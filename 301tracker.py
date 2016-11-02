@@ -12,6 +12,7 @@ w, h = gb_template.shape[::-1]
 #===Set up Vars for Screen===#
 font = cv2.FONT_HERSHEY_SIMPLEX
 canvas = np.zeros((100, 250, 3), np.uint8)
+toggle = False
 
 #===Game===#
 current_game =0
@@ -60,6 +61,7 @@ def display_counter():
 	global quit
 	global update
 	global connect
+	global toggle
 	while quit:
 		#===Screen Capture===#
 		screen = ImageGrab.grab(bbox=(200,400,500,550)) 
@@ -77,6 +79,12 @@ def display_counter():
 			update= True
 		if ch == ord('s'): 
 			connect= True
+		if ch == ord('t'): 
+			if toggle:
+				toggle= False
+				cv2.destroyWindow('301 App')
+			else:
+				toggle= True
 		if ch == 2555904:
 			current_game+=1
 		if ch == 2424832:
@@ -96,8 +104,10 @@ def display_counter():
 		cv2.putText(canvas,collectable_name[current_game]+'= '+collectables[current_game],(10,30), font, 0.8,(255,255,255),2)	
 		cv2.putText(canvas,game_list[current_game],(10,90), font, 0.6,(255,255,255),2)	
 		
+		#==Show Screens===#
 		cv2.imshow('Counter App : '+username, canvas)
-		#cv2.imshow('301 App', img)			
+		if toggle:
+			cv2.imshow('301 App', img)		
 	cv2.destroyAllWindows()
 	
 def check_golden_banana(img):
@@ -110,25 +120,26 @@ def check_golden_banana(img):
 		for pt in zip(*loc[::-1]):			
 			place_hold = list(collectables[2])
 			final = list(collectables[2])
-			if pt[1] <20:
+			#print(pt[1])
+			if pt[1] <30:
 				#=====Menu====================
 				roi = img[pt[1]+25:(pt[1]+73), (pt[0]+60):(pt[0]+110)]
-				roi2 = img[pt[1]+25:(pt[1]+73), (pt[0]+70):(pt[0]+123)]
-				roi3 = img[pt[1]+25:(pt[1]+73), (pt[0]+117):(pt[0]+155)]
+				roi2 = img[pt[1]+25:(pt[1]+73), (pt[0]+90):(pt[0]+140)]
+				roi3 = img[pt[1]+25:(pt[1]+73), (pt[0]+125):(pt[0]+175)]
 				place_hold[0]  =str(test_num(roi))
 				place_hold[1]  =str(test_num(roi2))
-				place_hold[2]  =str(test_num(roi3))
-				#cv2.rectangle(img, (pt[0]+95,pt[1]+25), (pt[0]+143,pt[1]+73), (0,255,0), 1)	
-				#cv2.rectangle(img, (pt[0]+117,pt[1]+25), (pt[0]+175,pt[1]+73), (255,0,0), 1)			
-							
+				place_hold[2]  =str(test_num(roi3))				
 			else:
 				#=====Gameplay====================
 				roi = img[pt[1]+25:(pt[1]+73), (pt[0]+70):(pt[0]+120)]
 				roi2 = img[pt[1]+25:(pt[1]+73), (pt[0]+105):(pt[0]+153)]
-				roi3 = img[pt[1]+25:(pt[1]+73), (pt[0]+147):(pt[0]+185)]
+				roi3 = img[pt[1]+25:(pt[1]+73), (pt[0]+140):(pt[0]+185)]
 				place_hold[0]  =str(test_num(roi))
 				place_hold[1]  =str(test_num(roi2))	
-				place_hold[2]  =str(test_num(roi3))				
+				place_hold[2]  =str(test_num(roi3))	
+				#cv2.rectangle(img, (pt[0]+70,pt[1]+25), (pt[0]+120,pt[1]+73), (0,0,255), 1)
+				#cv2.rectangle(img, (pt[0]+105,pt[1]+25), (pt[0]+153,pt[1]+73), (0,255,0), 1)	
+				#cv2.rectangle(img, (pt[0]+140,pt[1]+25), (pt[0]+185,pt[1]+73), (255,0,0), 1)				
 			
 			#print(str(place_hold[0])+str(place_hold[1])+str(place_hold[2]))
 			if place_hold[0] is not '':
@@ -145,7 +156,7 @@ def check_golden_banana(img):
 def server_send():
 	global update
 	
-	while connect == False:
+	while connect == False or quit == False:
 		pass
 	s.connect((host, port))
 	print s.recv(1024)
