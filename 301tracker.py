@@ -3,10 +3,6 @@ import cv2
 import numpy as np
 
 
-#===Your Capture Card======#
-#0 is your default webcam, so if your cam is the feed, change to 1 for the secondary camera#
-camera_port = 0
-cam = cv2.VideoCapture(camera_port)
 
 #===Templates for image comparison===#
 gb_template = cv2.imread('temps/gb.png',0)
@@ -53,9 +49,8 @@ def test_num(img):
 def display_game():
 	global current_game
 	while True:
-		#ret_val, img = cam.read()
-		screen = ImageGrab.grab(bbox=(200,400,500,550)) #bbox specifies specific region (bbox= x,y,width,height *starts top-left)
-		box = np.array(screen) #this is the array obtained from conversion
+		screen = ImageGrab.grab(bbox=(200,400,500,550)) 
+		box = np.array(screen) 
 		img= cv2.cvtColor(box, cv2.COLOR_RGB2BGR)
 		
 
@@ -89,14 +84,12 @@ def check_golden_banana(img):
 
 	img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)		
 	res = cv2.matchTemplate(img_gray,gb_template,cv2.TM_CCOEFF_NORMED)
-	#cv2.imwrite('screenshot.png',img_gray)
 	threshold = 0.8
 	loc = np.where( res >= threshold)		
 	if zip(*loc[::-1]):
 		for pt in zip(*loc[::-1]):			
 			place_hold = list(collectables[2])
 			final = list(collectables[2])
-			#print(pt[1])
 			if pt[1] <20:
 				#=====Menu====================
 				roi = img[pt[1]+25:(pt[1]+73), (pt[0]+60):(pt[0]+110)]
@@ -105,8 +98,8 @@ def check_golden_banana(img):
 				place_hold[0]  =str(test_num(roi))
 				place_hold[1]  =str(test_num(roi2))
 				place_hold[2]  =str(test_num(roi3))
-				cv2.rectangle(img, (pt[0]+95,pt[1]+25), (pt[0]+143,pt[1]+73), (0,255,0), 1)	
-				cv2.rectangle(img, (pt[0]+117,pt[1]+25), (pt[0]+175,pt[1]+73), (255,0,0), 1)			
+				#cv2.rectangle(img, (pt[0]+95,pt[1]+25), (pt[0]+143,pt[1]+73), (0,255,0), 1)	
+				#cv2.rectangle(img, (pt[0]+117,pt[1]+25), (pt[0]+175,pt[1]+73), (255,0,0), 1)			
 							
 			else:
 				#=====Gameplay====================
@@ -115,9 +108,7 @@ def check_golden_banana(img):
 				roi3 = img[pt[1]+25:(pt[1]+73), (pt[0]+147):(pt[0]+185)]
 				place_hold[0]  =str(test_num(roi))
 				place_hold[1]  =str(test_num(roi2))	
-				place_hold[2]  =str(test_num(roi3))
-				#cv2.rectangle(img, (x+pt[0]+105,y+pt[1]+25), (x+pt[0]+153,y+pt[1]+73), (0,255,0), 1)	
-				#cv2.rectangle(img, (x+pt[0]+140,y+pt[1]+25), (x+pt[0]+183,y+pt[1]+73), (255,0,0), 1)					
+				place_hold[2]  =str(test_num(roi3))				
 			
 			#print(str(place_hold[0])+str(place_hold[1])+str(place_hold[2]))
 			if place_hold[0] is not '':
