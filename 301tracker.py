@@ -1,8 +1,9 @@
 from PIL import ImageGrab
 import cv2
 import numpy as np
-
-
+import socket
+from threading import Thread
+import time
 
 #===Templates for image comparison===#
 gb_template = cv2.imread('temps/gb.png',0)
@@ -15,11 +16,19 @@ canvas = np.zeros((100, 250, 3), np.uint8)
 #===Game===#
 current_game =0
 game_list=["Banjo-Kazooie","Banjo-Tooie","Donkey Kong 64"]
-collectables=['0  ','0  ','0  ']
+collectables=['0  ','0 ','0  ']
 collectable_name=["Jiggy","Jiggy","GB"]
 
+#===Server=====#
+username = "Test"
+s = socket.socket()
+host = 'localhost'
+port = 8888
+update = False
+quit = True
+connect = False
 
-
+#===Read DK64 Numbers===#
 def test_num(img):
 	this_number =''
 	
@@ -45,10 +54,14 @@ def test_num(img):
 	return this_number			
 		
 
-				
-def display_game():
+#===Display the tacker app===#				
+def display_counter():
 	global current_game
-	while True:
+	global quit
+	global update
+	global connect
+	while quit:
+		#===Screen Capture===#
 		screen = ImageGrab.grab(bbox=(200,400,500,550)) 
 		box = np.array(screen) 
 		img= cv2.cvtColor(box, cv2.COLOR_RGB2BGR)
@@ -57,9 +70,13 @@ def display_game():
 		#===Keyboard Commands========
 		ch = cv2.waitKey(1)
 		if  ch == 27:
-			break  # esc to quit
+			quit= False  # esc to quit
 		if ch == ord('a'): 
 			cv2.imwrite('screenshot.png',img)
+		if ch == ord('q'): 
+			update= True
+		if ch == ord('s'): 
+			connect= True
 		if ch == 2555904:
 			current_game+=1
 		if ch == 2424832:
@@ -70,13 +87,16 @@ def display_game():
 		if current_game>2:
 			current_game=2
 		
-		check_golden_banana(img)
+		#===Check Game and perform action===#
+		if current_game==2:
+			check_golden_banana(img)
 		
+		#===Draw on Screen===#
 		cv2.rectangle(canvas, (0,0), (300,100), (0,0,0), -1)	
 		cv2.putText(canvas,collectable_name[current_game]+'= '+collectables[current_game],(10,30), font, 0.8,(255,255,255),2)	
 		cv2.putText(canvas,game_list[current_game],(10,90), font, 0.6,(255,255,255),2)	
 		
-		cv2.imshow('Counter App', canvas)
+		cv2.imshow('Counter App : '+username, canvas)
 		#cv2.imshow('301 App', img)			
 	cv2.destroyAllWindows()
 	
@@ -118,13 +138,32 @@ def check_golden_banana(img):
 			if place_hold[2] is not '':
 				final[2] = place_hold[2]
 			collectables[2] = "".join(final)
+			update = True
 			break;
+
+#===Server Thread===#
+def server_send():
+	global update
+	
+	while connect == False:
+		pass
+	s.connect((host, port))
+	print s.recv(1024)
+	s.send(username + str(collectables))
+	#===loop while app is active, every 5 seconds check to see if there is an update, if so send the data==#
+	while quit:
+		time.sleep( 5 )
+		if update:	
+			s.send(username + str(collectables))
+			update = False
 
 	
 	
-	
 def main():
-	display_game()
+	t = Thread(target=display_counter, args=())
+	t2 = Thread(target=server_send, args=())
+	t.start()
+	t2.start()
 
 if __name__ == '__main__':
 	main()
