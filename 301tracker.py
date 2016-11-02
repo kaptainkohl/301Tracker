@@ -79,6 +79,12 @@ def display_counter():
 			update= True
 		if ch == ord('s'): 
 			connect= True
+		if ch == ord('1'): 
+			collectables[0]='100'
+		if ch == ord('2'): 
+			collectables[1]='90'
+		if ch == ord('3'): 
+			collectables[2]='201'
 		if ch == ord('t'): 
 			if toggle:
 				toggle= False
@@ -167,7 +173,7 @@ def server_send():
 		if update:	
 			s.send(username + str(collectables))
 			update = False
-
+	s.send("quiting")
 	
 	
 def main():

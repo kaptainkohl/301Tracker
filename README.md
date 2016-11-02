@@ -1,4 +1,4 @@
-# 301Tracker
+# 301 Tracker
 This is an application made solely for the Rareware 301 Collectathon Race http://bombch.us/Bj_W
 
 This program uses opencv to look at an image of gameplay and search for objects, in this case Jiggies and Golden Bananas.
@@ -7,6 +7,19 @@ The collectables data is now displayed in a small box on the screen which a user
 The data will also be sent to a server. The server reads everyones incomeing data and displays it on the screen.
 This data then can be streamed to the stats tracking stream showing who is in the lead with how many totals.
 This automates the process of finding out who is in the lead making it so the helpers do not need to struggle to keep up with the counts.
+
+# How To Use
+
+KeyBoard Controls
+
+	Escape: Close the Program
+	Arrow Keys: Scroll through games
+	S: Start your connection to the server
+	T: Toggle the gameplay display
+	1: Toggle 100 Jiggies (incase app/computer crashes you have a way to get the totals back)
+	2: Toggle 90 Jiggies
+	3: Toggle 201 Banana
+	
 
 # Install (Windows)
 

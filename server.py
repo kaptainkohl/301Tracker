@@ -10,7 +10,7 @@ quit= True
 
 #===Max of 15 people in the race===#
 index=0
-user_data = ['','','','','','','','','','','','','','','']
+user_data = []
 
 #===Set up Vars for Screen===#
 font = cv2.FONT_HERSHEY_SIMPLEX
@@ -32,16 +32,17 @@ print 'Socket now listening'
  
 #Function for handling connections
 def clientthread(conn,user_index):
-    conn.send('connected') 
-     
-    while quit:     
+	global index
+	conn.send('connected')
+	while quit:     
 		data = conn.recv(1024)
 		print(data)
 		user_data[user_index]=data
-		if not data: 
+		if data == "quiting":
+			del user_data[user_index]
+			index-=1;
 			break
-
-    conn.close()
+	conn.close()
 
 def display_counts():
 		global quit
@@ -50,8 +51,8 @@ def display_counts():
 			if  ch == 27:
 				quit= False
 			cv2.rectangle(canvas, (0,0), (720,480), (0,0,0), -1)	
-			for x in range(0,15):
-				cv2.putText(canvas,user_data[x],(10,30*x), font, 0.8,(255,255,255),2)	
+			for x in range(0,len(user_data)):
+				cv2.putText(canvas,user_data[x],(10,30*x+30), font, 0.8,(255,255,255),2)	
 			
 			cv2.imshow('Server App', canvas)
 	
@@ -60,6 +61,7 @@ start_new_thread(display_counts,())
 while quit:
 	conn, addr = s.accept()
 	print 'Connected with ' + addr[0] + ':' + str(addr[1])
+	user_data.append('')
 	start_new_thread(clientthread ,(conn,index))
 	index+=1
  
