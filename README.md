@@ -10,6 +10,11 @@ This automates the process of finding out who is in the lead making it so the he
 
 # How To Use
 
+You must use AmaRec to have the gameplay be displayed on your screen, The way this program works is that it reads the game for a window which is a small portion of your screen.
+AmaRec needs to be placed in the top left of your main monitor.
+For N64 you must make your game 4:3 at 680x508 for best results
+For VC you need to make it, and move the screen over so that the game play is resting against the edge of your screen.
+
 KeyBoard Controls
 
 	Escape: Close the Program
