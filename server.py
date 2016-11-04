@@ -13,7 +13,9 @@ quit= True
 index=0
 user_data = []
 user_name = []
-profile_pic = []
+
+#===Layout===$
+player_bac = cv2.imread('temps/player_bac.png')
 
 #===Set up Vars for Screen===#
 font = cv2.FONT_HERSHEY_SIMPLEX
@@ -62,11 +64,17 @@ def display_counts():
 				quit= False
 			cv2.rectangle(canvas, (0,0), (720,480), (0,0,0), -1)	
 			for x in range(0,len(user_data)):
-				cv2.putText(canvas,user_name[x],(10,10), font, 0.5,(255,255,255),2)	
+				canvas[x*125:125+x*125, 0:200] = player_bac
+				cv2.putText(canvas,user_name[x],(55,20+x*125), font, 0.6,(255,255,255),2)
+				cv2.putText(canvas,"Game 0/3",(55,45+x*125), font, 0.4,(255,255,255),1)	
+				cv2.putText(canvas,"Place: 1",(140,45+x*125), font, 0.4,(255,255,255),1)				
 				#cv2.putText(canvas,user_data[x],(80,35*x+35), font, 0.8,(255,255,255),2)	
-				cv2.rectangle(canvas, (20,15), (int(user_data[x][0])*2+20,18), (0,0,255), -1)
-				cv2.rectangle(canvas, (20,25), (int(user_data[x][1])*2+20,28), (0,255,0), -1)
-				cv2.rectangle(canvas, (20,35), (int(user_data[x][2])+20,38), (255,0,0), -1)
+				cv2.putText(canvas,"Banjo-Kazooie",(6,70+x*125), font, 0.3,(255,255,255),1)
+				cv2.rectangle(canvas, (6,75+x*125), (int(user_data[x][0])*2+6,79+x*125), (0,0,255), -1)
+				cv2.putText(canvas,"Banjo-Tooie",(6,90+x*125), font, 0.3,(255,255,255),1)
+				cv2.rectangle(canvas, (6,95+x*125), (int(user_data[x][1])*2+6,99+x*125), (0,255,0), -1)
+				cv2.putText(canvas,"Donkey Kong 64",(6,110+x*125), font, 0.3,(255,255,255),1)
+				cv2.rectangle(canvas, (6,115+x*125), (int(user_data[x][2])+6,119+x*125), (255,0,0), -1)
 				time.sleep(1)
 			cv2.imshow('Server App', canvas)
 

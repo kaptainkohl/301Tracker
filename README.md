@@ -30,7 +30,7 @@ KeyBoard Controls
 
 Install Anaconda (A python install that gives easy ways to install modules) https://www.continuum.io/downloads
 
-Once python is installed use the commands in a command prompt: conda install opencv
+Once python is installed use the commands in a command prompt: conda install -c https://conda.binstar.org/menpo opencv
 
 There you go everything needed is installed. Now you can go to your folder where the program is and click on it to run.
 You may have to open it as a python file by open with; then set the application to c:\where ever your anaconda install is\anaconda2\python

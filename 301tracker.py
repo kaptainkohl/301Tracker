@@ -31,13 +31,15 @@ bk_template = cv2.imread('temps/jiggy.png',0)
 w, h = bk_template.shape[::-1]
 
 #===Server=====#
-username = "kaptainkohl"
-host = 'localhost'
+f = open('settings.txt', 'r')
+username = f.readline()
+host = f.readline()
 port = 8888
 update = False
 quit = True
 connect = False
 profile_pic = cv2.imread('temps/jiggy.png',0)
+
 
 #===Read DK64 Numbers===#
 def test_num(img):
