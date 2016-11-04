@@ -18,7 +18,7 @@ user_name = []
 player_bac = cv2.imread('temps/player_bac.png')
 
 #===Set up Vars for Screen===#
-font = cv2.FONT_HERSHEY_SIMPLEX
+font = cv2.FONT_HERSHEY_DUPLEX
 canvas = np.zeros((720, 480, 3), np.uint8)
  
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

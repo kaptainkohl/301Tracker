@@ -7,8 +7,9 @@ import time
 
 
 #===Set up Vars for Screen===#
-font = cv2.FONT_HERSHEY_SIMPLEX
+font = cv2.FONT_HERSHEY_TRIPLEX
 canvas = np.zeros((100, 250, 3), np.uint8)
+current_bac = [cv2.imread('temps/bac/bk.png'),cv2.imread('temps/bac/tooie.png'),cv2.imread('temps/bac/dk.png')]
 toggle = False
 
 #===Game===#
@@ -177,8 +178,9 @@ def display_counter():
 			check_tooie_jiggies(img)
 		
 		#===Draw on Screen===#
-		cv2.rectangle(canvas, (0,0), (300,100), (0,0,0), -1)	
-		cv2.putText(canvas,collectable_name[current_game]+'= '+collectables[current_game],(10,30), font, 0.8,(255,255,255),2)	
+		#cv2.rectangle(canvas, (0,0), (300,100), (0,0,0), -1)	
+		canvas[0:100,0:250]=current_bac[current_game]
+		cv2.putText(canvas,'= '+collectables[current_game],(65,35), font, 1,(255,255,255),2)	
 		cv2.putText(canvas,game_list[current_game],(10,90), font, 0.6,(255,255,255),2)	
 		
 		#==Show Screens===#
@@ -270,7 +272,6 @@ def check_tooie_jiggies(img):
 		for pt in zip(*loc[::-1]):			
 			place_hold = list(collectables[1])
 			final = list(collectables[1])
-			print(pt[1])
 			if pt[1] < 103:
 				roi = img[pt[1]+5:(pt[1]+45), (pt[0]+50):(pt[0]+75)]
 				place_hold[0]  =str(tooie_num(roi))

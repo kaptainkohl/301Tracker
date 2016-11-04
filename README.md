@@ -12,7 +12,7 @@ This automates the process of finding out who is in the lead making it so the he
 
 You must use AmaRec to have the gameplay be displayed on your screen, The way this program works is that it reads the game for a window which is a small portion of your screen.
 AmaRec needs to be placed in the top left of your main monitor.
-For N64 you must make your game 4:3 at 680x508 for best results
+For N64 you must make your game 4:3 at 680x510 for best results  (try to get it as close to that as possible)
 For VC you need to make it, and move the screen over so that the game play is resting against the edge of your screen.
 
 KeyBoard Controls
@@ -28,7 +28,7 @@ KeyBoard Controls
 
 # Install (Windows)
 
-Install Anaconda (A python install that gives easy ways to install modules) https://www.continuum.io/downloads
+Install Anaconda 2.7(A python install that gives easy ways to install modules) https://www.continuum.io/downloads
 
 Once python is installed use the commands in a command prompt: conda install -c https://conda.binstar.org/menpo opencv
 
