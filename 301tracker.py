@@ -18,6 +18,7 @@ collectables=['0 ','0 ','0  ']
 collectable_name=["Jiggy","Jiggy","GB"]
 gb_name = 'temps/gb.png'
 last_jiggy=0
+first_jig = True
 vc=False
 vc_y=0;
 if vc:
@@ -29,11 +30,14 @@ gb_template = cv2.imread(gb_name,0)
 w, h = gb_template.shape[::-1]
 bk_template = cv2.imread('temps/jiggy.png',0)
 w, h = bk_template.shape[::-1]
-
+tooie_template = cv2.imread('temps/tooie.png',0)
+w, h = tooie_template.shape[::-1]
 #===Server=====#
 f = open('settings.txt', 'r')
 username = f.readline()
 host = f.readline()
+print username
+f.close()
 port = 8888
 update = False
 quit = True
@@ -92,7 +96,25 @@ def bk_num(img):
 				
 											
 	return this_number			
-		
+
+#===Read Tooie Numbers===#
+def tooie_num(img):
+	this_number =''
+	for x in range(0, 10):	
+		num = cv2.imread('temps/tooie_numbers/'+str(x)+'.png',0)
+		w, h = num.shape[::-1]
+		img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+		res = cv2.matchTemplate(img_gray,num,cv2.TM_CCOEFF_NORMED)
+		threshold = 0.9	
+		loc = np.where( res >= threshold)
+		if zip(*loc[::-1]):
+			for pt in zip(*loc[::-1]):
+				print(x)
+				this_number = str(x)
+				break;
+				
+											
+	return this_number	
 
 #===Display the tacker app===#				
 def display_counter():
@@ -114,18 +136,22 @@ def display_counter():
 			quit= False  # esc to quit
 		if ch == ord('a'): 
 			cv2.imwrite('screenshot.png',img)
-		if ch == ord('q'): 
+		if ch == ord('d'): 
 			update= True
 		if ch == ord('s'): 
 			connect= True
 		if ch == ord('1'): 
 			collectables[0]='100'
+			update= True
 		if ch == ord('2'): 
 			collectables[1]='90'
+			update= True
 		if ch == ord('3'): 
 			collectables[2]='201'
-		if ch == ord('w'): 
+			update= True
+		if ch == ord('q'): 
 			collectables[0]= str(int(collectables[0])+1)
+			update= True
 		if ch == ord('t'): 
 			if toggle:
 				toggle= False
@@ -147,6 +173,8 @@ def display_counter():
 			check_golden_banana(img)
 		if current_game==0:	
 			check_bk_jiggies(img)
+		if current_game==1:	
+			check_tooie_jiggies(img)
 		
 		#===Draw on Screen===#
 		cv2.rectangle(canvas, (0,0), (300,100), (0,0,0), -1)	
@@ -207,10 +235,11 @@ def check_golden_banana(img):
 def check_bk_jiggies(img):
 	place_hold =0
 	global last_jiggy
+	global first_jig
 	current_count = collectables[0]
 	img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)		
 	res = cv2.matchTemplate(img_gray,bk_template,cv2.TM_CCOEFF_NORMED)
-	threshold = 0.77
+	threshold = 0.7
 	loc = np.where( res >= threshold)		
 	if zip(*loc[::-1]):
 		for pt in zip(*loc[::-1]):
@@ -218,17 +247,45 @@ def check_bk_jiggies(img):
 				print("x:"+str(pt[0])+" y:"+str(pt[1]))
 				roi = img[pt[1]+10:(pt[1]+65), (pt[0]+80):(pt[0]+155)]
 				place_hold  =str(bk_num(roi))
-				cv2.rectangle(img, (pt[0]+60,pt[1]+10), (pt[0]+110,pt[1]+65), (0,0,255), 1)
+				cv2.rectangle(img, (pt[0]+65,pt[1]+10), (pt[0]+155,pt[1]+65), (0,0,255), 1)
 				cv2.rectangle(img, (pt[0],pt[1]), (pt[0]+67,pt[1]+72), (0,0,255), 1)
 			break;
-		if int(place_hold) is not last_jiggy and int(place_hold) is not 0:
+		if int(place_hold) is not last_jiggy and int(place_hold) is not 0 and first_jig == False:
 			collectables[0]= str(int(current_count)+1)
 			last_jiggy =int(place_hold)
-		if int(place_hold) == 1 and int(collectables[0]) == 0:
+		if int(place_hold) == 1 and first_jig:
 			collectables[0]= str(int(current_count)+1)
-			last_jiggy = 1
-			time.sleep(4)
+			first_jig = False
+			time.sleep(6)
 		update = True
+		
+		
+def check_tooie_jiggies(img):
+
+	img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)		
+	res = cv2.matchTemplate(img_gray,tooie_template,cv2.TM_CCOEFF_NORMED)
+	threshold = 0.8
+	loc = np.where( res >= threshold)		
+	if zip(*loc[::-1]):
+		for pt in zip(*loc[::-1]):			
+			place_hold = list(collectables[1])
+			final = list(collectables[1])
+			print(pt[1])
+			if pt[1] < 103:
+				roi = img[pt[1]+5:(pt[1]+45), (pt[0]+50):(pt[0]+75)]
+				place_hold[0]  =str(tooie_num(roi))
+				cv2.rectangle(img, (pt[0]+50,pt[1]+5), (pt[0]+75,pt[1]+45), (0,0,255), 1)
+				roi2 = img[pt[1]+5:(pt[1]+45), (pt[0]+70):(pt[0]+105)]
+				place_hold[1]  =str(tooie_num(roi2))
+				cv2.rectangle(img, (pt[0]+70,pt[1]+5), (pt[0]+105,pt[1]+45), (0,0,255), 1)
+			if place_hold[0] is not '':
+				final[0] = place_hold[0]				
+			if place_hold[1] is not '':
+				final[1] = place_hold[1]
+			collectables[1] = "".join(final)
+			update = True
+			break;
+
 #===Server Thread===#
 def server_send():
 	global update

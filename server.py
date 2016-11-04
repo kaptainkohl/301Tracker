@@ -65,16 +65,19 @@ def display_counts():
 			cv2.rectangle(canvas, (0,0), (720,480), (0,0,0), -1)	
 			for x in range(0,len(user_data)):
 				canvas[x*125:125+x*125, 0:200] = player_bac
-				cv2.putText(canvas,user_name[x],(55,20+x*125), font, 0.6,(255,255,255),2)
+				cv2.putText(canvas,user_name[x][:-1],(55,20+x*125), font, 0.6,(255,255,255),2)
 				cv2.putText(canvas,"Game 0/3",(55,45+x*125), font, 0.4,(255,255,255),1)	
 				cv2.putText(canvas,"Place: 1",(140,45+x*125), font, 0.4,(255,255,255),1)				
 				#cv2.putText(canvas,user_data[x],(80,35*x+35), font, 0.8,(255,255,255),2)	
 				cv2.putText(canvas,"Banjo-Kazooie",(6,70+x*125), font, 0.3,(255,255,255),1)
-				cv2.rectangle(canvas, (6,75+x*125), (int(user_data[x][0])*2+6,79+x*125), (0,0,255), -1)
+				cv2.putText(canvas,user_data[x][0]+"/100",(155,79+x*125), font, 0.3,(255,255,255),1)
+				cv2.rectangle(canvas, (6,75+x*125), (int(int(user_data[x][0])*1.4)+6,79+x*125), (0,0,255), -1)
 				cv2.putText(canvas,"Banjo-Tooie",(6,90+x*125), font, 0.3,(255,255,255),1)
-				cv2.rectangle(canvas, (6,95+x*125), (int(user_data[x][1])*2+6,99+x*125), (0,255,0), -1)
+				cv2.putText(canvas,user_data[x][1]+"/90",(155,99+x*125), font, 0.3,(255,255,255),1)
+				cv2.rectangle(canvas, (6,95+x*125), (int(int(user_data[x][1])*1.55)+6,99+x*125), (0,255,0), -1)
 				cv2.putText(canvas,"Donkey Kong 64",(6,110+x*125), font, 0.3,(255,255,255),1)
-				cv2.rectangle(canvas, (6,115+x*125), (int(user_data[x][2])+6,119+x*125), (255,0,0), -1)
+				cv2.putText(canvas,user_data[x][2]+"/201",(155,119+x*125), font, 0.3,(255,255,255),1)
+				cv2.rectangle(canvas, (6,115+x*125), (int(int(user_data[x][2])*0.7)+6,118+x*125), (255,0,0), -1)
 				time.sleep(1)
 			cv2.imshow('Server App', canvas)
 
