@@ -188,9 +188,11 @@ def display_counter():
 		if toggle:
 			cv2.imshow('Display Capture', img)		
 	cv2.destroyAllWindows()
-	
-def check_golden_banana(img):
 
+
+#==Functions for checking for objects on screen===#	
+def check_golden_banana(img):
+	global update
 	img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)		
 	res = cv2.matchTemplate(img_gray,gb_template,cv2.TM_CCOEFF_NORMED)
 	threshold = 0.8
@@ -238,6 +240,7 @@ def check_bk_jiggies(img):
 	place_hold =0
 	global last_jiggy
 	global first_jig
+	global update
 	current_count = collectables[0]
 	img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)		
 	res = cv2.matchTemplate(img_gray,bk_template,cv2.TM_CCOEFF_NORMED)
@@ -256,14 +259,14 @@ def check_bk_jiggies(img):
 			collectables[0]= str(int(current_count)+1)
 			last_jiggy =int(place_hold)
 		if int(place_hold) == 1 and first_jig:
-			collectables[0]= str(int(current_count)+1)
+			collectables[0]= 1
 			first_jig = False
 			time.sleep(6)
 		update = True
 		
 		
 def check_tooie_jiggies(img):
-
+	global update
 	img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)		
 	res = cv2.matchTemplate(img_gray,tooie_template,cv2.TM_CCOEFF_NORMED)
 	threshold = 0.8
@@ -275,10 +278,10 @@ def check_tooie_jiggies(img):
 			if pt[1] < 103:
 				roi = img[pt[1]+5:(pt[1]+45), (pt[0]+50):(pt[0]+75)]
 				place_hold[0]  =str(tooie_num(roi))
-				cv2.rectangle(img, (pt[0]+50,pt[1]+5), (pt[0]+75,pt[1]+45), (0,0,255), 1)
-				roi2 = img[pt[1]+5:(pt[1]+45), (pt[0]+70):(pt[0]+105)]
+				roi2 = img[pt[1]+5:(pt[1]+45), (pt[0]+68):(pt[0]+105)]
 				place_hold[1]  =str(tooie_num(roi2))
-				cv2.rectangle(img, (pt[0]+70,pt[1]+5), (pt[0]+105,pt[1]+45), (0,0,255), 1)
+				cv2.rectangle(img, (pt[0]+50,pt[1]+5), (pt[0]+75,pt[1]+45), (0,0,255), 1)
+				cv2.rectangle(img, (pt[0]+68,pt[1]+5), (pt[0]+105,pt[1]+45), (0,0,255), 1)
 			if place_hold[0] is not '':
 				final[0] = place_hold[0]				
 			if place_hold[1] is not '':
