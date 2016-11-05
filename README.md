@@ -9,11 +9,11 @@ This data then can be streamed to the stats tracking stream showing who is in th
 This automates the process of finding out who is in the lead making it so the helpers do not need to struggle to keep up with the counts.
 
 # How To Use
-
+Only works for n64 right now!!!
 You must use AmaRec to have the gameplay be displayed on your screen, The way this program works is that it reads the game for a window which is a small portion of your screen.
-AmaRec needs to be placed in the top left of your main monitor.
-For N64 you must make your game 4:3 at 680x510 for best results  (try to get it as close to that as possible)
-For VC you need to make it, and move the screen over so that the game play is resting against the edge of your screen.
+AmaRec needs to be placed in the top left of your main monitor. https://gyazo.com/3d4a216e07ada8b98b2680f4ea2792e8
+For N64 you must make your game 4:3 at or close to 680x510 for best results  (try to get it as close to that as possible)
+
 
 KeyBoard Controls
 
@@ -26,7 +26,7 @@ KeyBoard Controls
 	3: Toggle 201 Banana
 	
 
-# Install (Windows)
+# Dev Install (Windows)
 
 Install Anaconda 2.7(A python install that gives easy ways to install modules) https://www.continuum.io/downloads
 

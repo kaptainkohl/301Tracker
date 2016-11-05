@@ -9,14 +9,14 @@ import time
 #===Set up Vars for Screen===#
 font = cv2.FONT_HERSHEY_TRIPLEX
 canvas = np.zeros((100, 250, 3), np.uint8)
-current_bac = [cv2.imread('temps/bac/bk.png'),cv2.imread('temps/bac/tooie.png'),cv2.imread('temps/bac/dk.png')]
+current_bac = [cv2.imread('temps/bac/bk.png'),cv2.imread('temps/bac/tooie.png'),cv2.imread('temps/bac/dk.png'),cv2.imread('temps/bac/promo.png')]
 toggle = False
 
 #===Game===#
-current_game =0
-game_list=["Banjo-Kazooie","Banjo-Tooie","Donkey Kong 64"]
+current_game =3
+game_list=["Banjo-Kazooie","Banjo-Tooie","Donkey Kong 64","Menu"]
 collectables=['0 ','0 ','0  ']
-collectable_name=["Jiggy","Jiggy","GB"]
+collectable_name=["Jiggy","Jiggy","GB","None"]
 gb_name = 'temps/gb.png'
 last_jiggy=0
 first_jig = True
@@ -37,12 +37,12 @@ w, h = tooie_template.shape[::-1]
 f = open('settings.txt', 'r')
 username = f.readline()
 host = f.readline()
-print username
 f.close()
 port = 8888
 update = False
 quit = True
 connect = False
+online = False
 profile_pic = cv2.imread('temps/jiggy.png',0)
 
 
@@ -92,7 +92,7 @@ def bk_num(img):
 		loc = np.where( res >= threshold)
 		if zip(*loc[::-1]):
 			for pt in zip(*loc[::-1]):
-				print(x)
+				#print(x)
 				this_number = str(x)
 				
 											
@@ -110,7 +110,7 @@ def tooie_num(img):
 		loc = np.where( res >= threshold)
 		if zip(*loc[::-1]):
 			for pt in zip(*loc[::-1]):
-				print(x)
+				#print(x)
 				this_number = str(x)
 				break;
 				
@@ -124,6 +124,7 @@ def display_counter():
 	global update
 	global connect
 	global toggle
+	global online
 	while quit:
 		#===Screen Capture===#
 		screen = ImageGrab.grab(bbox=(200,400,500,550)) 
@@ -165,9 +166,9 @@ def display_counter():
 			current_game-=1
 		
 		if current_game<0:
+			current_game=3
+		if current_game>3:
 			current_game=0
-		if current_game>2:
-			current_game=2
 		
 		#===Check Game and perform action===#
 		if current_game==2:
@@ -178,10 +179,17 @@ def display_counter():
 			check_tooie_jiggies(img)
 		
 		#===Draw on Screen===#
-		#cv2.rectangle(canvas, (0,0), (300,100), (0,0,0), -1)	
-		canvas[0:100,0:250]=current_bac[current_game]
-		cv2.putText(canvas,'= '+collectables[current_game],(65,35), font, 1,(255,255,255),2)	
-		cv2.putText(canvas,game_list[current_game],(10,90), font, 0.6,(255,255,255),2)	
+		if current_game<3:	
+			canvas[0:100,0:250]=current_bac[current_game]
+			cv2.putText(canvas,'= '+collectables[current_game],(65,35), font, 1,(255,255,255),2)	
+			cv2.putText(canvas,game_list[current_game],(10,90), font, 0.6,(255,255,255),2)	
+		else:
+			canvas[0:100,0:250]=current_bac[current_game]
+			cv2.putText(canvas,username[:-1],(0,95), font, 0.5,(255,255,255),2)
+			if online:
+				cv2.putText(canvas,'Online',(175,95), font, 0.5,(255,255,255),2)
+			else:
+				cv2.putText(canvas,'Offline',(175,95), font, 0.5,(255,255,255),2)
 		
 		#==Show Screens===#
 		cv2.imshow('Counter App : '+username, canvas)
@@ -236,33 +244,27 @@ def check_golden_banana(img):
 			update = True
 			break;
 
+	
 def check_bk_jiggies(img):
 	place_hold =0
 	global last_jiggy
 	global first_jig
 	global update
 	current_count = collectables[0]
-	img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)		
-	res = cv2.matchTemplate(img_gray,bk_template,cv2.TM_CCOEFF_NORMED)
-	threshold = 0.7
-	loc = np.where( res >= threshold)		
-	if zip(*loc[::-1]):
-		for pt in zip(*loc[::-1]):
-			if pt[0] <110:
-				print("x:"+str(pt[0])+" y:"+str(pt[1]))
-				roi = img[pt[1]+10:(pt[1]+65), (pt[0]+80):(pt[0]+155)]
-				place_hold  =str(bk_num(roi))
-				cv2.rectangle(img, (pt[0]+65,pt[1]+10), (pt[0]+155,pt[1]+65), (0,0,255), 1)
-				cv2.rectangle(img, (pt[0],pt[1]), (pt[0]+67,pt[1]+72), (0,0,255), 1)
-			break;
-		if int(place_hold) is not last_jiggy and int(place_hold) is not 0 and first_jig == False:
-			collectables[0]= str(int(current_count)+1)
-			last_jiggy =int(place_hold)
-		if int(place_hold) == 1 and first_jig:
-			collectables[0]= 1
-			first_jig = False
-			time.sleep(6)
-		update = True
+	
+	#print("x:"+str(pt[0])+" y:"+str(pt[1]))
+	roi = img[60:120, (140):220]
+	place_hold  = str(bk_num(roi))
+	cv2.rectangle(img, (140,60), (220,120), (0,0,255), 1)
+		
+	if int(place_hold) is not last_jiggy and int(place_hold) is not 0 and first_jig == False:
+		collectables[0]= str(int(current_count)+1)
+		last_jiggy =int(place_hold)
+	if int(place_hold) == 1 and first_jig:
+		collectables[0]= '1'
+		first_jig = False
+		time.sleep(4)
+	update = True
 		
 		
 def check_tooie_jiggies(img):
@@ -295,16 +297,20 @@ def server_send():
 	global update
 	global connect
 	s = socket.socket()
-	print("Ready")
 	while connect == False or quit == False:
 		pass
 	connect = False
-	s.connect((host, port))
-	print s.recv(1024)
-	s.send(username)
-	s.send(collectables[0]+","+collectables[1]+","+collectables[2])
+	try:
+		s.connect((host, port))
+		print s.recv(1024)
+		s.send(username)
+		s.send(collectables[0]+","+collectables[1]+","+collectables[2])
+	except:
+		update = False 
+		connect = True
 	#===loop while app is active, every 5 seconds check to see if there is an update, if so send the data==#
 	while quit:
+		online = True 
 		time.sleep( 5 )
 		if update:	
 			try:
@@ -313,14 +319,14 @@ def server_send():
 				connect = True
 			update = False
 		if connect:
-			print("ending connection")
+			
 			connect = False
 			break;
 	try:
 		s.send("quiting")
 	except:
 		connect = False
-	
+	online = False
 	s.close()	
 	if quit:
 		server_send()
