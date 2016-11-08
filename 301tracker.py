@@ -22,6 +22,7 @@ last_jiggy=0
 first_jig = True
 vc=False
 vc_y=0;
+center= False
 if vc:
 	vc_y=-5;
 	gb_name = 'temps/gb2.png'
@@ -125,9 +126,15 @@ def display_counter():
 	global connect
 	global toggle
 	global online
+	global center
+	global last_jiggy
 	while quit:
 		#===Screen Capture===#
-		screen = ImageGrab.grab(bbox=(200,400,500,550)) 
+		
+		if center:
+			screen = ImageGrab.grab(bbox=(600,500,900,650))
+		else:
+			screen = ImageGrab.grab(bbox=(200,400,500,550))
 		box = np.array(screen) 
 		img= cv2.cvtColor(box, cv2.COLOR_RGB2BGR)
 		
@@ -142,6 +149,11 @@ def display_counter():
 			update= True
 		if ch == ord('s'): 
 			connect= True
+		if ch == ord('c'): 
+			if center:
+				center= False
+			else:
+				center=True				
 		if ch == ord('1'): 
 			collectables[0]='100'
 			update= True
@@ -152,12 +164,19 @@ def display_counter():
 			collectables[2]='201'
 			update= True
 		if ch == ord('q'): 
-			collectables[0]= str(int(collectables[0])+1)
+			if int(collectables[0]) <100:
+				collectables[0]= str(int(collectables[0])+1)
+				last_jiggy = (last_jiggy + 1)%10
+		if ch == ord('w'): 
+			if int(collectables[0]) >0:
+				collectables[0]= str(int(collectables[0])+1)
+				last_jiggy = (last_jiggy - 1)%10
 			update= True
 		if ch == ord('t'): 
 			if toggle:
 				toggle= False
 				cv2.destroyWindow('Display Capture')
+				cv2.destroyWindow('Place Game Feed on the desktop so that it fits exactly in this box. Press C to move the box to the center of the screen')
 			else:
 				toggle= True
 		if ch == 2555904:
@@ -180,21 +199,37 @@ def display_counter():
 		
 		#===Draw on Screen===#
 		if current_game<3:	
+			cv2.destroyWindow('Place Game Feed on the desktop so that it fits exactly in this box. Press C to move the box to the center of the screen')
 			canvas[0:100,0:250]=current_bac[current_game]
 			cv2.putText(canvas,'= '+collectables[current_game],(65,35), font, 1,(255,255,255),2)	
 			cv2.putText(canvas,game_list[current_game],(10,90), font, 0.6,(255,255,255),2)	
+			if toggle:
+				cv2.imshow('Display Capture', img)	
 		else:
+			if toggle:
+				cv2.destroyWindow('Display Capture')
+				if center:
+					screen = ImageGrab.grab(bbox=(400,100,1200,800))
+					box = np.array(screen) 
+					feed= cv2.cvtColor(box, cv2.COLOR_RGB2BGR)
+					cv2.rectangle(feed, (0,60), (680,570), (0,0,255), 3)				
+				else:	
+					screen = ImageGrab.grab(bbox=(0,0,800,700))
+					box = np.array(screen) 
+					feed= cv2.cvtColor(box, cv2.COLOR_RGB2BGR)
+					cv2.rectangle(feed, (0,60), (680,570), (0,0,255), 3)		
+				cv2.imshow('Place Game Feed on the desktop so that it fits exactly in this box. Press C to move the box to the center of the screen', feed)	
+		
 			canvas[0:100,0:250]=current_bac[current_game]
 			cv2.putText(canvas,username[:-1],(0,95), font, 0.5,(255,255,255),2)
 			if online:
 				cv2.putText(canvas,'Online',(175,95), font, 0.5,(255,255,255),2)
 			else:
 				cv2.putText(canvas,'Offline',(175,95), font, 0.5,(255,255,255),2)
+			
 		
 		#==Show Screens===#
-		cv2.imshow('Counter App : '+username, canvas)
-		if toggle:
-			cv2.imshow('Display Capture', img)		
+		cv2.imshow('Counter App : '+username, canvas)	
 	cv2.destroyAllWindows()
 
 
@@ -212,26 +247,26 @@ def check_golden_banana(img):
 			#print(pt[1])
 			if pt[1] <30:
 				#=====Menu====================
-				roi = img[pt[1]+25+vc_y:(pt[1]+73), (pt[0]+60+vc_y):(pt[0]+110)]
-				roi2 = img[pt[1]+25+vc_y:(pt[1]+73), (pt[0]+90+vc_y):(pt[0]+140)]
-				roi3 = img[pt[1]+25+vc_y:(pt[1]+73), (pt[0]+125+vc_y):(pt[0]+175)]
+				roi = img[pt[1]+20+vc_y:(pt[1]+73), (pt[0]+60+vc_y):(pt[0]+110)]
+				roi2 = img[pt[1]+20+vc_y:(pt[1]+73), (pt[0]+90+vc_y):(pt[0]+140)]
+				roi3 = img[pt[1]+20+vc_y:(pt[1]+73), (pt[0]+125+vc_y):(pt[0]+175)]
 				place_hold[0]  =str(test_num(roi))
 				place_hold[1]  =str(test_num(roi2))
 				place_hold[2]  =str(test_num(roi3))
-				cv2.rectangle(img, (pt[0]+60+vc_y,pt[1]+25+vc_y), (pt[0]+110,pt[1]+73), (0,0,255), 1)
-				cv2.rectangle(img, (pt[0]+90+vc_y,pt[1]+25+vc_y), (pt[0]+140,pt[1]+73), (0,255,0), 1)	
-				cv2.rectangle(img, (pt[0]+125+vc_y,pt[1]+25+vc_y), (pt[0]+175,pt[1]+73), (255,0,0), 1)				
+				cv2.rectangle(img, (pt[0]+60+vc_y,pt[1]+20+vc_y), (pt[0]+110,pt[1]+73), (0,0,255), 1)
+				cv2.rectangle(img, (pt[0]+90+vc_y,pt[1]+20+vc_y), (pt[0]+140,pt[1]+73), (0,255,0), 1)	
+				cv2.rectangle(img, (pt[0]+125+vc_y,pt[1]+20+vc_y), (pt[0]+175,pt[1]+73), (255,0,0), 1)				
 			else:
 				#=====Gameplay====================
-				roi = img[pt[1]+25+vc_y:(pt[1]+73), (pt[0]+70):(pt[0]+120)]
-				roi2 = img[pt[1]+25+vc_y:(pt[1]+73), (pt[0]+105):(pt[0]+153)]
-				roi3 = img[pt[1]+25+vc_y:(pt[1]+73), (pt[0]+140):(pt[0]+185)]
+				roi = img[pt[1]+20+vc_y:(pt[1]+73), (pt[0]+70):(pt[0]+120)]
+				roi2 = img[pt[1]+20+vc_y:(pt[1]+73), (pt[0]+105):(pt[0]+153)]
+				roi3 = img[pt[1]+20+vc_y:(pt[1]+73), (pt[0]+140):(pt[0]+185)]
 				place_hold[0]  =str(test_num(roi))
 				place_hold[1]  =str(test_num(roi2))	
 				place_hold[2]  =str(test_num(roi3))	
-				cv2.rectangle(img, (pt[0]+70,pt[1]+25), (pt[0]+120,pt[1]+73), (0,0,255), 1)
-				cv2.rectangle(img, (pt[0]+105,pt[1]+25), (pt[0]+153,pt[1]+73), (0,255,0), 1)	
-				cv2.rectangle(img, (pt[0]+140,pt[1]+25), (pt[0]+185,pt[1]+73), (255,0,0), 1)				
+				cv2.rectangle(img, (pt[0]+70,pt[1]+20), (pt[0]+120,pt[1]+73), (0,0,255), 1)
+				cv2.rectangle(img, (pt[0]+105,pt[1]+20), (pt[0]+153,pt[1]+73), (0,255,0), 1)	
+				cv2.rectangle(img, (pt[0]+140,pt[1]+20), (pt[0]+185,pt[1]+73), (255,0,0), 1)				
 			
 			#print(str(place_hold[0])+str(place_hold[1])+str(place_hold[2]))
 			if place_hold[0] is not '':
@@ -253,18 +288,19 @@ def check_bk_jiggies(img):
 	current_count = collectables[0]
 	
 	#print("x:"+str(pt[0])+" y:"+str(pt[1]))
-	roi = img[60:120, (140):220]
+	roi = img[50:110, (140):220]
 	place_hold  = str(bk_num(roi))
-	cv2.rectangle(img, (140,60), (220,120), (0,0,255), 1)
+	cv2.rectangle(img, (140,50), (220,110), (0,0,255), 1)
 		
 	if int(place_hold) is not last_jiggy and int(place_hold) is not 0 and first_jig == False:
 		collectables[0]= str(int(current_count)+1)
 		last_jiggy =int(place_hold)
-	if int(place_hold) == 1 and first_jig:
-		collectables[0]= '1'
+		update = True
+	if int(place_hold) is not 0 and first_jig:
+		collectables[0]= str(int(collectables[0])+1)
 		first_jig = False
 		time.sleep(4)
-	update = True
+		update = True
 		
 		
 def check_tooie_jiggies(img):

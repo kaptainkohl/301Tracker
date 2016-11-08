@@ -25,6 +25,12 @@ KeyBoard Controls
 	2: Toggle 90 Jiggies
 	3: Toggle 201 Banana
 	
+Settings File
+
+	Do not mess with Enter, there needs to be only 2 lines in the file
+	Line 1: Put your username here
+	Line 2: Put the ip of the server you want to connect to. 
+	
 
 # Dev Install (Windows)
 
