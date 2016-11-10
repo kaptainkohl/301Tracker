@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 import time
 
-HOST = '192.168.1.81' 
+HOST = 'localhost' 
 PORT = 8888 
 quit= True
 
