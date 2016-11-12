@@ -14,11 +14,13 @@ The way this program works is that it reads the game for a window which is a sma
 
 
 Settings File
+
 	Do not mess with Enter, there needs to be only 2 lines in the file
 	Line 1: Put your username here
 	Line 2: Put the ip of the server you want to connect to. 
 	
 Setup gameplay reading	
+
 	Open the Application (exe file)
 	Once Open press the T key on the keyboard to open the screen positioning window.
 		This window is used to display where in your monitor the application is looking for your gameplay.
@@ -29,10 +31,12 @@ Setup gameplay reading
 	Now you can start to use the Application
 		
 Gameplay
+
 	Use the Arrow keys on your key board to scroll through the games to select the current game you are on.
 	If you are on a game and you collect somthing for that game it will automatically update. Its that easy.
 	
 Online Feature
+
 	This Application has the ablity to connect to a server to send its data.
 	To turn on online mode all you need to do is press S. 
 	If you have the proper IP adress typed into the settings.txt it will try to connect. 

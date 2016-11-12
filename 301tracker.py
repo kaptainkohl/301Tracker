@@ -17,15 +17,11 @@ current_game =3
 game_list=["Banjo-Kazooie","Banjo-Tooie","Donkey Kong 64","Menu"]
 collectables=['0 ','0 ','0  ']
 collectable_name=["Jiggy","Jiggy","GB","None"]
+bk_jiggy=[0,0,0,0,0,0,0,0,0,0]
 gb_name = 'temps/gb.png'
-last_jiggy=0
-first_jig = True
-vc=False
-vc_y=0;
+lvl_index =-1
+lair_index =-1
 center= False
-if vc:
-	vc_y=-5;
-	gb_name = 'temps/gb2.png'
 	
 #===Templates for image comparison===#
 gb_template = cv2.imread(gb_name,0)
@@ -54,7 +50,7 @@ def test_num(img):
 	mask = np.zeros(img.shape[:2],np.uint8)
 	bgdModel = np.zeros((1,65),np.float64)
 	fgdModel = np.zeros((1,65),np.float64)
-
+	
 	rect = (1,1,50,64)
 	cv2.grabCut(img,mask,rect,bgdModel,fgdModel,5,cv2.GC_INIT_WITH_RECT)
 	mask2 = np.where((mask==2)|(mask==0),0,1).astype('uint8')
@@ -80,7 +76,7 @@ def bk_num(img):
 	bgdModel = np.zeros((1,65),np.float64)
 	fgdModel = np.zeros((1,65),np.float64)
 
-	rect = (1,1,67,45)
+	rect = (1,1,100,45)
 	cv2.grabCut(img,mask,rect,bgdModel,fgdModel,5,cv2.GC_INIT_WITH_RECT)
 	mask2 = np.where((mask==2)|(mask==0),0,1).astype('uint8')
 	img = img*mask2[:,:,np.newaxis]
@@ -127,10 +123,10 @@ def display_counter():
 	global toggle
 	global online
 	global center
-	global last_jiggy
+	global bk_jiggy
+	global lvl_index
 	while quit:
 		#===Screen Capture===#
-		
 		if center:
 			screen = ImageGrab.grab(bbox=(600,500,900,650))
 		else:
@@ -164,13 +160,13 @@ def display_counter():
 			collectables[2]='201'
 			update= True
 		if ch == ord('q'): 
-			if int(collectables[0]) <100:
-				collectables[0]= str(int(collectables[0])+1)
-				last_jiggy = (last_jiggy + 1)%10
-		if ch == ord('w'): 
-			if int(collectables[0]) >0:
-				collectables[0]= str(int(collectables[0])+1)
-				last_jiggy = (last_jiggy - 1)%10
+			if bk_jiggy[lvl_index] <10:
+				bk_jiggy[lvl_index]+=1
+				if bk_jiggy[lvl_index]==10:
+					lvl_index = 0
+					update = True
+
+
 			update= True
 		if ch == ord('t'): 
 			if toggle:
@@ -245,28 +241,29 @@ def check_golden_banana(img):
 			place_hold = list(collectables[2])
 			final = list(collectables[2])
 			#print(pt[1])
-			if pt[1] <30:
-				#=====Menu====================
-				roi = img[pt[1]+20+vc_y:(pt[1]+73), (pt[0]+60+vc_y):(pt[0]+110)]
-				roi2 = img[pt[1]+20+vc_y:(pt[1]+73), (pt[0]+90+vc_y):(pt[0]+140)]
-				roi3 = img[pt[1]+20+vc_y:(pt[1]+73), (pt[0]+125+vc_y):(pt[0]+175)]
-				place_hold[0]  =str(test_num(roi))
-				place_hold[1]  =str(test_num(roi2))
-				place_hold[2]  =str(test_num(roi3))
-				cv2.rectangle(img, (pt[0]+60+vc_y,pt[1]+20+vc_y), (pt[0]+110,pt[1]+73), (0,0,255), 1)
-				cv2.rectangle(img, (pt[0]+90+vc_y,pt[1]+20+vc_y), (pt[0]+140,pt[1]+73), (0,255,0), 1)	
-				cv2.rectangle(img, (pt[0]+125+vc_y,pt[1]+20+vc_y), (pt[0]+175,pt[1]+73), (255,0,0), 1)				
-			else:
-				#=====Gameplay====================
-				roi = img[pt[1]+20+vc_y:(pt[1]+73), (pt[0]+70):(pt[0]+120)]
-				roi2 = img[pt[1]+20+vc_y:(pt[1]+73), (pt[0]+105):(pt[0]+153)]
-				roi3 = img[pt[1]+20+vc_y:(pt[1]+73), (pt[0]+140):(pt[0]+185)]
-				place_hold[0]  =str(test_num(roi))
-				place_hold[1]  =str(test_num(roi2))	
-				place_hold[2]  =str(test_num(roi3))	
-				cv2.rectangle(img, (pt[0]+70,pt[1]+20), (pt[0]+120,pt[1]+73), (0,0,255), 1)
-				cv2.rectangle(img, (pt[0]+105,pt[1]+20), (pt[0]+153,pt[1]+73), (0,255,0), 1)	
-				cv2.rectangle(img, (pt[0]+140,pt[1]+20), (pt[0]+185,pt[1]+73), (255,0,0), 1)				
+			if pt[0]+175 < 301:
+				if pt[1] <30:
+					#=====Menu====================
+					roi = img[pt[1]+20:(pt[1]+73), (pt[0]+60):(pt[0]+110)]
+					roi2 = img[pt[1]+20:(pt[1]+73), (pt[0]+95):(pt[0]+145)]
+					roi3 = img[pt[1]+20:(pt[1]+73), (pt[0]+125):(pt[0]+175)]
+					place_hold[0]  =str(test_num(roi))
+					place_hold[1]  =str(test_num(roi2))
+					place_hold[2]  =str(test_num(roi3))
+					cv2.rectangle(img, (pt[0]+60,pt[1]+20), (pt[0]+110,pt[1]+73), (0,0,255), 1)
+					cv2.rectangle(img, (pt[0]+90,pt[1]+20), (pt[0]+140,pt[1]+73), (0,255,0), 1)	
+					cv2.rectangle(img, (pt[0]+125,pt[1]+20), (pt[0]+175,pt[1]+73), (255,0,0), 1)				
+				else:
+					#=====Gameplay====================
+					roi = img[pt[1]+20:(pt[1]+73), (pt[0]+70):(pt[0]+120)]
+					roi2 = img[pt[1]+20:(pt[1]+73), (pt[0]+110):(pt[0]+160)]
+					roi3 = img[pt[1]+20:(pt[1]+73), (pt[0]+140):(pt[0]+185)]
+					place_hold[0]  =str(test_num(roi))
+					place_hold[1]  =str(test_num(roi2))	
+					place_hold[2]  =str(test_num(roi3))	
+					cv2.rectangle(img, (pt[0]+70,pt[1]+20), (pt[0]+120,pt[1]+73), (0,0,255), 1)
+					cv2.rectangle(img, (pt[0]+105,pt[1]+20), (pt[0]+153,pt[1]+73), (0,255,0), 1)	
+					cv2.rectangle(img, (pt[0]+140,pt[1]+20), (pt[0]+185,pt[1]+73), (255,0,0), 1)				
 			
 			#print(str(place_hold[0])+str(place_hold[1])+str(place_hold[2]))
 			if place_hold[0] is not '':
@@ -282,25 +279,44 @@ def check_golden_banana(img):
 	
 def check_bk_jiggies(img):
 	place_hold =0
-	global last_jiggy
-	global first_jig
+	global bk_jiggy
+	global lvl_index
+	global lair_index
 	global update
 	current_count = collectables[0]
 	
 	#print("x:"+str(pt[0])+" y:"+str(pt[1]))
-	roi = img[50:110, (140):220]
+	roi = img[50:110, (140):240]
 	place_hold  = str(bk_num(roi))
-	cv2.rectangle(img, (140,50), (220,110), (0,0,255), 1)
-		
-	if int(place_hold) is not last_jiggy and int(place_hold) is not 0 and first_jig == False:
-		collectables[0]= str(int(current_count)+1)
-		last_jiggy =int(place_hold)
+	cv2.rectangle(img, (140,50), (240,110), (0,0,255), 1)
+	
+	if int(place_hold) == 1 and int(collectables[0]) is not 11:
+		lair_index+=1
+		lvl_index = lair_index
+		bk_jiggy[lvl_index]+=1
 		update = True
-	if int(place_hold) is not 0 and first_jig:
-		collectables[0]= str(int(collectables[0])+1)
-		first_jig = False
+		time.sleep(4)
+		
+	elif int(place_hold) == 10:
+		bk_jiggy[lvl_index]+=1	
+		lvl_index = 0
+		time.sleep(6)
+		update = True
+	elif int(place_hold) == 9 and lvl_index == 2:
+		bk_jiggy[lvl_index]+=2	
+		lvl_index = 0
 		time.sleep(4)
 		update = True
+		
+	elif int(place_hold) is not bk_jiggy[lvl_index] and int(place_hold) is not 0 and int(place_hold):
+		bk_jiggy[lvl_index]+=1
+		update = True
+	total = 0
+	for x in range(0, 10):		
+		total += bk_jiggy[x]
+	collectables[0] = str(total)
+	#print(bk_jiggy)
+
 		
 		
 def check_tooie_jiggies(img):
@@ -314,9 +330,9 @@ def check_tooie_jiggies(img):
 			place_hold = list(collectables[1])
 			final = list(collectables[1])
 			if pt[1] < 103:
-				roi = img[pt[1]+5:(pt[1]+45), (pt[0]+50):(pt[0]+75)]
+				roi = img[pt[1]+5:(pt[1]+45), (pt[0]+47):(pt[0]+80)]
 				place_hold[0]  =str(tooie_num(roi))
-				roi2 = img[pt[1]+5:(pt[1]+45), (pt[0]+68):(pt[0]+105)]
+				roi2 = img[pt[1]+5:(pt[1]+45), (pt[0]+65):(pt[0]+105)]
 				place_hold[1]  =str(tooie_num(roi2))
 				cv2.rectangle(img, (pt[0]+50,pt[1]+5), (pt[0]+75,pt[1]+45), (0,0,255), 1)
 				cv2.rectangle(img, (pt[0]+68,pt[1]+5), (pt[0]+105,pt[1]+45), (0,0,255), 1)
