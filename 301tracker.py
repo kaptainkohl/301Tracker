@@ -162,10 +162,11 @@ def display_counter():
 		if ch == ord('q'): 
 			if bk_jiggy[lvl_index] <10:
 				bk_jiggy[lvl_index]+=1
-				if bk_jiggy[lvl_index]==10:
+				if bk_jiggy[lvl_index]>=10:
 					lvl_index = 0
-					update = True
-
+				update = True
+		if ch == ord('w'): 
+			print(bk_jiggy)
 
 			update= True
 		if ch == ord('t'): 
@@ -257,7 +258,7 @@ def check_golden_banana(img):
 					#=====Gameplay====================
 					roi = img[pt[1]+20:(pt[1]+73), (pt[0]+70):(pt[0]+120)]
 					roi2 = img[pt[1]+20:(pt[1]+73), (pt[0]+110):(pt[0]+160)]
-					roi3 = img[pt[1]+20:(pt[1]+73), (pt[0]+140):(pt[0]+185)]
+					roi3 = img[pt[1]+20:(pt[1]+73), (pt[0]+140):(pt[0]+205)]
 					place_hold[0]  =str(test_num(roi))
 					place_hold[1]  =str(test_num(roi2))	
 					place_hold[2]  =str(test_num(roi3))	
@@ -290,7 +291,7 @@ def check_bk_jiggies(img):
 	place_hold  = str(bk_num(roi))
 	cv2.rectangle(img, (140,50), (240,110), (0,0,255), 1)
 	
-	if int(place_hold) == 1 and int(collectables[0]) is not 11:
+	if int(place_hold) == 1 and (bk_jiggy[lvl_index] is not 1 or int(collectables[0]) == 1):
 		lair_index+=1
 		lvl_index = lair_index
 		bk_jiggy[lvl_index]+=1
@@ -298,23 +299,24 @@ def check_bk_jiggies(img):
 		time.sleep(4)
 		
 	elif int(place_hold) == 10:
-		bk_jiggy[lvl_index]+=1	
+		bk_jiggy[lvl_index]=10	
 		lvl_index = 0
 		time.sleep(6)
 		update = True
 	elif int(place_hold) == 9 and lvl_index == 2:
-		bk_jiggy[lvl_index]+=2	
+		bk_jiggy[lvl_index]=10	
 		lvl_index = 0
 		time.sleep(4)
 		update = True
 		
-	elif int(place_hold) is not bk_jiggy[lvl_index] and int(place_hold) is not 0 and int(place_hold):
+	elif int(place_hold) is not bk_jiggy[lvl_index] and int(place_hold) is not 0 and int(place_hold) > bk_jiggy[lvl_index]:
 		bk_jiggy[lvl_index]+=1
 		update = True
 	total = 0
-	for x in range(0, 10):		
-		total += bk_jiggy[x]
-	collectables[0] = str(total)
+	if update:
+		for x in range(0, 10):		
+			total += bk_jiggy[x]
+		collectables[0] = str(total)
 	#print(bk_jiggy)
 
 		

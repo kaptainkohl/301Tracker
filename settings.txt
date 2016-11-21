@@ -1,2 +1,2 @@
-username
-173.240.197.244
+kohl
+localhost
