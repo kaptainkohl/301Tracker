@@ -9,11 +9,14 @@ import time
 #===Set up Vars for Screen===#
 font = cv2.FONT_HERSHEY_TRIPLEX
 canvas = np.zeros((100, 250, 3), np.uint8)
-current_bac = [cv2.imread('temps/bac/bk.png'),cv2.imread('temps/bac/tooie.png'),cv2.imread('temps/bac/dk.png'),cv2.imread('temps/bac/promo.png')]
+current_bac = [cv2.imread('temps/bac/bk.png'),cv2.imread('temps/bac/tooie.png'),cv2.imread('temps/bac/dk.png'),cv2.imread('temps/bac/refcheck.png'),cv2.imread('temps/bac/promo.png')]
+ref_bac = current_bac[3]
 toggle = False
+screenx =0
+screeny =0
 
 #===Game===#
-current_game =3
+current_game =4
 game_list=["Banjo-Kazooie","Banjo-Tooie","Donkey Kong 64","Menu"]
 collectables=['0 ','0 ','0  ']
 collectable_name=["Jiggy","Jiggy","GB","None"]
@@ -30,6 +33,10 @@ bk_template = cv2.imread('temps/jiggy.png',0)
 w, h = bk_template.shape[::-1]
 tooie_template = cv2.imread('temps/tooie.png',0)
 w, h = tooie_template.shape[::-1]
+ref_template = cv2.imread('temps/bac/refcheck.png',0)
+w, h = ref_template.shape[::-1]
+
+
 #===Server=====#
 f = open('settings.txt', 'r')
 username = f.readline()
@@ -76,21 +83,26 @@ def bk_num(img):
 	bgdModel = np.zeros((1,65),np.float64)
 	fgdModel = np.zeros((1,65),np.float64)
 
-	rect = (1,1,100,45)
+	rect = (1,1,100,60)
 	cv2.grabCut(img,mask,rect,bgdModel,fgdModel,5,cv2.GC_INIT_WITH_RECT)
 	mask2 = np.where((mask==2)|(mask==0),0,1).astype('uint8')
 	img = img*mask2[:,:,np.newaxis]
-	for x in range(1, 11):	
+	#cv2.imwrite('test.png',img)
+	for x in range(0, 11):	
 		num = cv2.imread('temps/bk_numbers/'+str(x)+'.png',0)
 		w, h = num.shape[::-1]
 		img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 		res = cv2.matchTemplate(img_gray,num,cv2.TM_CCOEFF_NORMED)
-		threshold = 0.85		
+		threshold = 0.85	
 		loc = np.where( res >= threshold)
 		if zip(*loc[::-1]):
 			for pt in zip(*loc[::-1]):
-				#print(x)
+				print(x)
 				this_number = str(x)
+				
+				if x==0:
+					this_number = 10
+					return this_number
 				
 											
 	return this_number			
@@ -125,16 +137,13 @@ def display_counter():
 	global center
 	global bk_jiggy
 	global lvl_index
-	while quit:
+	while quit: 
 		#===Screen Capture===#
-		if center:
-			screen = ImageGrab.grab(bbox=(600,500,900,650))
-		else:
-			screen = ImageGrab.grab(bbox=(200,400,500,550))
+		screen = ImageGrab.grab(bbox=(screenx+200,screeny+325,screenx+500,screeny+525))
 		box = np.array(screen) 
 		img= cv2.cvtColor(box, cv2.COLOR_RGB2BGR)
 		
-
+		time.sleep(0.2)
 		#===Keyboard Commands========
 		ch = cv2.waitKey(1)
 		if  ch == 27:
@@ -146,10 +155,8 @@ def display_counter():
 		if ch == ord('s'): 
 			connect= True
 		if ch == ord('c'): 
-			if center:
-				center= False
-			else:
-				center=True				
+			full = ImageGrab.grab(bbox=(0,0,950,400))
+			set_ref_point(full)
 		if ch == ord('1'): 
 			collectables[0]='100'
 			update= True
@@ -160,9 +167,10 @@ def display_counter():
 			collectables[2]='201'
 			update= True
 		if ch == ord('q'): 
-			if bk_jiggy[lvl_index] <10:
+			if bk_jiggy[lvl_index] <9:
 				bk_jiggy[lvl_index]+=1
-				if bk_jiggy[lvl_index]>=10:
+				if bk_jiggy[lvl_index]==9:
+					bk_jiggy[lvl_index]+=1
 					lvl_index = 0
 				update = True
 		if ch == ord('w'): 
@@ -182,8 +190,8 @@ def display_counter():
 			current_game-=1
 		
 		if current_game<0:
-			current_game=3
-		if current_game>3:
+			current_game=4
+		if current_game>4:
 			current_game=0
 		
 		#===Check Game and perform action===#
@@ -200,21 +208,22 @@ def display_counter():
 			canvas[0:100,0:250]=current_bac[current_game]
 			cv2.putText(canvas,'= '+collectables[current_game],(65,35), font, 1,(255,255,255),2)	
 			cv2.putText(canvas,game_list[current_game],(10,90), font, 0.6,(255,255,255),2)	
+			if current_game == 0:
+				cv2.putText(canvas, "lvl: "+str(lvl_index)+" J: "+str(bk_jiggy[lvl_index]),(10,65), font, 0.6,(255,255,255),2)	
+			
+			if toggle:
+				cv2.imshow('Display Capture', img)	
+		elif current_game == 3:
+			canvas[0:100,0:250]=current_bac[current_game]
 			if toggle:
 				cv2.imshow('Display Capture', img)	
 		else:
 			if toggle:
-				cv2.destroyWindow('Display Capture')
-				if center:
-					screen = ImageGrab.grab(bbox=(400,100,1200,800))
-					box = np.array(screen) 
-					feed= cv2.cvtColor(box, cv2.COLOR_RGB2BGR)
-					cv2.rectangle(feed, (0,60), (680,570), (0,0,255), 3)				
-				else:	
-					screen = ImageGrab.grab(bbox=(0,0,800,700))
-					box = np.array(screen) 
-					feed= cv2.cvtColor(box, cv2.COLOR_RGB2BGR)
-					cv2.rectangle(feed, (0,60), (680,570), (0,0,255), 3)		
+				cv2.destroyWindow('Display Capture')	
+				screen = ImageGrab.grab(bbox=(screenx,screeny,screenx+680,screeny+510))
+				box = np.array(screen) 
+				feed= cv2.cvtColor(box, cv2.COLOR_RGB2BGR)
+				#cv2.rectangle(feed, (0,60), (680,570), (0,0,255), 3)		
 				cv2.imshow('Place Game Feed on the desktop so that it fits exactly in this box. Press C to move the box to the center of the screen', feed)	
 		
 			canvas[0:100,0:250]=current_bac[current_game]
@@ -239,6 +248,7 @@ def check_golden_banana(img):
 	loc = np.where( res >= threshold)		
 	if zip(*loc[::-1]):
 		for pt in zip(*loc[::-1]):			
+			print("found")
 			place_hold = list(collectables[2])
 			final = list(collectables[2])
 			#print(pt[1])
@@ -287,22 +297,22 @@ def check_bk_jiggies(img):
 	current_count = collectables[0]
 	
 	#print("x:"+str(pt[0])+" y:"+str(pt[1]))
-	roi = img[50:110, (140):240]
+	roi = img[100:160, (140):240]
 	place_hold  = str(bk_num(roi))
-	cv2.rectangle(img, (140,50), (240,110), (0,0,255), 1)
+	cv2.rectangle(img, (140,100), (240,160), (0,0,255), 1)
 	
-	if int(place_hold) == 1 and (bk_jiggy[lvl_index] is not 1 or int(collectables[0]) == 1):
+	if int(place_hold) == 1 and bk_jiggy[lvl_index]==9 and lvl_index is not 0:
+		bk_jiggy[lvl_index]=10	
+		lvl_index = 0
+		time.sleep(6)
+		update = True
+		
+	elif int(place_hold) == 1 and (bk_jiggy[lvl_index] is not 1 or int(collectables[0]) == 1):
 		lair_index+=1
 		lvl_index = lair_index
 		bk_jiggy[lvl_index]+=1
 		update = True
 		time.sleep(4)
-		
-	elif int(place_hold) == 10:
-		bk_jiggy[lvl_index]=10	
-		lvl_index = 0
-		time.sleep(6)
-		update = True
 	elif int(place_hold) == 9 and lvl_index == 2:
 		bk_jiggy[lvl_index]=10	
 		lvl_index = 0
@@ -317,6 +327,7 @@ def check_bk_jiggies(img):
 		for x in range(0, 10):		
 			total += bk_jiggy[x]
 		collectables[0] = str(total)
+		#print(bk_jiggy)
 	#print(bk_jiggy)
 
 		
@@ -345,13 +356,31 @@ def check_tooie_jiggies(img):
 			collectables[1] = "".join(final)
 			update = True
 			break;
+			
+def set_ref_point(screen):
+	global screenx
+	global screeny
+	print("searching for screen")
+	box = np.array(screen) 
+	img_gray = cv2.cvtColor(box, cv2.COLOR_BGR2GRAY)		
+	res = cv2.matchTemplate(img_gray,ref_template,cv2.TM_CCOEFF_NORMED)
+	threshold = 0.6
+	loc = np.where( res >= threshold)		
+	if zip(*loc[::-1]):
+		for pt in zip(*loc[::-1]):
+			screenx = pt[0]
+			screeny = pt[1]
+			print("found")
+			break;
 
 #===Server Thread===#
 def server_send():
 	global update
 	global connect
+	global quit
 	s = socket.socket()
-	while connect == False or quit == False:
+	while connect == False or quit == True:
+		time.sleep(5)
 		pass
 	connect = False
 	try:
