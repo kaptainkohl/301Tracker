@@ -9,8 +9,13 @@ import time
 #===Set up Vars for Screen===#
 font = cv2.FONT_HERSHEY_TRIPLEX
 canvas = np.zeros((100, 250, 3), np.uint8)
-current_bac = [cv2.imread('temps/bac/bk.png'),cv2.imread('temps/bac/tooie.png'),cv2.imread('temps/bac/dk.png'),cv2.imread('temps/bac/refcheck.png'),cv2.imread('temps/bac/promo.png')]
+level_bac =  [cv2.imread('temps/bac/bk.png'),cv2.imread('temps/bac/tooie.png'),cv2.imread('temps/bac/dk.png'),cv2.imread('temps/bac/refcheck.png'),cv2.imread('temps/bac/promo.png')]
+current_bac = level_bac
+blackbac = cv2.imread('temps/bac/blackbac.png')
+black_bac = [blackbac,blackbac,blackbac,cv2.imread('temps/bac/refcheck.png'),cv2.imread('temps/bac/promo.png')]
 ref_bac = current_bac[3]
+topleft2 = cv2.imread('temps/topleft.png')
+bottomright2 = cv2.imread('temps/bottomright.png')
 toggle = False
 screenx =0
 screeny =0
@@ -36,6 +41,8 @@ w, h = tooie_template.shape[::-1]
 ref_template = cv2.imread('temps/bac/refcheck.png',0)
 w, h = ref_template.shape[::-1]
 
+topleft = cv2.imread('temps/topleft.png',0)
+bottomright = cv2.imread('temps/bottomright.png',0)
 
 #===Server=====#
 f = open('settings.txt', 'r')
@@ -129,6 +136,7 @@ def tooie_num(img):
 #===Display the tacker app===#				
 def display_counter():
 	global current_game
+	global current_bac
 	global quit
 	global update
 	global connect
@@ -143,7 +151,7 @@ def display_counter():
 		box = np.array(screen) 
 		img= cv2.cvtColor(box, cv2.COLOR_RGB2BGR)
 		
-		time.sleep(0.2)
+		time.sleep(0.1)
 		#===Keyboard Commands========
 		ch = cv2.waitKey(1)
 		if  ch == 27:
@@ -152,11 +160,21 @@ def display_counter():
 			cv2.imwrite('screenshot.png',img)
 		if ch == ord('d'): 
 			update= True
+		if ch == ord('b'): 
+			current_bac = black_bac
 		if ch == ord('s'): 
 			connect= True
+		if ch == ord('v'): 
+			#cv2.imshow('Top left', topleft2)
+			cv2.imshow('Bottom right', bottomright2)	
 		if ch == ord('c'): 
-			full = ImageGrab.grab(bbox=(0,0,950,400))
+			full = ImageGrab.grab(bbox=(0,0,1900,1080))
 			set_ref_point(full)
+		if ch == ord('0'): 
+			collectables[0]='0 '
+			collectables[1]='0 '
+			collectables[2]='0  '
+			update= True
 		if ch == ord('1'): 
 			collectables[0]='100'
 			update= True
@@ -204,6 +222,7 @@ def display_counter():
 		
 		#===Draw on Screen===#
 		if current_game<3:	
+			cv2.destroyWindow('Bottom right')
 			cv2.destroyWindow('Place Game Feed on the desktop so that it fits exactly in this box. Press C to move the box to the center of the screen')
 			canvas[0:100,0:250]=current_bac[current_game]
 			cv2.putText(canvas,'= '+collectables[current_game],(65,35), font, 1,(255,255,255),2)	
@@ -215,9 +234,11 @@ def display_counter():
 				cv2.imshow('Display Capture', img)	
 		elif current_game == 3:
 			canvas[0:100,0:250]=current_bac[current_game]
+			cv2.imshow('Bottom right', bottomright2)
 			if toggle:
 				cv2.imshow('Display Capture', img)	
 		else:
+			cv2.destroyWindow('Bottom right')
 			if toggle:
 				cv2.destroyWindow('Display Capture')	
 				screen = ImageGrab.grab(bbox=(screenx,screeny,screenx+680,screeny+510))
@@ -342,13 +363,13 @@ def check_tooie_jiggies(img):
 		for pt in zip(*loc[::-1]):			
 			place_hold = list(collectables[1])
 			final = list(collectables[1])
-			if pt[1] < 103:
-				roi = img[pt[1]+5:(pt[1]+45), (pt[0]+47):(pt[0]+80)]
-				place_hold[0]  =str(tooie_num(roi))
-				roi2 = img[pt[1]+5:(pt[1]+45), (pt[0]+65):(pt[0]+105)]
-				place_hold[1]  =str(tooie_num(roi2))
-				cv2.rectangle(img, (pt[0]+50,pt[1]+5), (pt[0]+75,pt[1]+45), (0,0,255), 1)
-				cv2.rectangle(img, (pt[0]+68,pt[1]+5), (pt[0]+105,pt[1]+45), (0,0,255), 1)
+			
+			roi = img[pt[1]+5:(pt[1]+45), (pt[0]+47):(pt[0]+80)]
+			place_hold[0]  =str(tooie_num(roi))
+			roi2 = img[pt[1]+5:(pt[1]+45), (pt[0]+65):(pt[0]+105)]
+			place_hold[1]  =str(tooie_num(roi2))
+			cv2.rectangle(img, (pt[0]+50,pt[1]+5), (pt[0]+75,pt[1]+45), (0,0,255), 1)
+			cv2.rectangle(img, (pt[0]+68,pt[1]+5), (pt[0]+105,pt[1]+45), (0,0,255), 1)
 			if place_hold[0] is not '':
 				final[0] = place_hold[0]				
 			if place_hold[1] is not '':
@@ -360,18 +381,47 @@ def check_tooie_jiggies(img):
 def set_ref_point(screen):
 	global screenx
 	global screeny
+	point1x = 0
+	point1y = 0
+	point2x = 0
+	point2y = 0
 	print("searching for screen")
 	box = np.array(screen) 
 	img_gray = cv2.cvtColor(box, cv2.COLOR_BGR2GRAY)		
 	res = cv2.matchTemplate(img_gray,ref_template,cv2.TM_CCOEFF_NORMED)
-	threshold = 0.6
+	threshold = 0.7
 	loc = np.where( res >= threshold)		
 	if zip(*loc[::-1]):
 		for pt in zip(*loc[::-1]):
-			screenx = pt[0]
-			screeny = pt[1]
-			print("found")
+			point1x = pt[0]
+			point1y = pt[1]
+			print("found301")
+			screenx = point1x
+			screeny = point1y
 			break;
+	
+	res = cv2.matchTemplate(img_gray,bottomright,cv2.TM_CCOEFF_NORMED)
+	threshold = 0.7
+	loc = np.where( res >= threshold)		
+	if zip(*loc[::-1]):
+		for pt in zip(*loc[::-1]):
+			point2x = pt[0]
+			point2y = pt[1]
+			print("foundDong")
+			break;
+
+	xdis = ((point2x)-point1x)	
+	ydis = ((point2y)-point1y)	
+	if 	xdis >= 670 and xdis <= 690 and ydis >= 500 and ydis <= 520:
+		print("size is good! ("+str(xdis) + ","+str(ydis)+")")
+	if xdis > 690:
+		print("Screen Size is to0 wide! Current Size: "+ str(xdis)+", Aim 680")
+	if xdis < 670:
+		print("Screen Size is not wide enough! Current Size: "+ str(xdis)+", Aim 680")
+	if ydis > 520:
+		print("Screen Size is to0 Tall! Current Size: "+ str(ydis)+", Aim 510")
+	if ydis < 500:
+		print("Screen Size is not Tall enough! Current Size: "+ str(ydis)+", Aim 510")	
 
 #===Server Thread===#
 def server_send():
@@ -379,10 +429,11 @@ def server_send():
 	global connect
 	global quit
 	s = socket.socket()
-	while connect == False or quit == True:
-		time.sleep(5)
+	while connect == False and quit == True:
+		time.sleep(1)
 		pass
 	connect = False
+	print("Trying to connect")
 	try:
 		s.connect((host, port))
 		print s.recv(1024)
