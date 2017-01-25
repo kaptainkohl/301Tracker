@@ -12,13 +12,15 @@ canvas = np.zeros((100, 250, 3), np.uint8)
 level_bac =  [cv2.imread('temps/bac/bk.png'),cv2.imread('temps/bac/tooie.png'),cv2.imread('temps/bac/dk.png'),cv2.imread('temps/bac/refcheck.png'),cv2.imread('temps/bac/promo.png')]
 current_bac = level_bac
 blackbac = cv2.imread('temps/bac/blackbac.png')
-black_bac = [blackbac,blackbac,blackbac,cv2.imread('temps/bac/refcheck.png'),cv2.imread('temps/bac/promo.png')]
+black_bac = [blackbac,blackbac,cv2.imread('temps/bac/blackbac2.png'),cv2.imread('temps/bac/refcheck.png'),cv2.imread('temps/bac/promo.png')]
 ref_bac = current_bac[3]
 topleft2 = cv2.imread('temps/topleft.png')
 bottomright2 = cv2.imread('temps/bottomright.png')
 toggle = False
 screenx =0
 screeny =0
+blackactive=False
+toggleCapture=True
 
 #===Game===#
 current_game =4
@@ -30,6 +32,7 @@ gb_name = 'temps/gb.png'
 lvl_index =-1
 lair_index =-1
 center= False
+
 	
 #===Templates for image comparison===#
 gb_template = cv2.imread(gb_name,0)
@@ -145,6 +148,8 @@ def display_counter():
 	global center
 	global bk_jiggy
 	global lvl_index
+	global blackactive 
+	global toggleCapture
 	while quit: 
 		#===Screen Capture===#
 		screen = ImageGrab.grab(bbox=(screenx+200,screeny+325,screenx+500,screeny+525))
@@ -156,13 +161,30 @@ def display_counter():
 		ch = cv2.waitKey(1)
 		if  ch == 27:
 			quit= False  # esc to quit
+		if  ch == 13:
+			if current_game >= 0 and current_game<=2:
+				collectables[current_game]= str(int(collectables[current_game])+1)
+		if  ch == ord('\\'):
+			if current_game >= 0 and current_game<=2:
+				collectables[current_game]= str(int(collectables[current_game])-1)
 		if ch == ord('a'): 
 			cv2.imwrite('screenshot.png',img)
 		if ch == ord('d'): 
 			update= True
-		if ch == ord('b'): 
-			current_bac = black_bac
+		if ch == ord('b'):
+			if blackactive:
+				current_bac = level_bac
+				blackactive =False
+			else:
+				current_bac = black_bac
+				blackactive =True
+		if ch == ord(']'):
+			if toggleCapture:
+				toggleCapture =False
+			else:
+				toggleCapture =True
 		if ch == ord('s'): 
+			online=True
 			connect= True
 		if ch == ord('v'): 
 			#cv2.imshow('Top left', topleft2)
@@ -170,18 +192,16 @@ def display_counter():
 		if ch == ord('c'): 
 			full = ImageGrab.grab(bbox=(0,0,1900,1080))
 			set_ref_point(full)
-		if ch == ord('0'): 
-			collectables[0]='0 '
-			collectables[1]='0 '
-			collectables[2]='0  '
+		if ch == ord('p'): 
+			collectables[current_game]='0  '
 			update= True
-		if ch == ord('1'): 
+		if ch == ord('z'): 
 			collectables[0]='100'
 			update= True
-		if ch == ord('2'): 
+		if ch == ord('x'): 
 			collectables[1]='90'
 			update= True
-		if ch == ord('3'): 
+		if ch == ord('c'): 
 			collectables[2]='201'
 			update= True
 		if ch == ord('q'): 
@@ -212,13 +232,14 @@ def display_counter():
 		if current_game>4:
 			current_game=0
 		
-		#===Check Game and perform action===#
-		if current_game==2:
-			check_golden_banana(img)
-		if current_game==0:	
-			check_bk_jiggies(img)
-		if current_game==1:	
-			check_tooie_jiggies(img)
+		if toggleCapture:
+			#===Check Game and perform action===#
+			if current_game==2:
+				check_golden_banana(img)
+			if current_game==0:	
+				check_bk_jiggies(img)
+			if current_game==1:	
+				check_tooie_jiggies(img)
 		
 		#===Draw on Screen===#
 		if current_game<3:	
@@ -227,8 +248,8 @@ def display_counter():
 			canvas[0:100,0:250]=current_bac[current_game]
 			cv2.putText(canvas,'= '+collectables[current_game],(65,35), font, 1,(255,255,255),2)	
 			cv2.putText(canvas,game_list[current_game],(10,90), font, 0.6,(255,255,255),2)	
-			if current_game == 0:
-				cv2.putText(canvas, "lvl: "+str(lvl_index)+" J: "+str(bk_jiggy[lvl_index]),(10,65), font, 0.6,(255,255,255),2)	
+			#if current_game == 0:
+				#cv2.putText(canvas, "lvl: "+str(lvl_index)+" J: "+str(bk_jiggy[lvl_index]),(10,65), font, 0.6,(255,255,255),2)	
 			
 			if toggle:
 				cv2.imshow('Display Capture', img)	
@@ -269,7 +290,7 @@ def check_golden_banana(img):
 	loc = np.where( res >= threshold)		
 	if zip(*loc[::-1]):
 		for pt in zip(*loc[::-1]):			
-			print("found")
+			#print("found")
 			place_hold = list(collectables[2])
 			final = list(collectables[2])
 			#print(pt[1])
