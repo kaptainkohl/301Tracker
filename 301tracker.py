@@ -1,3 +1,4 @@
+#Blake Kohl 2017
 from PIL import ImageGrab
 import cv2
 import numpy as np
@@ -152,7 +153,7 @@ def display_counter():
 	global toggleCapture
 	while quit: 
 		#===Screen Capture===#
-		screen = ImageGrab.grab(bbox=(screenx+200,screeny+325,screenx+500,screeny+525))
+		screen = ImageGrab.grab(bbox=(screenx+180,screeny+325,screenx+500,screeny+525))
 		box = np.array(screen) 
 		img= cv2.cvtColor(box, cv2.COLOR_RGB2BGR)
 		
@@ -195,23 +196,23 @@ def display_counter():
 		if ch == ord('p'): 
 			collectables[current_game]='0  '
 			update= True
-		if ch == ord('z'): 
+		if ch == ord('q'): 
 			collectables[0]='100'
 			update= True
-		if ch == ord('x'): 
+		if ch == ord('w'): 
 			collectables[1]='90'
 			update= True
-		if ch == ord('c'): 
+		if ch == ord('e'): 
 			collectables[2]='201'
 			update= True
-		if ch == ord('q'): 
+		if ch == ord('z'): 
 			if bk_jiggy[lvl_index] <9:
 				bk_jiggy[lvl_index]+=1
 				if bk_jiggy[lvl_index]==9:
 					bk_jiggy[lvl_index]+=1
 					lvl_index = 0
 				update = True
-		if ch == ord('w'): 
+		if ch == ord('x'): 
 			print(bk_jiggy)
 
 			update= True
@@ -294,8 +295,8 @@ def check_golden_banana(img):
 			place_hold = list(collectables[2])
 			final = list(collectables[2])
 			#print(pt[1])
-			if pt[0]+175 < 301:
-				if pt[1] <30:
+			if pt[0]+175 < 321:
+				if pt[1] <90:
 					#=====Menu====================
 					roi = img[pt[1]+20:(pt[1]+73), (pt[0]+60):(pt[0]+110)]
 					roi2 = img[pt[1]+20:(pt[1]+73), (pt[0]+95):(pt[0]+145)]
@@ -339,9 +340,9 @@ def check_bk_jiggies(img):
 	current_count = collectables[0]
 	
 	#print("x:"+str(pt[0])+" y:"+str(pt[1]))
-	roi = img[100:160, (140):240]
+	roi = img[85:145, (140):240]
 	place_hold  = str(bk_num(roi))
-	cv2.rectangle(img, (140,100), (240,160), (0,0,255), 1)
+	cv2.rectangle(img, (140,85), (240,145), (0,0,255), 1)
 	
 	if int(place_hold) == 1 and bk_jiggy[lvl_index]==9 and lvl_index is not 0:
 		bk_jiggy[lvl_index]=10	
@@ -433,16 +434,16 @@ def set_ref_point(screen):
 
 	xdis = ((point2x)-point1x)	
 	ydis = ((point2y)-point1y)	
-	if 	xdis >= 670 and xdis <= 690 and ydis >= 500 and ydis <= 520:
+	if 	xdis >= 655 and xdis <= 665 and ydis >= 500 and ydis <= 510:
 		print("size is good! ("+str(xdis) + ","+str(ydis)+")")
-	if xdis > 690:
-		print("Screen Size is to0 wide! Current Size: "+ str(xdis)+", Aim 680")
-	if xdis < 670:
-		print("Screen Size is not wide enough! Current Size: "+ str(xdis)+", Aim 680")
-	if ydis > 520:
-		print("Screen Size is to0 Tall! Current Size: "+ str(ydis)+", Aim 510")
+	if xdis > 665:
+		print("Screen Size is to0 wide! Current Size: ("+ str(xdis)+","+ str(ydis)+") | Aim (660,505)")
+	if xdis < 655:
+		print("Screen Size is not wide enough! Current Size: ("+ str(xdis)+","+ str(ydis)+") | Aim (660,505)")
+	if ydis > 510:
+		print("Screen Size is to0 Tall! Current Size: ("+ str(xdis)+","+ str(ydis)+") | Aim (660,505)")
 	if ydis < 500:
-		print("Screen Size is not Tall enough! Current Size: "+ str(ydis)+", Aim 510")	
+		print("Screen Size is not Tall enough! Current Size: ("+ str(xdis)+","+ str(ydis)+") | Aim (660,505)")
 
 #===Server Thread===#
 def server_send():
