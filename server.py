@@ -5,7 +5,10 @@ import cv2
 import numpy as np
 import time
 
-HOST = 'localhost' 
+f = open('ip.txt', 'r')
+HOST = f.readline()
+f.close()
+print(HOST)
 PORT = 8888 
 quit= True
 
@@ -44,6 +47,7 @@ def clientthread(conn,user_index):
 	global index
 	conn.send('connected')
 	user_name[user_index]=conn.recv(1024)
+	print(user_name[user_index][:-1])
 	user_data[user_index]=conn.recv(1024).split(',')
 	user_pic[user_index]= cv2.imread('serverIcons/'+user_name[user_index][:-1]+'.png')
 	try:
@@ -79,13 +83,14 @@ def display_counts():
 			if  ch == 27:
 				quit= False
 			cv2.rectangle(canvas, (0,0), (1000,500), (0,0,0), -1)
-			time.sleep(3)
+			time.sleep(2)
 			place = list(overall_totals)
 			place.sort(reverse=True)
 			#print(place )
 			#print(overall_totals)
 			for x in range(0,len(user_data)):
 				#===Check Place===#
+				time.sleep(1)
 				current_place = 0
 				for y in range(0,len(place)):
 					if overall_totals[x] == place[y]:

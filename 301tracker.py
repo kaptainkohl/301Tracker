@@ -141,6 +141,7 @@ def tooie_num(img):
 def display_counter():
 	global current_game
 	global current_bac
+	global collectables
 	global quit
 	global update
 	global connect
@@ -163,8 +164,11 @@ def display_counter():
 		if  ch == 27:
 			quit= False  # esc to quit
 		if  ch == 13:
-			if current_game >= 0 and current_game<=2:
+			if current_game >= 1 and current_game<=2:
 				collectables[current_game]= str(int(collectables[current_game])+1)
+			if current_game ==0:
+				bk_jiggy[0]+=1
+			update= True
 		if  ch == ord('\\'):
 			if current_game >= 0 and current_game<=2:
 				collectables[current_game]= str(int(collectables[current_game])-1)
@@ -197,7 +201,7 @@ def display_counter():
 			collectables[current_game]='0  '
 			update= True
 		if ch == ord('q'): 
-			collectables[0]='100'
+			bk_jiggy=[10,10,10,10,10,10,10,10,10,10]
 			update= True
 		if ch == ord('w'): 
 			collectables[1]='90'
