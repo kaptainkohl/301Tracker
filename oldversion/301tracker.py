@@ -202,7 +202,6 @@ def display_counter():
 			update= True
 		if ch == ord('q'): 
 			bk_jiggy=[10,10,10,10,10,10,10,10,10,10]
-			collectables[0]='100'
 			update= True
 		if ch == ord('w'): 
 			collectables[1]='90'
@@ -456,24 +455,41 @@ def server_send():
 	global connect
 	global quit
 	s = socket.socket()
-	while connect is not True and quit:
+	while connect == False and quit == True:
 		time.sleep(1)
+		pass
+	connect = False
+	print("Trying to connect")
 	try:
 		s.connect((host, port))
 		print s.recv(1024)
-		s.send("welcome")
-		#s.send(collectables[0]+","+collectables[1]+","+collectables[2])
+		s.send(username)
+		s.send(collectables[0]+","+collectables[1]+","+collectables[2])
 	except:
-		print("failed")
+		update = False 
+		connect = True
 	#===loop while app is active, every 5 seconds check to see if there is an update, if so send the data==#
 	while quit:
+		online = True 
 		time.sleep( 5 )
-		print("sending")
-		s.send(username[:-1] +","+collectables[0]+","+collectables[1]+","+collectables[2])
-		
-	
+		if update:	
+			try:
+				s.send(collectables[0]+","+collectables[1]+","+collectables[2])
+			except:
+				connect = True
+			update = False
+		if connect:
+			
+			connect = False
+			break;
+	try:
+		s.send("quiting")
+	except:
+		connect = False
+	online = False
 	s.close()	
-
+	if quit:
+		server_send()
 	
 	
 def main():
