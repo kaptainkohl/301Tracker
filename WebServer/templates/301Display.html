@@ -54,19 +54,16 @@ this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
 function updateScreen() {
 layout.clear();
-list_place = list_people;
+	list_place = list_people.slice();
 	list_place.sort(function(a, b){return b.totals-a.totals});
-
- for ( var i = 0; i< list_people.length;i++)
-	{
-	
- 	for ( var j = 0; j< list_place.length;j++)
+	 	for ( var j = 0; j< list_place.length;j++)
 		{
-		if (list_place[j].username == list_people[i].username)
-			{ 
-			list_people[i].place=j;
-			}
-		}	
+		list_people[i].place=j+1;
+
+		}
+for ( var i = 0; i< list_people.length;i++)
+	{
+
 	list_people[i].draw();
 	};
 } 
