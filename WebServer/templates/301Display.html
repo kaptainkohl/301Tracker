@@ -69,6 +69,7 @@ $.getJSON($SCRIPT_ROOT + '/_update', {
       }, function(data) {
         console.log(data.result);
 		dataarray = data.result;
+		if (dataarray){
 		playerarray = dataarray.split('$')
 		console.log(playerarray[1]);
 		for ( var i = 0; i< list_people.length;i++)
@@ -79,6 +80,7 @@ $.getJSON($SCRIPT_ROOT + '/_update', {
 			list_people[i].DKprogress = parseInt(player_data[3])
 			list_people[i].totals = list_people[i].BKprogress+list_people[i].BTprogress+list_people[i].DKprogress;
 			};
+		}
       });
       return false;
 
