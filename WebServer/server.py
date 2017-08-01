@@ -2,7 +2,6 @@ from __future__ import print_function
 import os
 import socket
 import sys
-from thread import *
 import time
 import flask
 from flask import request, render_template, redirect, Flask, jsonify
