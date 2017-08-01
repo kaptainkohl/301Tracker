@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,7 +7,8 @@
 canvas {
     zindex:1;
     border:1px solid #d3d3d3;
-    background-color: #f1f1f1;
+
+	background-color: #f1f1f1;
 }
 </style>
 </head>
@@ -27,8 +29,7 @@ var list_people = [];
 //Bac.src = "bac.png";
 function startScreen() {
  layout.start();
-}
-var layout = {
+}var layout = {
 canvas : document.createElement("canvas"),
  start : function() {
 this.canvas.width = 256;
@@ -38,7 +39,6 @@ this.canvas.height = 120;
 this.interval = setInterval(updateScreen, 1000);
 	this.stream = setInterval(updateStats, 10000);
 	
-
 },
 clear : function() {
 this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -49,8 +49,9 @@ this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
  }
 }
 
-function updateScreen() {
+function updateScreen() 
 layout.clear();
+
 	//list_people.sort(function(a, b){return b.totals-a.totals});
 
 	player1.draw();
@@ -60,7 +61,7 @@ layout.clear();
 
 function updateStats(){
 $.getJSON($SCRIPT_ROOT + '/_socket', {
-        username: 1,BK:2,BT:3,DK:4
+	username:kaptainkohl,BK:player1.BKprogress,BT:player1.BTprogress,DK:player1.DKprogress        
       }, function(data) {
         console.log(data.result);
 		dataarray = data.result;
@@ -74,6 +75,7 @@ $.getJSON($SCRIPT_ROOT + '/_socket', {
 				player1.BTprogress = parseInt(player_data[2])
 				player1.DKprogress = parseInt(player_data[3])
 				player1.totals = list_people[i].BKprogress+list_people[i].BTprogress+list_people[i].DKprogress;
+				document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;
 				}
 			};
       });
@@ -85,7 +87,7 @@ function card(x , y , name) {
 	this.xpos = x;
 	this.ypos = y;
 	this.username=name;
-	this.place=1;
+	this.place=1
 	this.BKprogress=0;
 	this.BTprogress=0;
 	this.DKprogress=0;
@@ -108,7 +110,7 @@ function card(x , y , name) {
 
 
 		var grdYellow = ctx.createLinearGradient(this.xpos ,this.ypos ,this.xpos +250,this.ypos + 120);
-		grdYellow.addColorStop(0,"#999900");
+		grdYellow.addColorStop(0,"#999900")
 		grdYellow.addColorStop(1,"#ffff1a");
 		ctx.fillStyle = grdYellow;
 		ctx.font = "24px Century";
@@ -117,7 +119,7 @@ function card(x , y , name) {
 		ctx.fillText("Place: "+this.place,this.xpos + 60 , this.ypos+50);
 		ctx.fillText(" Completion: "+parseInt((this.totals/391)*100)+"%",768+this.xpos + 120 , this.ypos+50);
 		
-		var grdRed = ctx.createLinearGradient(this.xpos + 4,this.ypos + 62,this.xpos +250,this.ypos + 62+15);
+		var grdRed = ctx.createLinearGradient(this.xpos + 4,this.ypos + 62,this.xpos +250,this.ypos + 62+15)
 		grdRed.addColorStop(0,"#990000");
 		grdRed.addColorStop(1,"#ff3333");
 		var grdBlue = ctx.createLinearGradient(this.xpos + 4,this.ypos + 62,this.xpos +250,this.ypos + 62+15);
