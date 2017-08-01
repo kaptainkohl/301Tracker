@@ -24,7 +24,6 @@ var list_people = [];
 function startScreen() {
  layout.start();
 }
-
 var layout = {
 canvas : document.createElement("canvas"),
  start : function() {
@@ -65,7 +64,7 @@ $.getJSON($SCRIPT_ROOT + '/_socket', {
 		for ( var i = 0; i< playerarray.length-1;i++)
 			{ 
 			player_data = playerarray[i].split(',');
-			if (player_data[1]==player1.username)
+			if (player_data[0]==player1.username)
 				{
 				player1.BKprogress = parseInt(player_data[1])
 				player1.BTprogress = parseInt(player_data[2])
