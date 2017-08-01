@@ -11,6 +11,7 @@ app = Flask(__name__)
 executor = ThreadPoolExecutor(2)
 #===Max of 15 people in the race===#
 index=0
+
 user_data = [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]
 user_name = ["Konditioner","connor75","Dickhiskhan","Emoarbiter","icupspeedruns_","Secrethumorman","Kiwikiller67","ElectricFortune","kaptainkohl","HolySanctum","Mittenz","PurpleRupees"]
 user_pic = []
@@ -18,9 +19,7 @@ totals=''
 y =0
 a =0
 
-
 quit= True
-	
 
 if __name__ == '__main__':
 	#start_new_thread(write ,())
@@ -61,11 +60,12 @@ def startsocket():
 	write()
 	return jsonify(result=totals)
 
-@app.route('/user')
+@app.route('/user/')
+@app.route('/user/<name>')
 def userpage():
-	return render_template('user.html')
+	return render_template('user.html', name=name)
 @app.route('/')
-def homepage():
+def homepage(name=None):
 	return render_template('main.html')
 @app.route('/stats', methods=['GET', 'POST'])
 def statspage():
