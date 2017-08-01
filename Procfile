@@ -1,1 +1,1 @@
-web: python WebServer/server.py
+web: cd WebServer && gunicorn server:app
