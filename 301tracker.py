@@ -515,7 +515,7 @@ def GET(player_data):
 	print 'Received', repr(data)
 
 def sendRequest():
-	r = requests.post('https://rareware-collectathon-race.herokuapp.com/_socket', data={'username': username[:-1],'BK':collectables[0],'BT':collectables[1],'DK':collectables[2]})
+	r = requests.post('https://rareware-collectathon-race.herokuapp.com/tracker', data={'username': username[:-1],'BK':collectables[0],'BT':collectables[1],'DK':collectables[2]})
 	if r.ok:
 		print("polling response OK")
 		print(r.text);

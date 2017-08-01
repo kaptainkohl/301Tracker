@@ -46,7 +46,7 @@ def updateStats():
 	
 	return jsonify(result=totals)
 
-@app.route('/_socket', methods=['GET', 'POST'])	
+@app.route('/_socket')	
 def startsocket():
 	a = request.args.get('username', 'Konditioner')
 	b = request.args.get('BK', 0, type=int)
