@@ -19,11 +19,11 @@ totals=''
 y =0
 a =0
 
-
 quit= True
 
-
 if __name__ == '__main__':
+	#start_new_thread(write ,())
+	#start_new_thread(socketThread ,())
 	port = int(os.environ.get("PORT", 5000))
 	app.run(host='0.0.0.0', port=port)
 
@@ -36,6 +36,7 @@ def write():
 	totals=''
 	for x in range(0,len(user_name)):
 		totals = ''+totals + user_name[x] +","+str(user_data[x])[1:-1]+"$"
+	
 	
 	
 
@@ -59,8 +60,6 @@ def startsocket():
 			user_data[x][2]=d
 	write()
 	return jsonify(result=totals)
-	
-
 
 @app.route('/user/', methods=['GET', 'POST'])
 @app.route('/user/<name>', methods=['GET', 'POST'])
