@@ -36,7 +36,7 @@ def write():
 	totals=''
 	for x in range(0,len(user_name)):
 		totals = ''+totals + user_name[x] +","+str(user_data[x])[1:-1]+"$"
-
+	
 	
 	
 
@@ -59,8 +59,11 @@ def startsocket():
 			user_data[x][1]=c
 			user_data[x][2]=d
 	write()
-	return 'success'
-	
+	return totals
+
+@app.route('/user')
+def userpage():
+	return render_template('user.html')
 @app.route('/')
 def homepage():
 	return render_template('main.html')
