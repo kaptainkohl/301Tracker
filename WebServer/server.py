@@ -11,6 +11,7 @@ app = Flask(__name__)
 executor = ThreadPoolExecutor(2)
 #===Max of 15 people in the race===#
 index=0
+
 user_data = [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]
 user_name = ["Konditioner","connor75","Dickhiskhan","Emoarbiter","icupspeedruns_","Secrethumorman","Kiwikiller67","ElectricFortune","kaptainkohl","HolySanctum","Mittenz","PurpleRupees"]
 user_pic = []
@@ -18,18 +19,14 @@ totals=''
 y =0
 a =0
 
-f = open('ip.txt', 'r')
-HOST = f.readline()
-f.close()
-print(HOST)
+
 quit= True
-	
+
 
 if __name__ == '__main__':
-	#start_new_thread(write ,())
-	#start_new_thread(socketThread ,())
-	
-	app.run()
+	port = int(os.environ.get("PORT", 5000))
+	app.run(host='0.0.0.0', port=port)
+
 	
 
 def write():
@@ -39,7 +36,7 @@ def write():
 	totals=''
 	for x in range(0,len(user_name)):
 		totals = ''+totals + user_name[x] +","+str(user_data[x])[1:-1]+"$"
-
+	
 	
 
 @app.route('/_update')
@@ -61,13 +58,20 @@ def startsocket():
 			user_data[x][1]=c
 			user_data[x][2]=d
 	write()
-	return 'success'
-	
+	return jsonify(result=totals)
+
+@app.route('/user/', methods=['GET', 'POST'])
+@app.route('/user/<name>', methods=['GET', 'POST'])
+def userpage(name=None):
+	return render_template('user.html', name=name)
+
 @app.route('/')
 def homepage():
 	return render_template('main.html')
+
 @app.route('/stats', methods=['GET', 'POST'])
 def statspage():
+	write()
 	return render_template('301Display.html')
 	
 

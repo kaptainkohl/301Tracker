@@ -1,0 +1,152 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+canvas {
+    zindex:1;
+    border:1px solid #d3d3d3;
+    background-color: #f1f1f1;
+}
+</style>
+</head>
+<body onload="startScreen()">
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+<div id="username">{{ name }}</div>
+<div id="stats">BK=0 BT=0 DK=0</div>
+
+<button type="button" onclick="player1.BKprogress+=1;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;">BK+1</button>
+<button type="button" onclick="player1.BTprogress+=1;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;">BT+1</button>
+<button type="button" onclick="player1.DKprogress+=1;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;">DK+1</button>
+
+<script>
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+var list_people = [];
+//var Bac = new Image();
+//Bac.src = "bac.png";
+function startScreen() {
+ layout.start();
+}
+var layout = {
+canvas : document.createElement("canvas"),
+ start : function() {
+this.canvas.width = 256;
+this.canvas.height = 120;
+ this.context = this.canvas.getContext("2d");
+ document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+this.interval = setInterval(updateScreen, 1000);
+	this.stream = setInterval(updateStats, 10000);
+	
+},
+clear : function() {
+this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+	//this.context.font = "50px Impact";
+	//this.context.fillText("RAREWARE 301%",20, 480);
+
+ }
+}
+
+function updateScreen() {
+layout.clear();
+
+	//list_people.sort(function(a, b){return b.totals-a.totals});
+
+	player1.draw();
+
+
+} 
+
+function updateStats(){
+$.getJSON($SCRIPT_ROOT + '/_socket', {
+	username:player1.username,BK:player1.BKprogress,BT:player1.BTprogress,DK:player1.DKprogress        
+      }, function(data) {
+        console.log(data.result);
+		dataarray = data.result;
+		playerarray = dataarray.split('$')
+		for ( var i = 0; i< playerarray.length-1;i++)
+			{ 
+			player_data = playerarray[i].split(',');
+			if (player_data[0]==player1.username)
+				{
+				player1.BKprogress = parseInt(player_data[1]);
+				player1.BTprogress = parseInt(player_data[2]);
+				player1.DKprogress = parseInt(player_data[3]);
+				player1.totals = player1.BKprogress+player1.BTprogress+player1.DKprogress;
+				document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;
+				}
+			};
+      });
+      return false;
+
+}
+
+function card(x , y , name) {
+	this.xpos = x;
+	this.ypos = y;
+	this.username=name;
+	this.place=1
+	this.BKprogress=0;
+	this.BTprogress=0;
+	this.DKprogress=0;
+	this.totals=0;
+	this.draw = function(){
+		var ctx = layout.context;
+		ctx.globalAlpha=0.9;
+		ctx.fillStyle = "black";
+		ctx.fillRect(this.xpos,this.ypos,256,120);
+
+		var grdGray = ctx.createLinearGradient(this.xpos ,this.ypos ,this.xpos +250,this.ypos + 120);
+		grdGray.addColorStop(0,"#1e1e15");
+		grdGray.addColorStop(1,"#b6b696");
+		ctx.fillStyle = grdGray;
+		ctx.globalAlpha=0.2;
+		ctx.fillRect(this.xpos +2,this.ypos +2,256 -4,120 -4);
+		ctx.fillStyle = "black";
+		ctx.globalAlpha=0.9;
+		ctx.fillRect(this.xpos +4,this.ypos +4,54,54);
+
+
+		var grdYellow = ctx.createLinearGradient(this.xpos ,this.ypos ,this.xpos +250,this.ypos + 120);
+		grdYellow.addColorStop(0,"#999900")
+		grdYellow.addColorStop(1,"#ffff1a");
+		ctx.fillStyle = grdYellow;
+		ctx.font = "24px Century";
+		ctx.fillText(this.username,this.xpos + 60 , this.ypos+30); 
+		ctx.font = "15px Century";
+		ctx.fillText("Place: "+this.place,this.xpos + 60 , this.ypos+50);
+		ctx.fillText(" Completion: "+parseInt((this.totals/391)*100)+"%",768+this.xpos + 120 , this.ypos+50);
+		
+		var grdRed = ctx.createLinearGradient(this.xpos + 4,this.ypos + 62,this.xpos +250,this.ypos + 62+15);
+		grdRed.addColorStop(0,"#990000");
+		grdRed.addColorStop(1,"#ff3333");
+		var grdBlue = ctx.createLinearGradient(this.xpos + 4,this.ypos + 62,this.xpos +250,this.ypos + 62+15);
+		grdBlue.addColorStop(0,"blue");
+		grdBlue.addColorStop(1,"#0066ff");
+		var grdGreen = ctx.createLinearGradient(this.xpos + 4,this.ypos + 62,this.xpos +250,this.ypos + 62+15);
+		grdGreen.addColorStop(0,"green");
+		grdGreen.addColorStop(1,"#33cc33");
+		ctx.fillStyle = grdRed;
+		ctx.fillRect(this.xpos + 4,this.ypos + 62, 248*(this.BKprogress/100), 15);
+		ctx.fillStyle = grdBlue;
+		ctx.fillRect(this.xpos + 4,this.ypos + 60 + 15 +4,248*(this.BTprogress/90), 15);
+		ctx.fillStyle = grdGreen;
+		ctx.fillRect(this.xpos + 4,this.ypos + 60 + 30 +8,248*(this.DKprogress/201), 15);
+
+	};
+};
+
+var player1 = new card(0 *256,0*120,document.getElementById('username').innerHTML);
+
+function runScript(e) {
+    if (e.keyCode == 13) {
+	player1.BKprogress+=1;
+    }
+}
+
+</script>
+</body>
+</html>
