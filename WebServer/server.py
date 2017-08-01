@@ -61,13 +61,13 @@ def startsocket():
 	write()
 	return jsonify(result=totals)
 
-@app.route('/user/')
-@app.route('/user/<name>')
-def userpage():
+@app.route('/user/', methods=['GET', 'POST'])
+@app.route('/user/<name>', methods=['GET', 'POST'])
+def userpage(name=None):
 	return render_template('user.html', name=name)
 
 @app.route('/')
-def homepage(name=None):
+def homepage():
 	return render_template('main.html')
 
 @app.route('/stats', methods=['GET', 'POST'])
