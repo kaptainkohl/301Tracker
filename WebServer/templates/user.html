@@ -62,7 +62,7 @@ layout.clear();
 
 function updateStats(){
 $.getJSON($SCRIPT_ROOT + '/_socket', {
-	username:'kaptainkohl',BK:player1.BKprogress,BT:player1.BTprogress,DK:player1.DKprogress        
+	username:player1.username,BK:player1.BKprogress,BT:player1.BTprogress,DK:player1.DKprogress        
       }, function(data) {
         console.log(data.result);
 		dataarray = data.result;
