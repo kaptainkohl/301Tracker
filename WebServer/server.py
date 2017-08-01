@@ -59,7 +59,7 @@ def startsocket():
 			user_data[x][1]=c
 			user_data[x][2]=d
 	write()
-	return totals
+	return jsonify(result=totals)
 
 @app.route('/user')
 def userpage():
