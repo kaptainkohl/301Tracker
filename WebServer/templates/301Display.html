@@ -12,7 +12,7 @@ canvas {
 </style>
 </head>
 <body onload="startScreen()">
-
+<iframe id="twitch" src="https://player.twitch.tv/?channel=kaptainkohl" frameborder="0" allowfullscreen="true" scrolling="no" height="415" width="748" style="position:absolute; left:20px; top:20px;"></iframe>
 <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script>
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
