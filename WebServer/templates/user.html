@@ -72,10 +72,10 @@ $.getJSON($SCRIPT_ROOT + '/_socket', {
 			player_data = playerarray[i].split(',');
 			if (player_data[0]==player1.username)
 				{
-				player1.BKprogress = parseInt(player_data[1])
-				player1.BTprogress = parseInt(player_data[2])
-				player1.DKprogress = parseInt(player_data[3])
-				player1.totals = list_people[i].BKprogress+list_people[i].BTprogress+list_people[i].DKprogress;
+				player1.BKprogress = parseInt(player_data[1]);
+				player1.BTprogress = parseInt(player_data[2]);
+				player1.DKprogress = parseInt(player_data[3]);
+				player1.totals = player1.BKprogress+player1.BTprogress+player1.DKprogress;
 				document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;
 				}
 			};
