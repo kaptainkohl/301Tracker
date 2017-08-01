@@ -9,6 +9,7 @@ from matplotlib import pyplot as plt
 import urlparse
 import re
 import os
+import requests
 
 #===Set up Vars for Screen===#
 font = cv2.FONT_HERSHEY_TRIPLEX
@@ -480,7 +481,8 @@ def server_send():
 		time.sleep( 1 )
 		if update:
 			print("sending")
-			GET("username="+username[:-1] +"&BK="+collectables[0]+"&BT="+collectables[1]+"&DK="+collectables[2])
+			#GET("username="+username[:-1] +"&BK="+collectables[0]+"&BT="+collectables[1]+"&DK="+collectables[2])
+			sendRequest()
 			update = False
 		
 	
@@ -494,11 +496,17 @@ CRLF = "\r\n\r\n"
 def GET(player_data):
 	player_data = player_data.replace(" ","")
 	print player_data
+	url = urlparse.urlparse('https://rareware-collectathon-race.herokuapp.com')
+	path = url.path
+	if path == "":
+		path = "/"
+	HOST = url.netloc
+	print(HOST)
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 	#s.setblocking(0)
-	s.connect(('localhost', 5000))
-	s.send("GET /_socket?"+player_data+" HTTP/1.0%s" % (CRLF))
+	s.connect((HOST, 33507))
+	s.send("GET /_socket?"+player_data+" HTTP/1.1%s" % (CRLF))
 	data = (s.recv(1000000))
 	print data
 	# https://docs.python.org/2/howto/sockets.html#disconnecting
@@ -506,7 +514,13 @@ def GET(player_data):
 	s.close()
 	print 'Received', repr(data)
 
-	
+def sendRequest():
+	r = requests.post('https://rareware-collectathon-race.herokuapp.com/_socket', data={'username': username[:-1],'BK':collectables[0],'BT':collectables[1],'DK':collectables[2]})
+	if r.ok:
+		print("polling response OK")
+		print(r.text);
+	else:
+		print(r.text);
 	
 def main():
 	t = Thread(target=display_counter, args=())

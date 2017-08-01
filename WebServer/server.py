@@ -25,6 +25,7 @@ quit= True
 
 if __name__ == '__main__':
 	port = int(os.environ.get("PORT", 5000))
+	print(port)
 	app.run(host='0.0.0.0', port=port)
 
 	
@@ -45,7 +46,7 @@ def updateStats():
 	
 	return jsonify(result=totals)
 
-@app.route('/_socket')	
+@app.route('/_socket', methods=['GET', 'POST'])	
 def startsocket():
 	a = request.args.get('username', 'Konditioner')
 	b = request.args.get('BK', 0, type=int)
@@ -59,6 +60,23 @@ def startsocket():
 			user_data[x][2]=d
 	write()
 	return jsonify(result=totals)
+	
+@app.route('/tracker', methods=['GET', 'POST'])	
+def startsocket():
+	if request.method == 'POST':
+		a = request.form['username']
+		b = request.form['BK']
+		c = rrequest.form['BT']
+		d = request.form['DK']
+		print(a+" "+str(b))
+		for x in range(0,len(user_name)):
+			if user_name[x]==a:
+				user_data[x][0]=b
+				user_data[x][1]=c
+				user_data[x][2]=d
+		write()
+		return jsonify(result=totals)	
+	
 
 @app.route('/user/', methods=['GET', 'POST'])
 @app.route('/user/<name>', methods=['GET', 'POST'])
