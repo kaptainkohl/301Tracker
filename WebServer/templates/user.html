@@ -87,6 +87,7 @@ function card(x , y , name) {
 	this.username=name;
 	this.place=1;
 	this.BKprogress=0;
+
 	this.BTprogress=0;
 	this.DKprogress=0;
 	this.totals=0;
@@ -136,6 +137,12 @@ function card(x , y , name) {
 	};
 };
 var player1 = new card(0 *256,0*120,document.getElementById('username').innerHTML);
+
+function runScript(e) {
+    if (e.keyCode == 13) {
+	player1.BKprogress+=1;
+    }
+}
 </script>
 </body>
 </html>
