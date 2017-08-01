@@ -27,6 +27,7 @@ if __name__ == '__main__':
 	port = int(os.environ.get("PORT", 5000))
 	app.run(host='0.0.0.0', port=port)
 
+	
 
 def write():
 	global user_data
@@ -64,11 +65,14 @@ def startsocket():
 @app.route('/user/<name>')
 def userpage():
 	return render_template('user.html', name=name)
+
 @app.route('/')
 def homepage(name=None):
 	return render_template('main.html')
+
 @app.route('/stats', methods=['GET', 'POST'])
 def statspage():
+	write()
 	return render_template('301Display.html')
 	
 
