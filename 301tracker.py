@@ -5,7 +5,10 @@ import numpy as np
 import socket
 from threading import Thread
 import time
-
+from matplotlib import pyplot as plt
+import urlparse
+import re
+import os
 
 #===Set up Vars for Screen===#
 font = cv2.FONT_HERSHEY_TRIPLEX
@@ -22,6 +25,12 @@ screenx =0
 screeny =0
 blackactive=False
 toggleCapture=True
+directCapture=False
+
+#===Your Capture Card======#
+#0 is your default webcam, so if your cam is the feed, change to 1 for the secondary camera#
+camera_port = 2
+cam = cv2.VideoCapture(camera_port)
 
 #===Game===#
 current_game =4
@@ -152,13 +161,19 @@ def display_counter():
 	global lvl_index
 	global blackactive 
 	global toggleCapture
+	global directCapture
 	while quit: 
 		#===Screen Capture===#
-		screen = ImageGrab.grab(bbox=(screenx+180,screeny+325,screenx+500,screeny+525))
-		box = np.array(screen) 
-		img= cv2.cvtColor(box, cv2.COLOR_RGB2BGR)
-		
-		time.sleep(0.1)
+		if directCapture:
+			ret_val, cap = cam.read()
+			img = cap[325: 525, 180: 500]
+			cv2.imshow('Place ', cap)
+		else:
+			screen = ImageGrab.grab(bbox=(screenx+180,screeny+325,screenx+500,screeny+525))
+			box = np.array(screen) 
+			img= cv2.cvtColor(box, cv2.COLOR_RGB2BGR)
+			time.sleep(0.1)
+		time.sleep(0.01)
 		#===Keyboard Commands========
 		ch = cv2.waitKey(1)
 		if  ch == 27:
@@ -176,6 +191,11 @@ def display_counter():
 			cv2.imwrite('screenshot.png',img)
 		if ch == ord('d'): 
 			update= True
+		if ch == ord('u'): 
+			if directCapture:
+				directCapture= False
+			else:
+				directCapture =True
 		if ch == ord('b'):
 			if blackactive:
 				current_bac = level_bac
@@ -455,24 +475,36 @@ def server_send():
 	global update
 	global connect
 	global quit
-	s = socket.socket()
-	while connect is not True and quit:
-		time.sleep(1)
-	try:
-		s.connect((host, port))
-		print s.recv(1024)
-		s.send("welcome")
-		#s.send(collectables[0]+","+collectables[1]+","+collectables[2])
-	except:
-		print("failed")
-	#===loop while app is active, every 5 seconds check to see if there is an update, if so send the data==#
+	print("connecting...")
 	while quit:
-		time.sleep( 5 )
-		print("sending")
-		s.send(username[:-1] +","+collectables[0]+","+collectables[1]+","+collectables[2])
+		time.sleep( 1 )
+		if update:
+			print("sending")
+			GET("username="+username[:-1] +"&BK="+collectables[0]+"&BT="+collectables[1]+"&DK="+collectables[2])
+			update = False
 		
 	
 	s.close()	
+
+socket.setdefaulttimeout = 0.50
+os.environ['no_proxy'] = '127.0.0.1,localhost'
+linkRegex = re.compile('<a\s*href=[\'|"](.*?)[\'"].*?>')
+CRLF = "\r\n\r\n"
+
+def GET(player_data):
+	player_data = player_data.replace(" ","")
+	print player_data
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+	#s.setblocking(0)
+	s.connect(('localhost', 5000))
+	s.send("GET /_socket?"+player_data+" HTTP/1.0%s" % (CRLF))
+	data = (s.recv(1000000))
+	print data
+	# https://docs.python.org/2/howto/sockets.html#disconnecting
+	s.shutdown(1)
+	s.close()
+	print 'Received', repr(data)
 
 	
 	
@@ -481,6 +513,5 @@ def main():
 	t2 = Thread(target=server_send, args=())
 	t.start()
 	t2.start()
-
 if __name__ == '__main__':
 	main()

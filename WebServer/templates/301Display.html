@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+canvas {
+    zindex:1;
+    border:1px solid #d3d3d3;
+    background-color: #f1f1f1;
+    position: absolute;
+}
+</style>
+</head>
+<body onload="startScreen()">
+
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script>
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+var list_people = [];
+//var Bac = new Image();
+//Bac.src = "bac.png";
+function startScreen() {
+ layout.start();
+}
+
+var layout = {
+canvas : document.createElement("canvas"),
+ start : function() {
+this.canvas.width = 1280;
+this.canvas.height = 720;
+ this.context = this.canvas.getContext("2d");
+ document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+this.interval = setInterval(updateScreen, 1000);
+	this.stream = setInterval(changeStream, 60000);
+	this.stream = setInterval(updateStats, 3000);
+	
+
+},
+clear : function() {
+this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+	//this.context.drawImage(Bac,0,0,1280,720);
+	this.context.fillStyle = "black";
+	this.context.fillRect(5,5,758, 424);
+	this.context.font = "50px Impact";
+	this.context.fillText("RAREWARE 301%",20, 480);
+	this.context.font = "70px Impact";
+	this.context.fillText(" 00:00:00",410, 500);
+	this.context.font = "20px Impact";
+	this.context.fillText("On Screen: "+runnername,20, 505);  
+ }
+}
+
+function updateScreen() {
+layout.clear();
+	//list_people.sort(function(a, b){return b.totals-a.totals});
+
+ for ( var i = 0; i< list_people.length;i++)
+	{
+	list_people[i].place = i+1;
+	list_people[i].draw();
+	};
+
+} 
+
+function updateStats(){
+$.getJSON($SCRIPT_ROOT + '/_update', {
+        a: 1,b:2
+      }, function(data) {
+        console.log(data.result);
+		dataarray = data.result;
+		playerarray = dataarray.split('$')
+		for ( var i = 0; i< list_people.length;i++)
+			{
+			player_data = playerarray[i].split(',');
+			list_people[i].BKprogress = parseInt(player_data[1])
+			list_people[i].BTprogress = parseInt(player_data[2])
+			list_people[i].DKprogress = parseInt(player_data[3])
+			list_people[i].totals = list_people[i].BKprogress+list_people[i].BTprogress+list_people[i].DKprogress;
+			};
+      });
+      return false;
+
+}
+
+var currentrunner=0;
+var runnername="kaptainkohl"
+function changeStream(){
+	currentrunner+=1;
+	document.getElementById('twitch').src = "https://player.twitch.tv/?channel="+list_people[currentrunner].username;
+	runnername = list_people[currentrunner].username;
+}
+
+function card(x , y , name) {
+	this.xpos = x;
+	this.ypos = y;
+	this.username=name;
+	this.place=1;
+	this.BKprogress=0;
+	this.BTprogress=0;
+	this.DKprogress=0;
+	this.totals=0;
+	this.draw = function(){
+		var ctx = layout.context;
+		ctx.globalAlpha=0.9;
+		ctx.fillStyle = "black";
+		ctx.fillRect(768+this.xpos,this.ypos,256,120);
+
+		var grdGray = ctx.createLinearGradient(768+this.xpos ,this.ypos ,768+this.xpos +250,this.ypos + 120);
+		grdGray.addColorStop(0,"#1e1e15");
+		grdGray.addColorStop(1,"#b6b696");
+		ctx.fillStyle = grdGray;
+		ctx.globalAlpha=0.2;
+		ctx.fillRect(768+this.xpos +2,this.ypos +2,256 -4,120 -4);
+		ctx.fillStyle = "black";
+		ctx.globalAlpha=0.9;
+		ctx.fillRect(768+this.xpos +4,this.ypos +4,54,54);
+
+
+		var grdYellow = ctx.createLinearGradient(768+this.xpos ,this.ypos ,768+this.xpos +250,this.ypos + 120);
+		grdYellow.addColorStop(0,"#999900");
+		grdYellow.addColorStop(1,"#ffff1a");
+		ctx.fillStyle = grdYellow;
+		ctx.font = "24px Century";
+		ctx.fillText(this.username,768+this.xpos + 60 , this.ypos+30); 
+		ctx.font = "15px Century";
+		ctx.fillText("Place: "+this.place,768+this.xpos + 60 , this.ypos+50);
+		ctx.fillText(" Completion: "+parseInt((this.totals/391)*100)+"%",768+this.xpos + 120 , this.ypos+50);
+		
+		var grdRed = ctx.createLinearGradient(768+this.xpos + 4,this.ypos + 62,768+this.xpos +250,this.ypos + 62+15);
+		grdRed.addColorStop(0,"#990000");
+		grdRed.addColorStop(1,"#ff3333");
+		var grdBlue = ctx.createLinearGradient(768+this.xpos + 4,this.ypos + 62,768+this.xpos +250,this.ypos + 62+15);
+		grdBlue.addColorStop(0,"blue");
+		grdBlue.addColorStop(1,"#0066ff");
+		var grdGreen = ctx.createLinearGradient(768+this.xpos + 4,this.ypos + 62,768+this.xpos +250,this.ypos + 62+15);
+		grdGreen.addColorStop(0,"green");
+		grdGreen.addColorStop(1,"#33cc33");
+		ctx.fillStyle = grdRed;
+		ctx.fillRect(768+this.xpos + 4,this.ypos + 62, 248*(this.BKprogress/100), 15);
+		ctx.fillStyle = grdBlue;
+		ctx.fillRect(768+this.xpos + 4,this.ypos + 60 + 15 +4,248*(this.BTprogress/90), 15);
+		ctx.fillStyle = grdGreen;
+		ctx.fillRect(768+this.xpos + 4,this.ypos + 60 + 30 +8,248*(this.DKprogress/201), 15);
+
+	};
+};
+
+var player1 = new card(0 *256,0*120,"Konditioner");
+var player2 = new card(0 *256,1*120,"Connor75");
+var player3 = new card(0 *256,2*120,"Dickhiskhan");
+var player4 = new card(0 *256,3*120,"Emoarbiter");
+var player5 = new card(0 *256,4*120,"icupspeedruns_");
+var player6 = new card(0 *256,5*120,"Secrethumorman");
+var player7 = new card(1 *256,0*120,"Kiwikiller67");
+var player8 = new card(1 *256,1*120,"ElectricFortune");
+var player9 = new card(1 *256,2*120,"kaptainkohl");
+var player10 = new card(1 *256,3*120,"HolySanctum");
+var player11 = new card(1 *256,4*120,"Mittenz");
+var player12 = new card(1 *256,5*120,"PurpleRupees");
+list_people.push(player1);
+list_people.push(player2);
+list_people.push(player3);
+list_people.push(player4);
+list_people.push(player5);
+list_people.push(player6);
+list_people.push(player7);
+list_people.push(player8);
+list_people.push(player9);
+list_people.push(player10);
+list_people.push(player11);
+list_people.push(player12);
+
+for ( var i = 0; i< list_people.length;i++)
+	{
+	list_people[i].BKprogress = (Math.random()*100);
+	list_people[i].BTprogress = (Math.random()*90);
+	list_people[i].DKprogress = (Math.random()*201);
+	list_people[i].totals = list_people[i].BKprogress+list_people[i].BTprogress+list_people[i].DKprogress;
+	};
+//list_people.sort(function(a, b){return b.totals-a.totals});
+
+</script>
+</body>
+</html>
