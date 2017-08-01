@@ -17,6 +17,7 @@ canvas {
 <script>
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 var list_people = [];
+var list_place = [];
 //var Bac = new Image();
 //Bac.src = "bac.png";
 function startScreen() {
@@ -53,14 +54,21 @@ this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
 function updateScreen() {
 layout.clear();
-	//list_people.sort(function(a, b){return b.totals-a.totals});
+list_place = list_people;
+	list_place.sort(function(a, b){return b.totals-a.totals});
 
  for ( var i = 0; i< list_people.length;i++)
 	{
-	list_people[i].place = i+1;
+	
+ 	for ( var j = 0; j< list_place.length;j++)
+		{
+		if (list_place[j].username == list_people[i].username)
+			{ 
+			list_people[i].place=j;
+			}
+		}	
 	list_people[i].draw();
 	};
-
 } 
 
 function updateStats(){
