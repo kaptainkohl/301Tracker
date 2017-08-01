@@ -25,7 +25,6 @@ quit= True
 
 if __name__ == '__main__':
 	port = int(os.environ.get("PORT", 5000))
-	print(port)
 	app.run(host='0.0.0.0', port=port)
 
 	
@@ -61,7 +60,7 @@ def startsocket():
 	write()
 	return jsonify(result=totals)
 	
-@app.route('/tracker', methods=['GET', 'POST'])	
+@app.route('/tracker', methods=['POST'])	
 def startsocket():
 	if request.method == 'POST':
 		a = request.form['username']
