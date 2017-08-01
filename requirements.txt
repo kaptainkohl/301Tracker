@@ -2,6 +2,7 @@ Flask==0.12.2
 Flask-Cors==2.1.2
 future==0.16.0
 futures==3.0.5
+gunicorn==19.6.0
 ipaddress==1.0.16
 ipykernel==4.5.0
 ipython==5.1.0
