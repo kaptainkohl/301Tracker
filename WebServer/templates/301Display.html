@@ -12,6 +12,7 @@ canvas {
 </style>
 </head>
 <body onload="startScreen()">
+	<div id = "gameTimer" class="stopwatch"></div>
 <iframe id="twitch" src="https://player.twitch.tv/?channel=kaptainkohl" frameborder="0" allowfullscreen="true" scrolling="no" height="415" width="748" style="position:absolute; left:20px; top:20px;"></iframe>
 <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script>
@@ -38,15 +39,16 @@ this.interval = setInterval(updateScreen, 1000);
 
 },
 clear : function() {
-this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
+	var time = document.getElementById("gameTimer").innerHTML;
+	time = time.substring(6,time.length-7)	
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	this.context.drawImage(Bac,0,0,1280,720);
 	this.context.fillStyle = "black";
 	this.context.fillRect(5,5,758, 424);
 	this.context.font = "50px Impact";
 	this.context.fillText("RAREWARE 301%",20, 480);
 	this.context.font = "70px Impact";
-	this.context.fillText(" 00:00:00",410, 500);
+	this.context.fillText(time,410, 500);
 	this.context.font = "20px Impact";
 	this.context.fillText("On Screen: "+runnername,20, 505);  
  }
@@ -138,6 +140,7 @@ function card(x , y , name) {
 		ctx.fillText("Place: "+this.place,768+this.xpos + 60 , this.ypos+50);
 		ctx.fillText(" Completion: "+parseInt((this.totals/391)*100)+"%",768+this.xpos + 120 , this.ypos+50);
 		
+
 		var grdRed = ctx.createLinearGradient(768+this.xpos + 4,this.ypos + 62,768+this.xpos +250,this.ypos + 62+15);
 		grdRed.addColorStop(0,"#990000");
 		grdRed.addColorStop(1,"#ff3333");
@@ -182,7 +185,95 @@ list_people.push(player10);
 list_people.push(player11);
 list_people.push(player12);
 
+var Stopwatch = function(elem, options) {
 
+  var timer      = createTimer() ,
+      offset,
+      clock,
+      interval;
+
+  // default options
+  options = options || {};
+  options.delay = options.delay || 1;
+
+  // append elements     
+  elem.appendChild(timer);
+
+  // initialize
+  reset();
+
+  // private functions
+  function createTimer() {
+    return document.createElement("span");
+  }
+
+  function createButton(action, handler) {
+    var a = document.createElement("a");
+    a.href = "#" + action;
+    a.innerHTML = action;
+    a.addEventListener("click", function(event) {
+      handler();
+      event.preventDefault();
+    });
+    return a;
+  }
+
+  function start() {
+    if (!interval) {
+      offset   = Date.now();
+      interval = setInterval(update, options.delay);
+    }
+  }
+
+  function stop() {
+    if (interval) {
+      clearInterval(interval);
+      interval = null;
+    }
+  }
+
+  function reset() {
+    clock = 0;
+    render();
+  }
+
+  function update() {
+    clock += delta();
+    render();
+  }
+
+  function render() {
+    timer.innerHTML = clock/1000; 
+  }
+
+  function delta() {
+    var now = Date.now(),
+        d   = now - offset;
+
+    offset = now;
+    return d;
+  }
+
+  // public API
+  this.start  = start;
+  this.stop   = stop;
+  this.reset  = reset;
+};
+
+var elem = document.getElementById("gameTimer");
+var timer = new Stopwatch(elem, {delay: 10});
+
+String.prototype.toHHMMSS = function () {
+    var sec_num = parseInt(this, 10); // don't forget the second param
+    var hours   = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+    if (hours   < 10) {hours   = "0"+hours;}
+    if (minutes < 10) {minutes = "0"+minutes;}
+    if (seconds < 10) {seconds = "0"+seconds;}
+    return hours+':'+minutes+':'+seconds;
+}
 </script>
 </body>
 </html>
