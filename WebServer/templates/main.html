@@ -1,9 +1,70 @@
 <!DOCTYPE html>
 <html>
-    <head>
-	Rareware Collectathon Website
-	</head>
-	<body>
-		<a href="https://rareware-collectathon-race.herokuapp.com/stats">View Stats Page</a>
-	</body>
+<title>W3.CSS Template</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata">
+<style>
+body, html {
+    height: 100%;
+    font-family: "Inconsolata", sans-serif;
+}
+.bgimg {
+    background-position: center;
+    background-size: cover;
+    background-image: url("{{ url_for('static', filename = 'bac.png') }}");
+    min-height: 75%;
+}
+.menu {
+    display: none;
+}
+</style>
+<body>
+
+<!-- Links (sit on top) -->
+<div class="w3-top">
+  <div class="w3-row w3-padding w3-black">
+    <div class="w3-col s3">
+      <a href="#" class="w3-button w3-block w3-black">HOME</a>
+    </div>
+    <div class="w3-col s3">
+      <a href="https://docs.google.com/spreadsheets/d/1DadsJQtvNINF2FNnGYMpinEqtGxLQkxIjoQ90Hh_iJo/edit#gid=1119770388" class="w3-button w3-block w3-black">Race Info</a>
+    </div>
+    <div class="w3-col s3">
+      <a href="https://rareware-collectathon-race.herokuapp.com/stats" class="w3-button w3-block w3-black">Stats Page</a>
+    </div>
+    <div class="w3-col s3">
+      <a href="https://discord.gg/wqEunw5" class="w3-button w3-block w3-black">Discord</a>
+    </div>
+  </div>
+</div>
+
+<!-- Header with image -->
+<header class="bgimg w3-display-container w3-grayscale-min" id="home">
+  <div class="w3-display-bottomleft w3-center w3-padding-large w3-hide-small">
+    <span class="w3-tag"> 301% Saturday Jan 27, 2018</span>
+  </div>
+  <div class="w3-display-middle w3-center">
+    <span class="w3-text-white" style="font-size:90px">Rareware N64<br>Collectathon Race</span>
+  </div>
+</header>
+
+<!-- Add a background color and large text to the whole page -->
+<div class="w3-sand w3-grayscale w3-large">
+
+<!-- About Container -->
+<div class="w3-container" id="about">
+  <div class="w3-content" style="max-width:700px">
+    <h5 class="w3-center w3-padding-64"><span class="w3-tag w3-wide">About</span></h5>
+    <p>The Rareware Collectathons refer to the three platformer collectathons made by Rareware: Banjo-Kazooie, Banjo-Tooie, and Donkey Kong 64.</p>
+    <p>There are three main race catagories that are run with these games: Any%, Restricted Any%, 301%</p>
+	<p>Currently there is only one planned race which is the 301% race. This is Banjo-Kazooie 100%, Banjo-Tooie 100%, and Donkey Kong 64 101% back to back to back!</p>
+    <p><strong>301% Race:</strong> Saturday Jan 27, 2018</p>
+  </div>
+</div>
+
+
+
+</body>
 </html>

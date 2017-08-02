@@ -478,7 +478,7 @@ def server_send():
 	global quit
 	print("connecting...")
 	while quit:
-		time.sleep( 1 )
+		time.sleep( 3 )
 		if update:
 			print("sending")
 			#GET("username="+username[:-1] +"&BK="+collectables[0]+"&BT="+collectables[1]+"&DK="+collectables[2])
@@ -488,37 +488,12 @@ def server_send():
 	
 	s.close()	
 
-socket.setdefaulttimeout = 0.50
-os.environ['no_proxy'] = '127.0.0.1,localhost'
-linkRegex = re.compile('<a\s*href=[\'|"](.*?)[\'"].*?>')
-CRLF = "\r\n\r\n"
-
-def GET(player_data):
-	player_data = player_data.replace(" ","")
-	print player_data
-	url = urlparse.urlparse('https://rareware-collectathon-race.herokuapp.com')
-	path = url.path
-	if path == "":
-		path = "/"
-	HOST = url.netloc
-	print(HOST)
-	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-	#s.setblocking(0)
-	s.connect((HOST, 33507))
-	s.send("GET /_socket?"+player_data+" HTTP/1.1%s" % (CRLF))
-	data = (s.recv(1000000))
-	print data
-	# https://docs.python.org/2/howto/sockets.html#disconnecting
-	s.shutdown(1)
-	s.close()
-	print 'Received', repr(data)
 
 def sendRequest():
-	r = requests.post('https://rareware-collectathon-race.herokuapp.com/tracker', data={'username': username[:-1],'BK':collectables[0],'BT':collectables[1],'DK':collectables[2]})
+	r = requests.get('https://rareware-collectathon-race.herokuapp.com/_socket?'+"username="+username[:-1] +"&BK="+collectables[0]+"&BT="+collectables[1]+"&DK="+collectables[2]) #data={'username': username[:-1],'BK':collectables[0],'BT':collectables[1],'DK':collectables[2]})
 	if r.ok:
 		print("polling response OK")
-		print(r.text);
+		#print(r.text);
 	else:
 		print(r.text);
 	
