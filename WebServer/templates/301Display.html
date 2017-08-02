@@ -18,8 +18,8 @@ canvas {
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 var list_people = [];
 var list_place = [];
-//var Bac = new Image();
-//Bac.src = "bac.png";
+var Bac = new Image();
+Bac.src = {{ url_for('static', filename = 'jiggyBac.png') }};
 function startScreen() {
  layout.start();
 }
@@ -40,7 +40,7 @@ this.interval = setInterval(updateScreen, 1000);
 clear : function() {
 this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-	//this.context.drawImage(Bac,0,0,1280,720);
+	this.context.drawImage(Bac,0,0,1280,720);
 	this.context.fillStyle = "black";
 	this.context.fillRect(5,5,758, 424);
 	this.context.font = "50px Impact";
@@ -111,7 +111,7 @@ function card(x , y , name) {
 	//this.f= 'serverIcons/'+name+'.png';
 	//this.picture = 'static/serverIcons/'+name+'.png';
 	this.draw = function(){
-		console.log(this.picture );
+		//console.log(this.picture );
 		var ctx = layout.context;
 		ctx.globalAlpha=0.9;
 		ctx.fillStyle = "black";
