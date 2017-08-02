@@ -108,8 +108,10 @@ function card(x , y , name) {
 	this.BTprogress=0;
 	this.DKprogress=0;
 	this.totals=0;
-	this.picture = {{ url_for('static', filename = '/serverIcons/'+this.username+'.png') }};
+	//this.f= 'serverIcons/'+name+'.png';
+	//this.picture = 'static/serverIcons/'+name+'.png';
 	this.draw = function(){
+		console.log(this.picture );
 		var ctx = layout.context;
 		ctx.globalAlpha=0.9;
 		ctx.fillStyle = "black";
@@ -124,7 +126,7 @@ function card(x , y , name) {
 		ctx.fillStyle = "black";
 		ctx.globalAlpha=0.9;
 		ctx.fillRect(768+this.xpos +4,this.ypos +4,54,54);
-		this.context.drawImage(this.picture,768+this.xpos +4,this.ypos +4,54,54);
+		//this.context.drawImage(this.picture,768+this.xpos +4,this.ypos +4,54,54);
 
 		var grdYellow = ctx.createLinearGradient(768+this.xpos ,this.ypos ,768+this.xpos +250,this.ypos + 120);
 		grdYellow.addColorStop(0,"#999900");
