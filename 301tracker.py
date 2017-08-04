@@ -30,7 +30,7 @@ directCapture=False
 
 #===Your Capture Card======#
 #0 is your default webcam, so if your cam is the feed, change to 1 for the secondary camera#
-camera_port = 2
+camera_port = 1
 cam = cv2.VideoCapture(camera_port)
 
 #===Game===#
