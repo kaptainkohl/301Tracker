@@ -13,8 +13,8 @@ canvas {
 </head>
 <body onload="startScreen()">
 	<div id = "gameTimer" class="stopwatch"></div>
-<iframe id="twitch" src="https://player.twitch.tv/?channel=Hagginater" frameborder="0" allowfullscreen="true" scrolling="no" height="415" width="748" style="position:absolute; left:20px; top:20px;"></iframe>
-<iframe src="https://www.twitch.tv/hagginater/chat?popout=" frameborder="0" scrolling="no" height="500" width="350"style="left:0px; top:0px position:absolute"></iframe>
+<iframe id="twitch" src="https://player.twitch.tv/?channel=Hagginater" frameborder="0" allowfullscreen="true" scrolling="no" height="570" width="1150" style="position:absolute; left:20px; top:20px;"></iframe>
+<iframe src="https://www.twitch.tv/hagginater/chat?popout=" frameborder="0" scrolling="no" height="720" width="350"style="right:0px; top:0px; position:absolute;"></iframe>
 <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script>
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
@@ -48,11 +48,11 @@ clear : function() {
 	this.context.fillStyle = "black";
 	this.context.fillRect(5,5,758, 424);
 	this.context.font = "50px Impact";
-	this.context.fillText("Blind RAREWARE 301%",20, 480);
+	this.context.fillText("Blind RAREWARE 301%",20, 5*120+30);
 	this.context.font = "70px Impact";
 	//this.context.fillText(time.toHHMMSS(),410, 500);
 	this.context.font = "20px Impact";
-	this.context.fillText("On Screen: "+runnername,20, 505);  
+	this.context.fillText("On Screen: "+runnername,20, 5*120+60);  
  }
 }
 
@@ -78,17 +78,18 @@ $.getJSON($SCRIPT_ROOT + '/_update', {
       }, function(data) {
         console.log(data.result);
 		dataarray = data.result;
-		if (dataarray){
 		playerarray = dataarray.split('$')
-		console.log(playerarray[1]);
-		for ( var i = 0; i< list_people.length;i++)
-			{
+		for ( var i = 0; i< playerarray.length-1;i++)
+			{ 
 			player_data = playerarray[i].split(',');
-			list_people[i].BKprogress = parseInt(player_data[1])
-			list_people[i].BTprogress = parseInt(player_data[2])
-			list_people[i].DKprogress = parseInt(player_data[3])
-			list_people[i].totals = list_people[i].BKprogress+list_people[i].BTprogress+list_people[i].DKprogress;
-			};
+			if (player_data[0]==player1.username)
+				{
+			player_data = playerarray[i].split(',');
+			player1.BKprogress = parseInt(player_data[1])
+			player1.BTprogress = parseInt(player_data[2])
+			player1.DKprogress = parseInt(player_data[3])
+			player1.totals = player1.BKprogress+player1.BTprogress+player1.DKprogress;
+			}
 		}
       });
       return false;
@@ -162,7 +163,7 @@ function card(x , y , name) {
 	};
 };
 
-var player1 = new card(0 *256,0*120,"Hagginater");
+var player1 = new card(0 *256+200,5*120-25,"Hagginater");
 
 list_people.push(player1);
 

@@ -77,7 +77,7 @@ def statspage():
 	return render_template('301Display.html')
 
 @app.route('/statsHag', methods=['GET', 'POST'])
-def statspage():
+def statspage2():
 	write()
 	return render_template('hag.html')	
 
