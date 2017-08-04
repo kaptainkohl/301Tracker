@@ -12,8 +12,8 @@ executor = ThreadPoolExecutor(2)
 #===Max of 15 people in the race===#
 index=0
 
-user_data = [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]
-user_name = ["Konditioner","connor75","Dickhiskhan","Emoarbiter","icupspeedruns_","Secrethumorman","Kiwikiller67","ElectricFortune","kaptainkohl","HolySanctum","Mittenz","PurpleRupees"]
+user_data = [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]
+user_name = ["Konditioner","connor75","Dickhiskhan","Emoarbiter","icupspeedruns_","Secrethumorman","Kiwikiller67","ElectricFortune","kaptainkohl","HolySanctum","Mittenz","PurpleRupees","Hagginater"]
 user_pic = []
 totals=''
 y =0
@@ -75,7 +75,11 @@ def homepage():
 def statspage():
 	write()
 	return render_template('301Display.html')
-	
+
+@app.route('/statsHag', methods=['GET', 'POST'])
+def statspage():
+	write()
+	return render_template('hag.html')	
 
 	
 
