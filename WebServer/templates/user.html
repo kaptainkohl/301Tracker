@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,13 +16,14 @@ canvas {
 <div id="username">{{ name }}</div>
 <div id="stats">BK=0 BT=0 DK=0</div>
 
-<button type="button" onclick="player1.BKprogress+=1;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;">BK+1</button>
-<button type="button" onclick="player1.BTprogress+=1;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;">BT+1</button>
-<button type="button" onclick="player1.DKprogress+=1;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;">DK+1</button>
+<button type="button" onclick="player1.BKprogress+=1;update = true;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;">BK+1</button>
+<button type="button" onclick="player1.BTprogress+=1;update = true;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;">BT+1</button>
+<button type="button" onclick="player1.DKprogress+=1;update = true;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;">DK+1</button>
 
 <script>
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 var list_people = [];
+var update = false; 
 //var Bac = new Image();
 //Bac.src = "bac.png";
 function startScreen() {
@@ -38,7 +37,8 @@ this.canvas.height = 120;
  this.context = this.canvas.getContext("2d");
  document.body.insertBefore(this.canvas, document.body.childNodes[0]);
 this.interval = setInterval(updateScreen, 1000);
-	this.stream = setInterval(updateStats, 10000);
+	this.stream = setInterval(updateStats, 30000);
+this.stream = setInterval(delaySend, 2000);
 	
 },
 clear : function() {
@@ -49,7 +49,13 @@ this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
  }
 }
-
+function delaySend()
+{
+if (update){
+updateStats();
+update = false;
+}
+}
 function updateScreen() {
 layout.clear();
 
