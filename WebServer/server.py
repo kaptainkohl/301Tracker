@@ -74,6 +74,11 @@ def homepage():
 @app.route('/stats', methods=['GET', 'POST'])
 def statspage():
 	write()
+	return render_template('viewer.html')
+
+@app.route('/statStream', methods=['GET', 'POST'])
+def statStream():
+	write()
 	return render_template('301Display.html')
 
 @app.route('/statsHag', methods=['GET', 'POST'])
