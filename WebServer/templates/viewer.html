@@ -22,8 +22,8 @@ color: white;
 }
 
 </style>
-</head>
-<body onload="startScreen()" background="jiggyBac.png">
+</head
+<body onload="startScreen()" background="{{ url_for('static', filename = 'jiggyBac.png') }}">
 <!-- Links (sit on top) -->
 <div class="w3-top">
   <div class="w3-row w3-padding w3-black">
@@ -62,14 +62,14 @@ color: white;
 
 <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script>
-//$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 var list_people = [];
 var list_place = [];
 var Bac = new Image();
-//Bac.src = "{{ url_for('static', filename = 'jiggyBac.png') }}";
+Bac.src = "{{ url_for('static', filename = 'jiggyBac.png') }}";
 var addOffset =0;
 function startScreen() {
-    	timer.start();	
+Â Â Â  	timer.start();	
  	layout.start();
 	document.getElementById("twitch").width = window.innerWidth - 694;
 	document.getElementById("twitch").height = (document.getElementById("twitch").width / 16)*9;
@@ -95,7 +95,7 @@ clear : function() {
 	var time = document.getElementById("gameTimer").innerHTML;
 	time = time.substring(6,time.length-7).toHHMMSS();
 	document.getElementById("timer").innerHTML = time;	
-        //this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+Â Â Â Â Â Â Â  this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
  }
 }
@@ -119,7 +119,6 @@ addOffset=0;
 
 function updateStats(){
 $.getJSON($SCRIPT_ROOT + '/_update', {
-        a: 1,b:2
       }, function(data) {
         console.log(data.result);
 		dataarray = data.result;
