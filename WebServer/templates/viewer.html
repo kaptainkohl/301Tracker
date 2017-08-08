@@ -1,0 +1,343 @@
+﻿<!DOCTYPE html>
+<html>
+<title>Stats Page</title>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata">
+<style>
+canvas {
+    border:1px solid #d3d3d3;
+    background-color: #f1f1f1;
+	position: fixed;
+	top:55px;
+}
+mid {
+color: white;
+    text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+
+</style>
+</head>
+<body onload="startScreen()" background="{{ url_for('static', filename = 'jiggyBac.png') }}">
+<!-- Links (sit on top) -->
+<div class="w3-top">
+  <div class="w3-row w3-padding w3-black">
+    <div class="w3-col s3">
+      <a href="#" class="w3-button w3-block w3-black">HOME</a>
+    </div>
+    <div class="w3-col s3">
+      <a href="https://docs.google.com/spreadsheets/d/1DadsJQtvNINF2FNnGYMpinEqtGxLQkxIjoQ90Hh_iJo/edit#gid=1119770388" class="w3-button w3-block w3-black">Race Info</a>
+    </div>
+    <div class="w3-col s3">
+      <a href="https://rareware-collectathon-race.herokuapp.com/stats" class="w3-button w3-block w3-black">Stats Page</a>
+    </div>
+    <div class="w3-col s3">
+      <a href="https://discord.gg/wqEunw5" class="w3-button w3-block w3-black">Discord</a>
+    </div>
+  </div>
+</div>
+
+<canvas id="canvas" ></canvas>
+
+<iframe id="twitchchat" src="https://www.twitch.tv/rareware301/chat?popout=" frameborder="0" scrolling="no" height="500" width="350"style="right:0px; top:55px; position:fixed;"></iframe>
+<div id = "gameTimer" class="stopwatch"></div>
+
+<div id="mid" style="position:absolute; left:300px; top:70px;">
+	<iframe id="twitch" src="https://player.twitch.tv/?channel=konditioner" frameborder="0" allowfullscreen="true" scrolling="no" height="415" width="748" ></iframe>
+	<div id="runnertext" >
+		<div style="position:absolute; left:10px; font-family:Impact;font-size:500%;text-align:left;text-outline: 2px 2px #ff0000;">Rareware 301</div>
+		<div id = "timer" style="position:absolute; right:10px; font-family:Impact;font-size:500%;text-outline: 2px 2px #ff0000;"></div>		
+	</div>
+	<div id="runner" style="position:absolute;left:10px; font-family:Impact;font-size:250%;text-align:left;text-outline: 2px 2px #ff0000;"><br><br>On screen: Konditioner</div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script>
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+var list_people = [];
+var list_place = [];
+var Bac = new Image();
+Bac.src = "{{ url_for('static', filename = 'jiggyBac.png') }}";
+var addOffset =0;
+function startScreen() {
+    	timer.start();	
+ 	layout.start();
+	document.getElementById("twitch").width = window.innerWidth - 694;
+	document.getElementById("twitch").height = (document.getElementById("twitch").width / 16)*9;
+	document.getElementById("twitchchat").height = window.innerHeight -55;
+
+
+}
+
+var layout = {
+canvas : document.getElementById("canvas"),
+ start : function() {
+this.canvas.width = 256;
+this.canvas.height = window.innerHeight;
+ this.context = this.canvas.getContext("2d");
+ document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+this.interval = setInterval(updateScreen, 20);
+	this.stream = setInterval(changeStream, 60000);
+	this.stream = setInterval(updateStats, 5000);
+	
+
+},
+clear : function() {
+	var time = document.getElementById("gameTimer").innerHTML;
+	time = time.substring(6,time.length-7).toHHMMSS();
+	document.getElementById("timer").innerHTML = time;	
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+ }
+}
+
+function updateScreen() {
+layout.clear();
+	list_place = list_people.slice();
+	list_place.sort(function(a, b){return b.totals-a.totals});
+	 	for ( var j = 0; j< list_place.length;j++)
+		{
+		list_place[j].place=j+1;
+
+		}
+for ( var i = 0; i< list_people.length;i++)
+	{
+	if(addOffset !=0){list_people[i].ypos +=addOffset;}
+	list_people[i].draw();
+	};
+addOffset=0;
+} 
+
+function updateStats(){
+$.getJSON($SCRIPT_ROOT + '/_update', {
+        a: 1,b:2
+      }, function(data) {
+        console.log(data.result);
+		dataarray = data.result;
+		if (dataarray){
+		playerarray = dataarray.split('$')
+		console.log(playerarray[1]);
+		for ( var i = 0; i< list_people.length;i++)
+			{
+			player_data = playerarray[i].split(',');
+			list_people[i].BKprogress = parseInt(player_data[1])
+			list_people[i].BTprogress = parseInt(player_data[2])
+			list_people[i].DKprogress = parseInt(player_data[3])
+			list_people[i].totals = list_people[i].BKprogress+list_people[i].BTprogress+list_people[i].DKprogress;
+			};
+		}
+      });
+      return false;
+
+}
+
+var currentrunner=0;
+var runnername="konditioner"
+function changeStream(){
+	currentrunner+=1;
+	document.getElementById('twitch').src = "https://player.twitch.tv/?channel="+list_people[currentrunner].username;
+	runnername = list_people[currentrunner].username;
+	document.getElementById('runner').innerHTML = "<br><br>On screen: " +runnername;
+}
+
+function card(x , y , name) {
+	this.xpos = x;
+	this.ypos = y;
+	this.username=name;
+	this.place=1;
+	this.BKprogress=0;
+	this.BTprogress=0;
+	this.DKprogress=0;
+	this.totals=0;
+	//this.f= 'serverIcons/'+name+'.png';
+	//this.picture = 'static/serverIcons/'+name+'.png';
+	this.draw = function(){
+		//console.log(this.picture );
+		var ctx = layout.context;
+		ctx.globalAlpha=0.9;
+		ctx.fillStyle = "black";
+		ctx.fillRect(this.xpos,this.ypos,256,120);
+
+		var grdGray = ctx.createLinearGradient(this.xpos ,this.ypos ,this.xpos +250,this.ypos + 120);
+		grdGray.addColorStop(0,"#1e1e15");
+		grdGray.addColorStop(1,"#b6b696");
+		ctx.fillStyle = grdGray;
+		ctx.globalAlpha=0.2;
+		ctx.fillRect(this.xpos +2,this.ypos +2,256 -4,120 -4);
+		ctx.fillStyle = "black";
+		ctx.globalAlpha=0.9;
+		ctx.fillRect(this.xpos +4,this.ypos +4,54,54);
+
+
+		var grdYellow = ctx.createLinearGradient(this.xpos ,this.ypos ,this.xpos +250,this.ypos + 120);
+		grdYellow.addColorStop(0,"#999900")
+		grdYellow.addColorStop(1,"#ffff1a");
+		ctx.fillStyle = grdYellow;
+		ctx.font = "24px Century";
+		ctx.fillText(this.username,this.xpos + 60 , this.ypos+30); 
+		ctx.font = "15px Century";
+		ctx.fillText("Place: "+this.place,this.xpos + 60 , this.ypos+50);
+		ctx.fillText(" Completion: "+parseInt((this.totals/391)*100)+"%",this.xpos + 120 , this.ypos+50);
+		
+		var grdRed = ctx.createLinearGradient(this.xpos + 4,this.ypos + 62,this.xpos +250,this.ypos + 62+15);
+		grdRed.addColorStop(0,"#990000");
+		grdRed.addColorStop(1,"#ff3333");
+		var grdBlue = ctx.createLinearGradient(this.xpos + 4,this.ypos + 62,this.xpos +250,this.ypos + 62+15);
+		grdBlue.addColorStop(0,"blue");
+		grdBlue.addColorStop(1,"#0066ff");
+		var grdGreen = ctx.createLinearGradient(this.xpos + 4,this.ypos + 62,this.xpos +250,this.ypos + 62+15);
+		grdGreen.addColorStop(0,"green");
+		grdGreen.addColorStop(1,"#33cc33");
+		ctx.fillStyle = grdRed;
+		ctx.fillRect(this.xpos + 4,this.ypos + 62, 248*(this.BKprogress/100), 15);
+		ctx.fillStyle = grdBlue;
+		ctx.fillRect(this.xpos + 4,this.ypos + 60 + 15 +4,248*(this.BTprogress/90), 15);
+		ctx.fillStyle = grdGreen;
+		ctx.fillRect(this.xpos + 4,this.ypos + 60 + 30 +8,248*(this.DKprogress/201), 15);
+
+	};
+};
+
+var player1 = new card(0 *256,0*120,"Konditioner");
+var player2 = new card(0 *256,1*120,"Connor75");
+var player3 = new card(0 *256,2*120,"Dickhiskhan");
+var player4 = new card(0 *256,3*120,"Emoarbiter");
+var player5 = new card(0 *256,4*120,"icupspeedruns_");
+var player6 = new card(0 *256,5*120,"Secrethumorman");
+var player7 = new card(0 *256,6*120,"Kiwikiller67");
+var player8 = new card(0 *256,7*120,"ElectricFortune");
+var player9 = new card(0 *256,8*120,"kaptainkohl");
+var player10 = new card(0 *256,9*120,"HolySanctum");
+var player11 = new card(0 *256,10*120,"Mittenz");
+var player12 = new card(0 *256,11*120,"PurpleRupees");
+list_people.push(player1);
+list_people.push(player2);
+list_people.push(player3);
+list_people.push(player4);
+list_people.push(player5);
+list_people.push(player6);
+list_people.push(player7);
+list_people.push(player8);
+list_people.push(player9);
+list_people.push(player10);
+list_people.push(player11);
+list_people.push(player12);
+
+var Stopwatch = function(elem, options) {
+
+  var timer      = createTimer() ,
+      offset,
+      clock,
+      interval;
+
+  // default options
+  options = options || {};
+  options.delay = options.delay || 1;
+
+  // append elements     
+  elem.appendChild(timer);
+
+  // initialize
+  reset();
+
+  // private functions
+  function createTimer() {
+    return document.createElement("span");
+  }
+
+  function createButton(action, handler) {
+    var a = document.createElement("a");
+    a.href = "#" + action;
+    a.innerHTML = action;
+    a.addEventListener("click", function(event) {
+      handler();
+      event.preventDefault();
+    });
+    return a;
+  }
+
+  function start() {
+    if (!interval) {
+      offset   = Date.now();
+      interval = setInterval(update, options.delay);
+    }
+  }
+
+  function stop() {
+    if (interval) {
+      clearInterval(interval);
+      interval = null;
+    }
+  }
+
+  function reset() {
+    clock = 0;
+    render();
+  }
+
+  function update() {
+    clock += delta();
+    render();
+  }
+
+  function render() {
+    timer.innerHTML = clock/1000; 
+  }
+
+  function delta() {
+    var now = Date.now(),
+        d   = now - offset;
+
+    offset = now;
+    return d;
+  }
+
+  // public API
+  this.start  = start;
+  this.stop   = stop;
+  this.reset  = reset;
+};
+
+var elem = document.getElementById("gameTimer");
+var timer = new Stopwatch(elem, {delay: 10});
+
+String.prototype.toHHMMSS = function () {
+    var sec_num = parseInt(this, 10); // don't forget the second param
+    var hours   = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+    if (hours   < 10) {hours   = "0"+hours;}
+    if (minutes < 10) {minutes = "0"+minutes;}
+    if (seconds < 10) {seconds = "0"+seconds;}
+    return hours+':'+minutes+':'+seconds;
+}
+var stats = document.getElementById("canvas");
+if (stats.addEventListener) {
+	// IE9, Chrome, Safari, Opera
+	stats.addEventListener("mousewheel", MouseWheelHandler, false);
+	// Firefox
+	stats.addEventListener("DOMMouseScroll", MouseWheelHandler, false);
+}
+// IE 6/7/8
+else stats.attachEvent("onmousewheel", MouseWheelHandler);
+
+function MouseWheelHandler(event){
+	if(event.wheelDelta>0 && player1.ypos<0){
+		addOffset=30;
+	}
+		if(event.wheelDelta<0 && player1.ypos>(-6*120)){
+		addOffset=-30;
+	}
+
+}
+</script>
+</body>
+</html>
