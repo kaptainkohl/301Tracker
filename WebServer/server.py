@@ -71,6 +71,10 @@ def userpage(name=None):
 def homepage():
 	return render_template('main.html')
 
+@app.route('/races')
+def racepage():
+	return render_template('races.html')
+
 @app.route('/stats', methods=['GET', 'POST'])
 def statspage():
 	write()
