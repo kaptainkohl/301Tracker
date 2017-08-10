@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<title>Race Info Page</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata">
+<style>
+body, html {
+    height: 100%;
+    font-family: "Inconsolata", sans-serif;
+}
+.menu {
+    display: none;
+}
+</style>
+<body>
+
+<!-- Links (sit on top) -->
+<div class="w3-top">
+  <div class="w3-row w3-padding w3-black">
+    <div class="w3-col s3">
+      <a href="https://rareware-collectathon-race.herokuapp.com" class="w3-button w3-block w3-black">HOME</a>
+    </div>
+    <div class="w3-col s3">
+      <a href="https://rareware-collectathon-race.herokuapp.com/races" class="w3-button w3-block w3-black">Race Info</a>
+    </div>
+    <div class="w3-col s3">
+      <a href="https://rareware-collectathon-race.herokuapp.com/stats" class="w3-button w3-block w3-black">Stats Page</a>
+    </div>
+    <div class="w3-col s3">
+      <a href="https://discord.gg/wqEunw5" class="w3-button w3-block w3-black">Discord</a>
+    </div>
+  </div>
+</div>
+
+
+<!-- Menu Container -->
+<div class="w3-container" id="menu">
+  <div class="w3-content" style="max-width:1000px">
+ 
+    <h5 class="w3-center w3-padding-48"><span class="w3-tag w3-wide">Catagories</span></h5>
+  
+    <div class="w3-row w3-center w3-card-2 w3-padding">
+      <a href="javascript:void(0)" onclick="openMenu(event, '301');" id="myLink">
+        <div class="w3-col s6 tablink">301%</div>
+      </a>
+      <a href="javascript:void(0)" onclick="openMenu(event, 'any');">
+        <div class="w3-col s6 tablink">Any%</div>
+      </a>
+       <a href="javascript:void(0)" onclick="openMenu(event, 'Rany');">
+        <div class="w3-col s6 tablink">Restricted Any%</div>
+      </a>
+    </div>
+
+    <div id="301" class="w3-container menu w3-padding-48 w3-card-2">
+      <h5>301% Race</h5>
+      <p class="w3-text-grey">The 301 is Banjo-Kazooie 100%, Banjo-Tooie 100% and Donkey Kong 64 101% all done in one race back to back to back. This is the msot popular catagory for the rareware races and is the most popular.</p><br>
+    
+      <h5>Currently Scheduled Races</h5>
+      <p class="w3-text-grey">January 28, 2018</p><br>
+    
+      <h5>Race Rules</h5>
+      <p class="w3-text-grey"> 
+
+       - The race will be hosted on SpeedRunsLive<br>
+      - The race must be done in BK-BT-DK64 order<br>
+      - All official releases of the games are allowed<br>
+      - Unofficial emulators are banned<br>
+      - The race is done RTA style. Breaks shorter than an hour are allowed, but will count against your final time<br>
+      - Breaks longer than an hour result in disqualification, per SpeedRunsLive rules<br>
+      - Streaming is required<br>
+      - All rules pertaining to the 3 categories must be followed (see respective speedrun.com pages for more info)<br>
+      - Furnace Fun Moves is allowed for Banjo-Kazooie and can be set up before the race begins, per BK 100% rules<br></p><br>
+    
+      <h5>Current Particpants</h5>
+      <p class="w3-text-grey">These are the current times that each of the runners have in each game along with their predicted best time total for the race. <br>
+      <table style="width:100%">
+  <tr>
+<th>Runner</th>			<th>BK 100%</th>	<th>BT 100%</th>	<th>DK64 101%</th>	<th>Total</th>
+</tr> <tr>
+<td>Konditioner</td>			<td>2:18:44</td>		<td>4:36:10</td>		<td>5:50:49		<td>12:45:43<br></tr> <tr>
+<td>Connor75</td>		<td>2:37:42</td><td>4:58:56	</td>	<td>5:37:16</td><td>13:13:54</td></tr> <tr>
+<td>SecretHumorMan</td>		<td>2:17:25</td><td>4:47:04</td><td>6:51:15</td><td>13:55:44</td></tr> <tr>
+<td>icupletsplay</td>	<td>3:20:10</td><td>4:57:42</td><td>6:03:52</td><td>14:21:44</td></tr> <tr>
+<td>GarageDoorOpener</td>	<td>2:42:45</td><td>4:34:31</td><td>7:09:48</td><td>14:27:04</td></tr> <tr>
+<td>Emoarbiter</td>			<td>2:42:31</td><td>6:10:21</td><td>6:21:17</td><td>15:14:09</td></tr> <tr>
+<td>Kaptainkohl	</td>		<td>2:16:55</td><td>5:00:20</td><td>8:12:10</td><td>15:29:25</td></tr> <tr>
+<td>Electric_Fortune</td>	<td>2:29:20</td><td>8:06:06</td><td>7:50:25</td><td>18:25:51</td></tr> <tr>
+<td>MittenzHugg</td>			<td>2:26:42</td><td>6:48:55</td><td>11:55:34</td><td>21:11:11</td></tr> <tr>
+<td>PurpleRupees</td>		<td>2:27:32</td><td>10:00:00</td><td>9:23:46</td><td>21:51:18</td></tr> <tr>
+<td>HolySanctum	</td>		<td>3:27:04</td><td>8:58:29</td><td>12:00:00</td><td>24:25:33</td></tr> <tr>
+<td>Yogithemaster</td>		<td>8:00:00</td><td>18:00:00</td><td>12:00:00</td><td>38:00:00</td></tr></table></p><br>
+    
+      <h5>General Estimates</h5>
+      <p class="w3-text-grey">These Times show predictions of times baised on experince with the game.<br>
+      <table style="width:100%">
+  <tr>
+  <th></th>			<th>BK 100%</th>	<th>BT 100%</th>	<th>DK64 101%</th>	<th>Total</th></tr> <tr>
+<td>World Record</td>	<td>2:03:55</td>	<td>4:23:30</td>	<td>5:37:16</td>	<td>12:04:41</td></tr> <tr>
+<td>OK Speedun</td>	<td>3:00:00</td>	<td>5:30:00</td>	<td>6:45:00</td>	<td>15:15:00</td></tr> <tr>
+<td>Played Before</td>	<td>8:00:00</td>	<td>10:00:00</td>	<td>12:00:00</td>	<td>30:00:00</td></tr> <tr>
+<td>Blind Run</td>	<td>12:00:00</td>	<td>18:00:00</td>	<td>20:00:00</td>	<td>50:00:00</td></tr></table>
+      </p>
+    
+      <h5>Leaderboards</h5>
+      <p class="w3-text-grey"><a href="http://www.speedrun.com/multiple_rareware_games">LeaderBoards</a></p><br>
+      
+      <h5>Routes and Guides</h5>
+      <p class="w3-text-grey">
+      <a href="https://www.youtube.com/playlist?list=PLCc9Cw--86Lif3s7SyQ7OyI3Z7lRxPiqj">Banjo-Kazooie 100% Tutorial</a><br>
+
+      <a href="https://docs.google.com/document/d/1pXDJBBm8XpnB8brEUCtiEqIvThBHPNzOMu0mA4yheoE/edit
+">Banjo-Kazooie 100% Route</a><br>
+		<a href="https://pastebin.com/rNaSUVqK">Furnace Fun Moves Setup</a><br>
+       <a href="bkhelper.herokuapp.com">Banjo-Kazooie Online Tools</a> <br><br>
+      
+      <a href="">Banjo-Tooie 100% Tutorial</a><br>
+      <a href="https://docs.google.com/document/d/1SoYKzgL1pXCFCmQ8AwYE60zE_zsQfTyo1fx0hjBi5hk/edit
+">Banjo-Tooie 100% Route</a><br>
+      <a href="">Banjo-Tooie Online Tools</a> (In progress)<br><br>
+      
+      <a href="">Donkey Kong 64 101% Beginner Route(N64)</a><br>
+      <a href="">Donkey Kong 64 101% Beginner Route(VC)</a><br>
+      <a href="">Donkey Kong 64 101% Advanced Route(N64)</a><br>
+     <a href=""> Donkey Kong 64 101% Advanced Route(VC)</a><br>     
+      
+      </p><br>
+    </div>
+
+    <div id="any" class="w3-container menu w3-padding-48 w3-card-2">
+      <h5>Any%</h5>
+      <p class="w3-text-grey">Rareware Any% is compleating all three games as fast as possible.</p><br>
+    </div>  
+       
+      <div id="Rany" class="w3-container menu w3-padding-48 w3-card-2">
+      <h5>Restricted Any%</h5>
+      <p class="w3-text-grey">Why would anyone do this now that we can RBA on NTSC?</p><br>
+    </div> 
+
+  </div>
+</div>
+
+
+
+<script>
+function openMenu(evt, menuName) {
+  var i, x, tablinks;
+  x = document.getElementsByClassName("menu");
+  for (i = 0; i < x.length; i++) {
+     x[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablink");
+  for (i = 0; i < x.length; i++) {
+     tablinks[i].className = tablinks[i].className.replace(" w3-dark-grey", "");
+  }
+  document.getElementById(menuName).style.display = "block";
+  evt.currentTarget.firstElementChild.className += " w3-dark-grey";
+}
+</script>
+
+
+</body>
+</html>
