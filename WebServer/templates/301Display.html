@@ -15,6 +15,8 @@ canvas {
 	<div id = "gameTimer" class="stopwatch"></div>
 <iframe id="twitch" src="https://player.twitch.tv/?channel=kaptainkohl" frameborder="0" allowfullscreen="true" scrolling="no" height="415" width="748" style="position:absolute; left:20px; top:20px;"></iframe>
 <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<button onClick="timer.start();">Start</button>
 <script>
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 var list_people = [];
@@ -22,7 +24,7 @@ var list_place = [];
 var Bac = new Image();
 Bac.src = "{{ url_for('static', filename = 'jiggyBac.png') }}";
 function startScreen() {
-    	timer.start();	
+  
  layout.start();
 }
 
@@ -95,9 +97,12 @@ $.getJSON($SCRIPT_ROOT + '/_update', {
 }
 
 var currentrunner=0;
-var runnername="kaptainkohl"
+var runnername="Dickhiskhan"
 function changeStream(){
 	currentrunner+=1;
+	if (currentrunner > list_people.length) {
+	currentrunner=0;
+	}
 	document.getElementById('twitch').src = "https://player.twitch.tv/?channel="+list_people[currentrunner].username;
 	runnername = list_people[currentrunner].username;
 }
