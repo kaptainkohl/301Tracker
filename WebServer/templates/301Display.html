@@ -119,13 +119,7 @@ function card(x , y , name) {
 	//this.f= 'serverIcons/'+name+'.png';
 	//this.picture = 'static/serverIcons/'+name+'.png';
 	this.picture = new Image();
-	try{
-	this.picture.src = "{{ url_for('static', filename = 'serverIcons/'+name+'.png';) }}";
-	}
-	catch(err)
-	{
-	this.picture.src = "{{ url_for('static', filename = 'serverIcons/unknown.png') }}";
-	}
+	this.picture.src = "{{ url_for('static', filename = 'serverIcons/')}}"+name+'.png';
 	this.draw = function(){
 		//console.log(this.picture );
 		var ctx = layout.context;
