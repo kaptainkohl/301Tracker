@@ -13,7 +13,7 @@ executor = ThreadPoolExecutor(2)
 index=0
 
 user_data = [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]
-user_name = ["Connor75","Dickhiskhan","ObiyoSRL","Secrethumorman","Emoarbiter","icupspeedruns_","Hagginater","ElectricFortune","kaptainkohl","HolySanctum","Mittenz","PurpleRupees","Hagginatersd"]
+user_name = ["Connor75","Emoarbiter","ObiyoSRL","Secrethumorman","Dickhiskhan","icupspeedruns_","Hagginater","ElectricFortune","kaptainkohl","HolySanctum","Mittenz","PurpleRupees","Hagginatersd"]
 user_pic = []
 totals=''
 y =0
