@@ -13,7 +13,7 @@ canvas {
 </head>
 <body onload="startScreen()">
 	<div id = "gameTimer" class="stopwatch"></div>
-<iframe id="twitch" src="https://player.twitch.tv/?channel=kaptainkohl" frameborder="0" allowfullscreen="true" scrolling="no" height="415" width="748" style="position:absolute; left:20px; top:20px;"></iframe>
+<iframe id="twitch" src="https://player.twitch.tv/?channel=kaptainkohl" frameborder="0" allowfullscreen="true" scrolling="no" height="585" width="1009" style="position:absolute; left:20px; top:20px;"></iframe>
 <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 <button onClick="timer.start();">Start</button>
@@ -47,13 +47,13 @@ clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	this.context.drawImage(Bac,0,0,1280,720);
 	this.context.fillStyle = "black";
-	this.context.fillRect(5,5,758, 424);
+	this.context.fillRect(5,5,1014, 590);
 	this.context.font = "50px Impact";
-	this.context.fillText("RAREWARE 301%",20, 480);
-	this.context.font = "70px Impact";
-	this.context.fillText(time.toHHMMSS(),410, 500);
+	this.context.fillText("RAREWARE 301%",20, 480+190);
+	this.context.font = "90px Impact";
+	this.context.fillText(time.toHHMMSS(),420, 500+190);
 	this.context.font = "20px Impact";
-	this.context.fillText("On Screen: "+runnername,20, 505);  
+	this.context.fillText("On Screen: "+runnername,20, 505+190);
  }
 }
 
@@ -166,30 +166,25 @@ function card(x , y , name) {
 	};
 };
 
-var player1 = new card(0 *256,0*120,"Konditioner");
-var player2 = new card(0 *256,1*120,"Connor75");
-var player3 = new card(0 *256,2*120,"Dickhiskhan");
-var player4 = new card(0 *256,3*120,"Emoarbiter");
-var player5 = new card(0 *256,4*120,"icupspeedruns_");
-var player6 = new card(0 *256,5*120,"Secrethumorman");
-var player7 = new card(1 *256,0*120,"Kiwikiller67");
-var player8 = new card(1 *256,1*120,"ElectricFortune");
-var player9 = new card(1 *256,2*120,"kaptainkohl");
-var player10 = new card(1 *256,3*120,"HolySanctum");
-var player11 = new card(1 *256,4*120,"Mittenz");
-var player12 = new card(1 *256,5*120,"PurpleRupees");
+var player1 = new card(0 *256,5*120,"Connor75");
+var player2 = new card(1 *256,4*120,"Dickhiskhan");
+var player3 = new card(1 *256,5*120,"ObiyoSRL");
+
+
+var player7 = new card(1 *256,0*120,"Secrethumorman");
+var player8 = new card(1 *256,1*120,"Emoarbiter");
+var player9 = new card(1 *256,2*120,"icupspeedruns_");
+var player10 = new card(1 *256,3*120,"Hagginater");
+
 list_people.push(player1);
 list_people.push(player2);
 list_people.push(player3);
-list_people.push(player4);
-list_people.push(player5);
-list_people.push(player6);
+
+
 list_people.push(player7);
 list_people.push(player8);
 list_people.push(player9);
 list_people.push(player10);
-list_people.push(player11);
-list_people.push(player12);
 
 var Stopwatch = function(elem, options) {
 
