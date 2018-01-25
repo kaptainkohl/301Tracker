@@ -120,11 +120,11 @@ function card(x , y , name) {
 	//this.picture = 'static/serverIcons/'+name+'.png';
 	this.picture = new Image();
 	try{
-	this.picture.src = "{{ url_for('static/serverIcons', filename = name+'.png') }}";
+	this.picture.src = "{{ url_for('static', filename = 'serverIcons/'+name+'.png';) }}";
 	}
 	catch(err)
 	{
-	this.picture.src = "{{ url_for('static/serverIcons', filename = 'unknown.png') }}";
+	this.picture.src = "{{ url_for('static', filename = 'serverIcons/unknown.png') }}";
 	}
 	this.draw = function(){
 		//console.log(this.picture );
