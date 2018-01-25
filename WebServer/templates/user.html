@@ -19,7 +19,10 @@ canvas {
 <button type="button" onclick="player1.BKprogress+=1;update = true;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;">BK+1</button>
 <button type="button" onclick="player1.BTprogress+=1;update = true;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;">BT+1</button>
 <button type="button" onclick="player1.DKprogress+=1;update = true;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;">DK+1</button>
-
+<br> <br>
+<button type="button" onclick="player1.BKprogress-=1;update = true;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;">BK-1</button>
+<button type="button" onclick="player1.BTprogress-=1;update = true;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;">BT-1</button>
+<button type="button" onclick="player1.DKprogress-=1;update = true;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;">DK-1</button>
 <script>
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 var list_people = [];
@@ -147,11 +150,18 @@ function card(x , y , name) {
 
 var player1 = new card(0 *256,0*120,document.getElementById('username').innerHTML);
 
-function runScript(e) {
-    if (e.keyCode == 13) {
-	player1.BKprogress+=1;
+document.addEventListener("keydown", function(e) {
+
+    if (e.keyCode == 49) {
+	player1.BKprogress+=1;update = true;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;
     }
-}
+	    if (e.keyCode == 50) {
+	player1.BTprogress+=1;update = true;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;
+    }
+	    if (e.keyCode == 51) {
+	player1.DKprogress+=1;update = true;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;
+    }
+});
 
 </script>
 </body>
