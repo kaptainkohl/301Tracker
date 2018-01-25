@@ -13,9 +13,9 @@ canvas {
 </head>
 <body onload="startScreen()">
 	<div id = "gameTimer" class="stopwatch"></div>
-<iframe id="twitch" src="https://player.twitch.tv/?channel=kaptainkohl" frameborder="0" allowfullscreen="true" scrolling="no" height="585" width="1009" style="position:absolute; left:20px; top:20px;"></iframe>
+<iframe id="twitch" src="https://player.twitch.tv/?channel=Connor75" frameborder="0" allowfullscreen="true" scrolling="no" height="585" width="1009" style="position:absolute; left:20px; top:20px;"></iframe>
 <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 <button onClick="timer.start();">Start</button>
 <script>
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
@@ -36,7 +36,7 @@ this.canvas.height = 720;
  this.context = this.canvas.getContext("2d");
  document.body.insertBefore(this.canvas, document.body.childNodes[0]);
 this.interval = setInterval(updateScreen, 20);
-	this.stream = setInterval(changeStream, 60000);
+	this.stream = setInterval(changeStream, 600000);
 	this.stream = setInterval(updateStats, 5000);
 	
 
@@ -118,6 +118,14 @@ function card(x , y , name) {
 	this.totals=0;
 	//this.f= 'serverIcons/'+name+'.png';
 	//this.picture = 'static/serverIcons/'+name+'.png';
+	this.picture = new Image();
+	try{
+	this.picture.src = "{{ url_for('static/serverIcons', filename = name+'.png') }}";
+	}
+	catch(err)
+	{
+	this.picture.src = "{{ url_for('static/serverIcons', filename = 'unknown.png') }}";
+	}
 	this.draw = function(){
 		//console.log(this.picture );
 		var ctx = layout.context;
@@ -134,7 +142,7 @@ function card(x , y , name) {
 		ctx.fillStyle = "black";
 		ctx.globalAlpha=0.9;
 		ctx.fillRect(768+this.xpos +4,this.ypos +4,54,54);
-		//this.context.drawImage(this.picture,768+this.xpos +4,this.ypos +4,54,54);
+		ctx.drawImage(this.picture,768+this.xpos +4,this.ypos +4,54,54);
 
 		var grdYellow = ctx.createLinearGradient(768+this.xpos ,this.ypos ,768+this.xpos +250,this.ypos + 120);
 		grdYellow.addColorStop(0,"#999900");
@@ -167,12 +175,12 @@ function card(x , y , name) {
 };
 
 var player1 = new card(0 *256,5*120,"Connor75");
-var player2 = new card(1 *256,4*120,"Dickhiskhan");
+var player2 = new card(1 *256,4*120,"Emoarbiter");
 var player3 = new card(1 *256,5*120,"ObiyoSRL");
 
 
 var player7 = new card(1 *256,0*120,"Secrethumorman");
-var player8 = new card(1 *256,1*120,"Emoarbiter");
+var player8 = new card(1 *256,1*120,"Dickhiskhan");
 var player9 = new card(1 *256,2*120,"icupspeedruns_");
 var player10 = new card(1 *256,3*120,"Hagginater");
 
