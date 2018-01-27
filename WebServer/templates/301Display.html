@@ -45,7 +45,7 @@ clear : function() {
 	var time = document.getElementById("gameTimer").innerHTML;
 	time = time.substring(6,time.length-7)	
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-	//this.context.drawImage(Bac,0,0,1280,720);
+	this.context.drawImage(Bac,0,0,1280,720);
 	this.context.fillStyle = "black";
 	this.context.fillRect(5,5,1014, 585);
 	this.context.font = "50px Impact";
