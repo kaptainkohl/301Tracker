@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <title>Stats Page</title>
 <head>
@@ -54,7 +54,11 @@ color: white;
 		<div id = "timer" style="position:absolute; right:10px; font-family:Impact;font-size:500%;text-outline: 2px 2px #ff0000;"></div>		
 	</div>
 	<div id="runner" style="position:absolute;left:10px; font-family:Impact;font-size:250%;text-align:left;text-outline: 2px 2px #ff0000;"><br><br>On screen: Konditioner</div>
+<button id="left" onClick="changeStream(-1);">Back</button>
+	<button id="Right" onClick="changeStream(1);">Next Streamer</button>
+	
 </div>
+
 
 
 <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
@@ -66,7 +70,7 @@ var Bac = new Image();
 Bac.src = "{{ url_for('static', filename = 'jiggyBac.png') }}";
 var addOffset =0;
 function startScreen() {
-    	timer.start();	
+    	timer.start();	
  	layout.start();
 	document.getElementById("twitch").width = window.innerWidth - 694;
 	document.getElementById("twitch").height = (document.getElementById("twitch").width / 16)*9;
@@ -83,7 +87,7 @@ this.canvas.height = window.innerHeight;
  this.context = this.canvas.getContext("2d");
  document.body.insertBefore(this.canvas, document.body.childNodes[0]);
 this.interval = setInterval(updateScreen, 20);
-	this.stream = setInterval(changeStream, 60000);
+	this.stream = setInterval(changeStream, 600000);
 	this.stream = setInterval(updateStats, 5000);
 	
 
@@ -92,7 +96,7 @@ clear : function() {
 	var time = document.getElementById("gameTimer").innerHTML;
 	time = time.substring(6,time.length-7).toHHMMSS();
 	document.getElementById("timer").innerHTML = time;	
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
  }
 }
@@ -139,8 +143,8 @@ $.getJSON($SCRIPT_ROOT + '/_update', {
 
 var currentrunner=0;
 var runnername="konditioner"
-function changeStream(){
-	currentrunner+=1;
+function changeStream(a){
+	currentrunner+=a;
 	document.getElementById('twitch').src = "https://player.twitch.tv/?channel="+list_people[currentrunner].username;
 	runnername = list_people[currentrunner].username;
 	document.getElementById('runner').innerHTML = "<br><br>On screen: " +runnername;
@@ -204,18 +208,14 @@ function card(x , y , name) {
 	};
 };
 
-var player1 = new card(0 *256,0*120,"Konditioner");
-var player2 = new card(0 *256,1*120,"Connor75");
-var player3 = new card(0 *256,2*120,"Dickhiskhan");
-var player4 = new card(0 *256,3*120,"Emoarbiter");
-var player5 = new card(0 *256,4*120,"icupspeedruns_");
-var player6 = new card(0 *256,5*120,"Secrethumorman");
-var player7 = new card(0 *256,6*120,"Kiwikiller67");
-var player8 = new card(0 *256,7*120,"ElectricFortune");
-var player9 = new card(0 *256,8*120,"kaptainkohl");
-var player10 = new card(0 *256,9*120,"HolySanctum");
-var player11 = new card(0 *256,10*120,"Mittenz");
-var player12 = new card(0 *256,11*120,"PurpleRupees");
+var player1 = new card(0 *256,0*120,"Connor75");
+var player2 = new card(0 *256,1*120,"Emoarbiter");
+var player3 = new card(0 *256,2*120,"Secrethumorman");
+var player4 = new card(0 *256,3*120,"ObiyoSRL");
+var player5 = new card(0 *256,4*120,"Dickhiskhan");
+var player6 = new card(0 *256,5*120,"MutantsAbyss");
+var player7 = new card(0 *256,6*120,"icupspeedruns_");
+var player8 = new card(0 *256,7*120,"Hagginator");
 list_people.push(player1);
 list_people.push(player2);
 list_people.push(player3);
@@ -224,10 +224,7 @@ list_people.push(player5);
 list_people.push(player6);
 list_people.push(player7);
 list_people.push(player8);
-list_people.push(player9);
-list_people.push(player10);
-list_people.push(player11);
-list_people.push(player12);
+
 
 var Stopwatch = function(elem, options) {
 
@@ -324,7 +321,8 @@ if (stats.addEventListener) {
 	stats.addEventListener("mousewheel", MouseWheelHandler, false);
 	// Firefox
 	stats.addEventListener("DOMMouseScroll", MouseWheelHandler, false);
-}
+	}
+
 // IE 6/7/8
 else stats.attachEvent("onmousewheel", MouseWheelHandler);
 
@@ -335,6 +333,8 @@ function MouseWheelHandler(event){
 		if(event.wheelDelta<0 && player1.ypos>(-6*120)){
 		addOffset=-30;
 	}
+
+	
 
 }
 </script>
