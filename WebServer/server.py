@@ -62,15 +62,22 @@ def startsocket():
 	return jsonify(result=totals)
 
 @app.route('/_bingo')
-def updateStats():
+def updatebingo():
+	global bingoCard
+	##print(bingoCard)
+	return jsonify(result=bingoCard)
+
+@app.route('/_bingoClick')
+def updatebingoClicked():
+	global bingoCard
 	a = request.args.get('board', "goals")
 	b = request.args.get('bcolors', "color")
 	bingoCard = ''+a + '$' + b
-	return jsonify(result=bingoCard)
-
+	return jsonify(result='sent')
+	
 @app.route('/bingo')
 def lockout():
-	return render_template('LT.html')
+	return render_template('TL.html')
 
 @app.route('/user/', methods=['GET', 'POST'])
 @app.route('/user/<name>', methods=['GET', 'POST'])
