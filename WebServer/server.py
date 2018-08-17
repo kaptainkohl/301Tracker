@@ -73,7 +73,7 @@ def updatebingoClicked():
 	a = request.args.get('board', "goals")
 	b = request.args.get('bcolors', "color")
 	bingoCard = ''+a + '$' + b
-	return jsonify(result='sent')
+	return jsonify(result=bingoCard)
 	
 @app.route('/bingo')
 def lockout():
