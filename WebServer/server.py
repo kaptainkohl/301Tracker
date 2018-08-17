@@ -18,7 +18,7 @@ user_pic = []
 totals=''
 y =0
 a =0
-
+bingoCard = ''
 quit= True
 
 if __name__ == '__main__':
@@ -60,7 +60,17 @@ def startsocket():
 			user_data[x][2]=d
 	write()
 	return jsonify(result=totals)
-	
+
+@app.route('/_bingo')
+def updateStats():
+	a = request.args.get('board', "goals")
+	b = request.args.get('bcolors', "color")
+	bingoCard = ''+a + '$' + b
+	return jsonify(result=bingoCard)
+
+@app.route('/bingo')
+def lockout():
+	return render_template('LT.html')
 
 @app.route('/user/', methods=['GET', 'POST'])
 @app.route('/user/<name>', methods=['GET', 'POST'])
