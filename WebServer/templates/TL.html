@@ -61,6 +61,8 @@ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 	}
 
 	function updateClick(){
+		clearInterval(stats);
+		stats = setInterval(updateStats, 5000);
 		$.getJSON($SCRIPT_ROOT + '/_bingoClick', {board:goals.toString(),bcolors:colors.toString()
       }, function(data) {
         console.log(data.result);
