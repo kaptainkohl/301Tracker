@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		Banjo-Tooie Lockout Bingo Generator
+	</title>
+</head>
+<body>
+	<p>Banjo-Tooie Lockout Bingo Generator</p><br>
+	<p>This generator generates:<br>8 Goals that are a random amount of jiggies in a level(3-7) 
+		<br> 8 Random Long Jiggies (Jiggies that you wouldn't really want to do)
+		<br> 2 Jinjo Families that need to be compleated
+		<br> 1 note amount, first player to have that much get the goal <br> 2 Jamjars Moves that need to be learned 
+		<br> 1 Glowbo Amount <br> 3 worlds where all cheato pages much be collected </p>
+	<button onclick="getRandom()" class="button">Generate</button>
+	<p id = "item"></p>
+	COLOR Select: 
+<select id="p1color" name="player1" onchange="color_pick(this.value);">
+  <option value="red">Red</option>  
+  <option value="green">Green</option>
+  <option value="black">Blue</option>
+  <option value="pink">Pink</option>  
+  <option value="Purple">Purple</option>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+	playercolor = 'Red';
+	function color_pick(p){
+    playercolor = p;
+	}	
+	var stats = setInterval(updateStats, 5000);
+
+	function updateStats(){
+		$.getJSON($SCRIPT_ROOT + '/_bingo', {board:goals,bcolors:colors
+      }, function(data) {
+        console.log(data.result);
+		dataarray = data.result;
+		if (dataarray){
+		playerarray = dataarray.split('$')
+		console.log(playerarray[0]);
+		
+		goals = playerarray[0].split(',');
+		colors = playerarray[1].split(',');
+		
+		
+		
+		var cells = tbl.getElementsByTagName("td"); 
+			for (var i = 0; i < cells.length; i++) { 
+				var name = cells[i].id;
+				if (name == 'cell '+i){
+					cells.innerHTML = goals[i];
+					cells.style.backgroundColor=colors[i];
+					}
+				}	
+		}
+      });
+      return false;
+
+}
+
+		var goals = [];
+		var colors = [];
+		
+		var level_jiggies= []; 
+		level_jiggies[0] = " Jiggies in MT";
+		level_jiggies[1] = " Jiggies in GGM";
+		level_jiggies[2] = " Jiggies in WW";
+		level_jiggies[3] = " Jiggies in JRL";
+		level_jiggies[4] = " Jiggies in TDL";
+		level_jiggies[5] = " Jiggies in GI";
+		level_jiggies[6] = " Jiggies in HFP";
+		level_jiggies[7] = " Jiggies in CCL";		
+		
+		var long_jiggies = [];
+		long_jiggies[0] = "MT Kickball Jiggy";
+		long_jiggies[1] = "Relic Jiggy ";
+		long_jiggies[2] = "Targetzan Jiggy";
+		long_jiggies[3] = "Crushing Shed Jiggy";
+		long_jiggies[4] = "Old King Coal Jiggy";
+		long_jiggies[5] = "Ordance Storage Jiggy";
+		long_jiggies[6] = "Dodgem Dome Jiggy";
+		long_jiggies[7] = "Saucer of Peril Jiggy";
+		long_jiggies[8] = "Boggy's Kids Jiggy";
+		long_jiggies[9] = "Pig Pool Jiggy";
+		long_jiggies[10] = "Merry Maggie Jiggy";
+		long_jiggies[11] = "Woo Fak Fak Jiggy";
+		long_jiggies[12] = "Dino Kids Jiggy";
+		long_jiggies[13] = "Terry's Kids Jiggy";
+		long_jiggies[14] = "Oogle Boogles Jiggy";
+		long_jiggies[15] = "Workers jiggy";
+		long_jiggies[16] = "Clinkers Jiggy";
+		long_jiggies[17] = "Quality Control Jiggy";
+		long_jiggies[18] = "Alien Kids Jiggy";
+		long_jiggies[19] = "Saberman Jiggy";
+		long_jiggies[20] = "Hfp Kickball Jiggy";
+		long_jiggies[21] = "Mr. Fit Jiggy";
+		long_jiggies[22] = "Canary Mary 3 Jiggy";
+		long_jiggies[23] = "Pot O' Gold Jiggy";
+		
+		var jinjos= []; 
+		jinjos[0] = "White Jinjo";
+		jinjos[1] = "Orange Jinjos";
+		jinjos[2] = "Yellow Jinjos";
+		jinjos[3] = "Brown Jinjos";
+		jinjos[4] = "Green Jinjos";
+		jinjos[5] = "Blue Jinjos";
+		jinjos[6] = "Red Jinjos";
+		jinjos[7] = "Purple Jinjos";		
+		jinjos[8] = "Black Jinjos";
+		
+		var notes= []; 
+		notes[0] = "500 Notes";
+		notes[1] = "600 Notes";
+		notes[2] = "700 Notes";
+		notes[3] = "750 Notes";
+		notes[4] = "800 Notes";
+		notes[5] = "900 Notes";		
+		
+		var jamjars= []; 
+		jamjars[0] = "Shack Pack";
+		jamjars[1] = "Sack Pack";
+		jamjars[2] = "Glide";
+		jamjars[3] = "Talon Torpedo";
+		jamjars[4] = "Clockworks";
+		jamjars[5] = "Leg Spring";
+		jamjars[6] = "Taxi Pack";
+		
+		var glowbo= []; 
+		glowbo[0] = "5 glowbos";
+		glowbo[1] = "7 glowbos";
+		glowbo[2] = "10 glowbos";
+		glowbo[3] = "12 glowbos";
+		glowbo[4] = "14 glowbos";
+		glowbo[5] = "16 glowbos";
+		
+		var cheato= []; 
+		cheato[0] = " All Cheato Pages in MT";
+		cheato[1] = "All Cheato Pages in GGM";
+		cheato[2] = "All Cheato Pages in WW";
+		cheato[3] = "All Cheato Pages in JRL";
+		cheato[4] = "All Cheato Pages in TDL";
+		cheato[5] = "All Cheato Pages in GI";
+		cheato[6] = "All Cheato Pages in HFP";
+		cheato[7] = "All Cheato Pages in CCL";
+		
+
+	function getRandom() {
+		try {
+			document.parentNode.removeChild('bingo');
+		}
+		catch(err) {
+			
+		}
+		goals = [];
+		// Generate a random number 8 times and place it in a level then in the array
+		for(var i = 0; i<8 ; i++)
+		{
+			var ran = 3 + Math.floor(Math.random() * 5);
+			goals.push("" + ran +level_jiggies[i]);
+		}
+		// Take 1 jiggy from each level and place it in the level
+		for(var i = 0; i<8 ; i++)
+		{
+			var ran = Math.floor(Math.random() * 3);
+			goals.push("" + long_jiggies[(i*3)+ran]);
+		}		
+		// Take 1 randomly
+
+		
+		goals.push("" + notes[Math.floor(Math.random() * 6)]);		
+		
+		goals.push("" + glowbo[Math.floor(Math.random() * 6)]);
+		
+		//Take 2 random while no repeates
+		
+		var ran1 = Math.floor(Math.random() * 7)
+		var ran2 = Math.floor(Math.random() * 7)
+		
+		while(ran1 == ran2)
+		{
+			ran2 = Math.floor(Math.random() * 7)
+		}
+		goals.push("" + jamjars[ran1]);
+		goals.push("" + jamjars[ran2]);
+		
+//Take 2 random while no repeates
+		
+		var ran1 = Math.floor(Math.random() * 9)
+		var ran2 = Math.floor(Math.random() * 9)
+		
+		while(ran1 == ran2)
+		{
+			ran2 = Math.floor(Math.random() * 9)
+		}
+		goals.push("" + jinjos[ran1]);
+		goals.push("" + jinjos[ran2]);		
+		
+		
+		//Take 3 random while no repeates
+		
+		var ran1 = Math.floor(Math.random() * 8)
+		var ran2 = Math.floor(Math.random() * 8)
+		var ran3 = Math.floor(Math.random() * 8)
+		
+		
+		while(ran1 == ran2)
+		{
+			ran2 = Math.floor(Math.random() * 7)
+		}
+		while(ran1 == ran3 || ran2 == ran3) 
+		{
+			ran3 = Math.floor(Math.random() * 7)
+		}		
+		
+		goals.push("" + cheato[ran1]);
+		goals.push("" + cheato[ran2]);
+		goals.push("" + cheato[ran3]);
+		
+		//document.getElementById("item").innerHTML = goals;
+		goals = shuffle(goals);
+		tableCreate();
+		}
+	
+	
+	function tableCreate() {
+	var a = 0;
+    var body = document.getElementsByTagName('body')[0];
+    var tbl = document.createElement('table');
+	tbl.setAttribute('id','bingo')
+    tbl.style.width = '33%';
+    tbl.setAttribute('border', '1');
+	tbl.setAttribute('padding-bottom', '33%');
+	tbl.setAttribute('height', '0');
+    var tbdy = document.createElement('tbody');
+    for (var i = 0; i < 5; i++) {
+        var tr = document.createElement('tr');
+        for (var j = 0; j < 5; j++) {
+
+                var td = document.createElement('td');
+                td.appendChild(document.createTextNode(goals[a]))
+				td.setAttribute('id',a)
+				td.setAttribute('onclick','clicked(this)')
+                tr.appendChild(td)
+			a++;
+        }
+        tbdy.appendChild(tr);
+    }
+    tbl.appendChild(tbdy);
+    body.appendChild(tbl)
+	
+	var cells = tbl.getElementsByTagName("td"); 
+		for (var i = 0; i < cells.length; i++) { 
+			var name = document.getElementById(cells[i]);
+			cells[i].onclick = clicked(name);
+}
+}
+
+
+function clicked(x) {
+    x.style.backgroundColor=playercolor;
+	//alert("clicked cell at: " + x.cellIndex + ", " + x.parentNode.rowIndex);
+	
+	colors[parseInt(x.id)]= playercolor;
+}
+
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}		
+</script>
+</body>
+</html>
