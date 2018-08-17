@@ -39,7 +39,7 @@ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 		dataarray = data.result;
 		if (dataarray){
 		playerarray = dataarray.split('$')
-		console.log(playerarray[0]);
+		//console.log(playerarray[0]);
 		
 		goals = playerarray[0].split(',');
 		colors = playerarray[1].split(',');
@@ -67,7 +67,24 @@ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
       }, function(data) {
         console.log(data.result);
 		dataarray = data.result;
+				if (dataarray){
+		playerarray = dataarray.split('$')
+		//console.log(playerarray[0]);
 		
+		goals = playerarray[0].split(',');
+		colors = playerarray[1].split(',');
+		
+		
+		
+		var cells = document.getElementById('bingo').getElementsByTagName("td"); 
+			for (var i = 0; i < cells.length; i++) { 
+				var name = cells[i].id;
+				
+					cells[i].innerHTML = goals[i];
+					cells[i].style.backgroundColor=colors[i];
+					
+				}	
+		}
       });
       return false;
 
