@@ -18,7 +18,7 @@
 <select id="p1color" name="player1" onchange="color_pick(this.value);">
   <option value="red">Red</option>  
   <option value="green">Green</option>
-  <option value="black">Blue</option>
+  <option value="blue">Blue</option>
   <option value="pink">Pink</option>  
   <option value="Purple">Purple</option>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -29,9 +29,11 @@ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
     playercolor = p;
 	}	
 	var stats = setInterval(updateStats, 5000);
-
+	var goals = [];
+	var colors = [];
+	
 	function updateStats(){
-		$.getJSON($SCRIPT_ROOT + '/_bingo', {board:goals,bcolors:colors
+		$.getJSON($SCRIPT_ROOT + '/_bingo', {
       }, function(data) {
         console.log(data.result);
 		dataarray = data.result;
@@ -44,22 +46,30 @@ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 		
 		
 		
-		var cells = tbl.getElementsByTagName("td"); 
+		var cells = document.getElementById('bingo').getElementsByTagName("td"); 
 			for (var i = 0; i < cells.length; i++) { 
 				var name = cells[i].id;
-				if (name == 'cell '+i){
-					cells.innerHTML = goals[i];
-					cells.style.backgroundColor=colors[i];
-					}
+				
+					cells[i].innerHTML = goals[i];
+					cells[i].style.backgroundColor=colors[i];
+					
 				}	
 		}
       });
       return false;
 
-}
+	}
 
-		var goals = [];
-		var colors = [];
+	function updateClick(){
+		$.getJSON($SCRIPT_ROOT + '/_bingoClick', {board:goals.toString(),bcolors:colors.toString()
+      }, function(data) {
+        console.log(data.result);
+		dataarray = data.result;
+		
+      });
+      return false;
+
+	}
 		
 		var level_jiggies= []; 
 		level_jiggies[0] = " Jiggies in MT";
@@ -142,7 +152,7 @@ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 		cheato[5] = "All Cheato Pages in GI";
 		cheato[6] = "All Cheato Pages in HFP";
 		cheato[7] = "All Cheato Pages in CCL";
-		
+		tableCreate();
 
 	function getRandom() {
 		try {
@@ -218,9 +228,20 @@ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 		
 		//document.getElementById("item").innerHTML = goals;
 		goals = shuffle(goals);
-		tableCreate();
+		tableFill();
+		updateClick();
 		}
 	
+	function tableFill() {
+		var cells = document.getElementById('bingo').getElementsByTagName("td"); 
+			for (var i = 0; i < cells.length; i++) { 
+				var name = cells[i].id;
+					cells[i].innerHTML = goals[i];
+					colors[i] = 'White';
+					
+				}	
+		}
+
 	
 	function tableCreate() {
 	var a = 0;
@@ -237,7 +258,7 @@ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
         for (var j = 0; j < 5; j++) {
 
                 var td = document.createElement('td');
-                td.appendChild(document.createTextNode(goals[a]))
+                td.appendChild(document.createTextNode('null'))
 				td.setAttribute('id',a)
 				td.setAttribute('onclick','clicked(this)')
                 tr.appendChild(td)
@@ -261,6 +282,7 @@ function clicked(x) {
 	//alert("clicked cell at: " + x.cellIndex + ", " + x.parentNode.rowIndex);
 	
 	colors[parseInt(x.id)]= playercolor;
+	updateClick();
 }
 
 function shuffle(array) {
