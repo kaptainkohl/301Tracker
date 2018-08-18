@@ -36,7 +36,7 @@ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 		$.getJSON($SCRIPT_ROOT + '/_bingo', {
       }, function(data) {
         console.log(data.result);
-		dataarray = data.result;
+		dataarray = data.result.toString();
 		if (dataarray){
 		playerarray = dataarray.split('$')
 		//console.log(playerarray[0]);
@@ -66,25 +66,9 @@ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 		$.getJSON($SCRIPT_ROOT + '/_bingoClick', {board:goals.toString(),bcolors:colors.toString()
       }, function(data) {
         console.log(data.result);
-		dataarray = data.result;
-				if (dataarray){
-		playerarray = dataarray.split('$')
-		//console.log(playerarray[0]);
-		
-		goals = playerarray[0].split(',');
-		colors = playerarray[1].split(',');
-		
-		
-		
-		var cells = document.getElementById('bingo').getElementsByTagName("td"); 
-			for (var i = 0; i < cells.length; i++) { 
-				var name = cells[i].id;
+		dataarray = data.result.toString();
 				
-					cells[i].innerHTML = goals[i];
-					cells[i].style.backgroundColor=colors[i];
-					
-				}	
-		}
+		
       });
       return false;
 
