@@ -65,7 +65,7 @@ def startsocket():
 def updatebingo():
 	global bingoCard
 	print(bingoCard)
-	time.sleep(1)
+	
 	return jsonify(result=bingoCard)
 
 @app.route('/_bingoClick', methods=['GET', 'POST'])
@@ -74,6 +74,7 @@ def updatebingoClicked():
 	a = request.args.get('board', "goals")
 	b = request.args.get('bcolors', "color")
 	bingoCard = ''+a + '$' + b
+	time.sleep(5)
 	return jsonify(result=bingoCard)
 	
 @app.route('/bingo')
