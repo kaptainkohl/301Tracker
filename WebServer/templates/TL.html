@@ -10,7 +10,7 @@
 	<p>This generator generates:<br>8 Goals that are a random amount of jiggies in a level(3-7) 
 		<br> 8 Random Long Jiggies (Jiggies that you wouldn't really want to do)
 		<br> 2 Jinjo Families that need to be compleated
-		<br> 1 note amount, first player to have that much get the goal <br> 2 Jamjars Moves that need to be learned 
+		<br> 1 note amount(200-900), first player to have that much get the goal <br> 2 Jamjars Moves that need to be learned 
 		<br> 1 Glowbo Amount <br> 3 worlds where all cheato pages much be collected </p>
 	<button onclick="getRandom()" class="button">Generate</button>
 	<p id = "item"></p>
@@ -24,7 +24,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-	playercolor = 'Red';
+	playercolor = 'red';
 	function color_pick(p){
     playercolor = p;
 	}	
@@ -121,33 +121,26 @@ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 		jinjos[7] = "Purple Jinjos";		
 		jinjos[8] = "Black Jinjos";
 		
-		var notes= []; 
-		notes[0] = "500 Notes";
-		notes[1] = "600 Notes";
-		notes[2] = "700 Notes";
-		notes[3] = "750 Notes";
-		notes[4] = "800 Notes";
-		notes[5] = "900 Notes";		
+		var notes= []; 	
 		
 		var jamjars= []; 
-		jamjars[0] = "Shack Pack";
-		jamjars[1] = "Sack Pack";
-		jamjars[2] = "Glide";
-		jamjars[3] = "Talon Torpedo";
-		jamjars[4] = "Clockworks";
-		jamjars[5] = "Leg Spring";
-		jamjars[6] = "Taxi Pack";
+		jamjars[0] = "Learn Shack Pack";
+		jamjars[1] = "Learn Sack Pack";
+		jamjars[2] = "Learn Glide";
+		jamjars[3] = "Learn Talon Torpedo";
+		jamjars[4] = "Learn Clockworks";
+		jamjars[5] = "Learn Leg Spring";
+		jamjars[6] = "Learn Taxi Pack";
+		jamjars[7] = "Learn Hatch";
+		jamjars[8] = "Learn Claw Climber Boots";
+		jamjars[9] = "Learn Snooze Pack";
+		jamjars[10] = "Learn Wing Wack";
 		
 		var glowbo= []; 
-		glowbo[0] = "5 glowbos";
-		glowbo[1] = "7 glowbos";
-		glowbo[2] = "10 glowbos";
-		glowbo[3] = "12 glowbos";
-		glowbo[4] = "14 glowbos";
-		glowbo[5] = "16 glowbos";
+
 		
 		var cheato= []; 
-		cheato[0] = " All Cheato Pages in MT";
+		cheato[0] = "All Cheato Pages in MT";
 		cheato[1] = "All Cheato Pages in GGM";
 		cheato[2] = "All Cheato Pages in WW";
 		cheato[3] = "All Cheato Pages in JRL";
@@ -177,21 +170,22 @@ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 			var ran = Math.floor(Math.random() * 3);
 			goals.push("" + long_jiggies[(i*3)+ran]);
 		}		
-		// Take 1 randomly
-
 		
-		goals.push("" + notes[Math.floor(Math.random() * 6)]);		
-		
-		goals.push("" + glowbo[Math.floor(Math.random() * 6)]);
+		//Get random note value 200 to 900
+		var note_value = (Math.floor(Math.random() * 140) *5) +200;
+		goals.push("" + note_value+ " Notes");	
+		// Get Random 4-17 	
+		var glowbo_value = Math.floor(Math.random() * 13)  +4;
+		goals.push("" + glowbo_value+ " Glowbos");	
 		
 		//Take 2 random while no repeates
 		
-		var ran1 = Math.floor(Math.random() * 7)
-		var ran2 = Math.floor(Math.random() * 7)
+		var ran1 = Math.floor(Math.random() * 11)
+		var ran2 = Math.floor(Math.random() * 11)
 		
 		while(ran1 == ran2)
 		{
-			ran2 = Math.floor(Math.random() * 7)
+			ran2 = Math.floor(Math.random() * 11)
 		}
 		goals.push("" + jamjars[ran1]);
 		goals.push("" + jamjars[ran2]);
@@ -254,7 +248,7 @@ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
     tbl.style.width = '33%';
     tbl.setAttribute('border', '1');
 	tbl.setAttribute('padding-bottom', '33%');
-	tbl.setAttribute('height', '0');
+	tbl.setAttribute('height', '150px');
     var tbdy = document.createElement('tbody');
     for (var i = 0; i < 5; i++) {
         var tr = document.createElement('tr');
@@ -264,6 +258,7 @@ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
                 td.appendChild(document.createTextNode('null'))
 				td.setAttribute('id',a)
 				td.setAttribute('onclick','clicked(this)')
+				td.setAttribute('height', '80px');
                 tr.appendChild(td)
 			a++;
         }
@@ -281,7 +276,14 @@ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 
 
 function clicked(x) {
-    x.style.backgroundColor=playercolor;
+    
+	if(x.style.backgroundColor == playercolor)
+	{
+	 x.style.backgroundColor='white';
+	}
+	else{
+	x.style.backgroundColor=playercolor;
+	}
 	//alert("clicked cell at: " + x.cellIndex + ", " + x.parentNode.rowIndex);
 	
 	colors[parseInt(x.id)]= playercolor;
