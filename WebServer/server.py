@@ -64,8 +64,10 @@ def startsocket():
 @app.route('/_bingo', methods=['GET', 'POST'])
 def updatebingo():
 	global bingoCard
-	print(bingoCard)
-	
+	#print(bingoCard)
+	f = open('card.txt', 'r')
+	bingoCard = f.readlines()
+	f.close()
 	return jsonify(result=bingoCard)
 
 @app.route('/_bingoClick', methods=['GET', 'POST'])
@@ -73,8 +75,9 @@ def updatebingoClicked():
 	global bingoCard
 	a = request.args.get('board', "goals")
 	b = request.args.get('bcolors', "color")
-	bingoCard = ''+a + '$' + b
-	time.sleep(5)
+	f = open('card.txt', 'w')
+	f.write(""+a + "$" + b)
+	f.close()
 	return jsonify(result=bingoCard)
 	
 @app.route('/bingo')
