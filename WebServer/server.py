@@ -78,7 +78,7 @@ def updatebingoClicked():
 	f = open('card.txt', 'w')
 	f.write(""+a + "$" + b)
 	f.close()
-	return jsonify(result=bingoCard)
+	return jsonify(result='sent')
 	
 @app.route('/bingo')
 def lockout():
