@@ -4,6 +4,7 @@ import socket
 import sys
 import time
 import flask
+import pickle
 from flask import request, render_template, redirect, Flask, jsonify
 from concurrent.futures import ThreadPoolExecutor
 
@@ -12,10 +13,13 @@ executor = ThreadPoolExecutor(2)
 #===Max of 15 people in the race===#
 index=0
 
-user_data = [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]
+f = open('userdata.txt', 'w')
+pickle.dump([[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]],f)
+f.close()
+
+
 user_name = ["Connor75","Emoarbiter","Secrethumorman","ObiyoSRL","Dickhiskhan","MutantsAbyss","icupspeedruns_","Hagginater","kaptainkohl","HolySanctum","Mittenz","PurpleRupees","Hagginatersd"]
 user_pic = []
-totals=''
 y =0
 a =0
 bingoCard = ''
@@ -30,14 +34,23 @@ if __name__ == '__main__':
 	
 
 def write():
-	global user_data
 	global totals
 	print("writing")
-	totals=''
-	for x in range(0,len(user_name)):
-		totals = ''+totals + user_name[x] +","+str(user_data[x])[1:-1]+"$"
+
 	
+
 	
+def start_timer():
+	f = open('timestamp.txt', 'w')
+	f.write(str(time.time()))
+	print(str(time.time()))
+	f.close()
+def read_timer():
+	f = open('timestamp.txt', 'r')
+	stamp = f.readline()
+	f.close()
+	
+	return int(time.time() - float(stamp))
 	
 
 @app.route('/_update')
@@ -45,6 +58,12 @@ def updateStats():
 	a = request.args.get('a', 0, type=int)
 	
 	return jsonify(result=totals)
+	
+@app.route('/_time')
+def updateTime():
+	a = request.args.get('username', 'Konditioner')
+	
+	return jsonify(result=read_timer())
 
 @app.route('/_socket', methods=['GET', 'POST'])	
 def startsocket():
@@ -52,13 +71,27 @@ def startsocket():
 	b = request.args.get('BK', 0, type=int)
 	c = request.args.get('BT', 1,type=int)
 	d = request.args.get('DK', 0,type=int)
-	print(a+" "+str(b))
+	
+	f = open('userdata.txt', 'rb')
+	user_data = pickle.load(f)
+	f.close()
+
+	
 	for x in range(0,len(user_name)):
 		if user_name[x]==a:
 			user_data[x][0]=b
 			user_data[x][1]=c
 			user_data[x][2]=d
-	write()
+	
+	totals=''
+	for x in range(0,len(user_name)):
+		totals = ''+totals + user_name[x] +","+str(user_data[x])[1:-1]+"$"
+	
+	f = open('userdata.txt', 'wb')
+	pickle.dump(user_data,f)
+	f.close()
+	
+	
 	return jsonify(result=totals)
 
 @app.route('/_bingo', methods=['GET', 'POST'])
@@ -105,6 +138,7 @@ def statspage():
 @app.route('/statStream', methods=['GET', 'POST'])
 def statStream():
 	write()
+	start_timer()
 	return render_template('301Display.html')
 
 @app.route('/statsHag', methods=['GET', 'POST'])

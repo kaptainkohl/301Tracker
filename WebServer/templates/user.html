@@ -12,85 +12,109 @@ canvas {
 </head>
 <body onload="startScreen()">
 <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-
-<div id="username">{{ name }}</div>
+<div id = "gameTimer" class="stopwatch" style="display: none;"></div>
+<div id="username" style="display: none;">{{ name }}</div>
 <div id="stats">BK=0 BT=0 DK=0</div>
 
-<button type="button" onclick="player1.BKprogress+=1;update = true;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;">BK+1</button>
-<button type="button" onclick="player1.BTprogress+=1;update = true;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;">BT+1</button>
-<button type="button" onclick="player1.DKprogress+=1;update = true;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;">DK+1</button>
+<button type="button" onclick="current_user.BKprogress+=1;update = true;document.getElementById('stats').innerHTML='BK='+current_user.BKprogress+' BT='+current_user.BTprogress+' DK='+current_user.DKprogress;">BK+1</button>
+<button type="button" onclick="current_user.BTprogress+=1;update = true;document.getElementById('stats').innerHTML='BK='+current_user.BKprogress+' BT='+current_user.BTprogress+' DK='+current_user.DKprogress;">BT+1</button>
+<button type="button" onclick="current_user.DKprogress+=1;update = true;document.getElementById('stats').innerHTML='BK='+current_user.BKprogress+' BT='+current_user.BTprogress+' DK='+current_user.DKprogress;">DK+1</button>
 <br> <br>
-<button type="button" onclick="player1.BKprogress-=1;update = true;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;">BK-1</button>
-<button type="button" onclick="player1.BTprogress-=1;update = true;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;">BT-1</button>
-<button type="button" onclick="player1.DKprogress-=1;update = true;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;">DK-1</button>
+<button type="button" onclick="current_user.BKprogress-=1;update = true;document.getElementById('stats').innerHTML='BK='+current_user.BKprogress+' BT='+current_user.BTprogress+' DK='+current_user.DKprogress;">BK-1</button>
+<button type="button" onclick="current_user.BTprogress-=1;update = true;document.getElementById('stats').innerHTML='BK='+current_user.BKprogress+' BT='+current_user.BTprogress+' DK='+current_user.DKprogress;">BT-1</button>
+<button type="button" onclick="current_user.DKprogress-=1;update = true;document.getElementById('stats').innerHTML='BK='+current_user.BKprogress+' BT='+current_user.BTprogress+' DK='+current_user.DKprogress;">DK-1</button>
 <script>
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 var list_people = [];
+var list_place = [];
 var update = false; 
-//var Bac = new Image();
-//Bac.src = "bac.png";
+var race_time = 0;
+var bac_image = new Image();
+bac_image.src = "{{ url_for('static', filename = 'tracker.png') }}";
 function startScreen() {
+ grab_time();
  layout.start();
 }
 var layout = {
 canvas : document.createElement("canvas"),
  start : function() {
-this.canvas.width = 256;
-this.canvas.height = 120;
+this.canvas.width = 200;
+this.canvas.height = 54;
  this.context = this.canvas.getContext("2d");
  document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-this.interval = setInterval(updateScreen, 1000);
+this.interval = setInterval(updateScreen, 20);
 	this.stream = setInterval(updateStats, 30000);
-this.stream = setInterval(delaySend, 2000);
-	
+	this.stream = setInterval(delaySend, 2000);
+
 },
 clear : function() {
 this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-	//this.context.font = "50px Impact";
-	//this.context.fillText("RAREWARE 301%",20, 480);
-
  }
 }
+
+
+
 function delaySend()
 {
-if (update){
-updateStats();
-update = false;
-}
+	if (update){
+		updateStats();
+		update = false;
+	}
 }
 function updateScreen() {
-layout.clear();
+	layout.clear();
+	list_place = list_people.slice();
+	list_place.sort(function(a, b){return b.totals-a.totals});
+	 	for ( var j = 0; j< list_place.length;j++)
+		{
+		list_place[j].place=j+1;
 
-	//list_people.sort(function(a, b){return b.totals-a.totals});
-
-	player1.draw();
-
+		}
+	current_user.draw();
+	
 
 } 
 
 function updateStats(){
 $.getJSON($SCRIPT_ROOT + '/_socket', {
-	username:player1.username,BK:player1.BKprogress,BT:player1.BTprogress,DK:player1.DKprogress        
+	username:current_user.username,BK:current_user.BKprogress,BT:current_user.BTprogress,DK:current_user.DKprogress        
       }, function(data) {
         console.log(data.result);
 		dataarray = data.result;
+		if (dataarray){
 		playerarray = dataarray.split('$')
-		for ( var i = 0; i< playerarray.length-1;i++)
-			{ 
+		for ( var i = 0; i< list_people.length;i++)
+			{
 			player_data = playerarray[i].split(',');
-			if (player_data[0]==player1.username)
-				{
-				player1.BKprogress = parseInt(player_data[1]);
-				player1.BTprogress = parseInt(player_data[2]);
-				player1.DKprogress = parseInt(player_data[3]);
-				player1.totals = player1.BKprogress+player1.BTprogress+player1.DKprogress;
-				document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;
+			list_people[i].BKprogress = parseInt(player_data[1])
+			list_people[i].BTprogress = parseInt(player_data[2])
+			list_people[i].DKprogress = parseInt(player_data[3])
+			list_people[i].totals = list_people[i].BKprogress+list_people[i].BTprogress+list_people[i].DKprogress;
+			if (player_data[0] == current_user.name){
+				current_user.totals = list_people[i].BKprogress+list_people[i].BTprogress+list_people[i].DKprogress;
 				}
 			};
+		}
       });
       return false;
 
+}
+
+function grab_time(){
+$.getJSON($SCRIPT_ROOT + '/_time', {
+	username:current_user.username    
+      }, function(data) {
+		race_time = parseInt(data.result);
+		setInterval(add_time, 1000);
+
+      });
+      return false;
+
+}
+
+function add_time(){
+race_time +=1;
 }
 
 function card(x , y , name) {
@@ -102,67 +126,115 @@ function card(x , y , name) {
 	this.BTprogress=0;
 	this.DKprogress=0;
 	this.totals=0;
-	this.draw = function(){
+	this.scrollpos = 0;
+	this.picture = new Image();
+	this.picture.src = "{{ url_for('static', filename = 'serverIcons/')}}"+name+'.png';
+	this.draw = function(){	
 		var ctx = layout.context;
-		ctx.globalAlpha=0.9;
+		ctx.drawImage(bac_image,0,0,200,54);
+		//time
 		ctx.fillStyle = "black";
-		ctx.fillRect(this.xpos,this.ypos,256,120);
-
-		var grdGray = ctx.createLinearGradient(this.xpos ,this.ypos ,this.xpos +250,this.ypos + 120);
-		grdGray.addColorStop(0,"#1e1e15");
-		grdGray.addColorStop(1,"#b6b696");
-		ctx.fillStyle = grdGray;
-		ctx.globalAlpha=0.2;
-		ctx.fillRect(this.xpos +2,this.ypos +2,256 -4,120 -4);
-		ctx.fillStyle = "black";
-		ctx.globalAlpha=0.9;
-		ctx.fillRect(this.xpos +4,this.ypos +4,54,54);
-
-
-		var grdYellow = ctx.createLinearGradient(this.xpos ,this.ypos ,this.xpos +250,this.ypos + 120);
-		grdYellow.addColorStop(0,"#999900")
-		grdYellow.addColorStop(1,"#ffff1a");
-		ctx.fillStyle = grdYellow;
-		ctx.font = "24px Century";
-		ctx.fillText(this.username,this.xpos + 60 , this.ypos+30); 
-		ctx.font = "15px Century";
-		ctx.fillText("Place: "+this.place,this.xpos + 60 , this.ypos+50);
-		ctx.fillText(" Completion: "+parseInt((this.totals/391)*100)+"%",768+this.xpos + 120 , this.ypos+50);
-		
-		var grdRed = ctx.createLinearGradient(this.xpos + 4,this.ypos + 62,this.xpos +250,this.ypos + 62+15);
+		var time = ""+parseInt(race_time);
+		ctx.font = "16px Impact";
+		ctx.fillText(time.toHHMMSS(),7, 19);
+		//user
+		this.totals= this.BKprogress+this.BTprogress+this.DKprogress;
+		ctx.drawImage(this.picture,75,0,25,25);
+		ctx.font = "12px Century";
+		ctx.fillText(this.username+"\t\t"+parseInt((this.totals/391)*100)+"%", 105 , 12); 
+		var grdRed = ctx.createLinearGradient(105,19,195,23);
 		grdRed.addColorStop(0,"#990000");
-		grdRed.addColorStop(1,"#ff3333");
-		var grdBlue = ctx.createLinearGradient(this.xpos + 4,this.ypos + 62,this.xpos +250,this.ypos + 62+15);
-		grdBlue.addColorStop(0,"blue");
-		grdBlue.addColorStop(1,"#0066ff");
-		var grdGreen = ctx.createLinearGradient(this.xpos + 4,this.ypos + 62,this.xpos +250,this.ypos + 62+15);
-		grdGreen.addColorStop(0,"green");
-		grdGreen.addColorStop(1,"#33cc33");
+		grdRed.addColorStop(0.37,"#006d99");
+		grdRed.addColorStop(0.75,"#00990c");
 		ctx.fillStyle = grdRed;
-		ctx.fillRect(this.xpos + 4,this.ypos + 62, 248*(this.BKprogress/100), 15);
-		ctx.fillStyle = grdBlue;
-		ctx.fillRect(this.xpos + 4,this.ypos + 60 + 15 +4,248*(this.BTprogress/90), 15);
-		ctx.fillStyle = grdGreen;
-		ctx.fillRect(this.xpos + 4,this.ypos + 60 + 30 +8,248*(this.DKprogress/201), 15);
+		ctx.fillRect(105,19, 90 *(this.totals/391), 4);
+		
+		// display scrolling bar of people
+		for ( var i = 0; i< list_people.length;i++)
+			{
+			ctx.fillStyle = "black";
+			ctx.font = "16px Impact";
+			ctx.fillText(""+list_people[i].place+" : ",this.scrollpos + 5 + (i*140), 48); 
+			
+			ctx.drawImage(list_people[i].picture,this.scrollpos + 15+ (i*140),33,16,16);
+			ctx.font = "12px Century";
+			ctx.fillText(list_people[i].username+"\t\t"+parseInt((list_people[i].totals/391)*100)+"%", this.scrollpos + 40 + (i*140), 44); 
+			var grdBar = ctx.createLinearGradient(this.scrollpos + 40 + (i*140),46, this.scrollpos + 40 + (i*140)+90,50);
+			grdBar.addColorStop(0,"#990000");
+			grdBar.addColorStop(0.37,"#006d99");
+			grdBar.addColorStop(0.75,"#00990c");
+			ctx.fillStyle = grdBar;
+			ctx.fillRect(this.scrollpos + 40 + (i*140),46, 90 *(list_people[i].totals/391), 4);
+			
+			};
+		this.scrollpos-=1;
+		
+		if (this.scrollpos < (list_people.length*-140))
+		{
+		this.scrollpos=200;
+		}
+		
+	
 
 	};
 };
 
-var player1 = new card(0 *256,0*120,document.getElementById('username').innerHTML);
+var current_user = new card(0,0,document.getElementById('username').innerHTML);
+
+var player1 = new card(-1 *256,5*120,"Connor75");
+
+
+var player2 = new card(1 *256,4*120,"Emoarbiter");
+var player11 = new card(0 *256,5*120,"Secrethumorman");
+var player3 = new card(1 *256,5*120,"ObiyoSRL");
+
+
+var player7 = new card(1 *256,0*120,"Dickhiskhan");
+var player8 = new card(1 *256,1*120,"MutantsAbyss");
+var player9 = new card(1 *256,2*120,"Icupspeedruns_");
+var player10 = new card(1 *256,3*120,"Hagginater");
+
+list_people.push(player1);
+list_people.push(player2);
+list_people.push(player11);
+list_people.push(player3);
+
+
+list_people.push(player7);
+list_people.push(player8);
+list_people.push(player9);
+list_people.push(player10);
+
 
 document.addEventListener("keydown", function(e) {
 
     if (e.keyCode == 49) {
-	player1.BKprogress+=1;update = true;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;
+	current_user.BKprogress+=1;update = true;document.getElementById('stats').innerHTML='BK='+current_user.BKprogress+' BT='+current_user.BTprogress+' DK='+current_user.DKprogress;
     }
 	    if (e.keyCode == 50) {
-	player1.BTprogress+=1;update = true;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;
+	current_user.BTprogress+=1;update = true;document.getElementById('stats').innerHTML='BK='+current_user.BKprogress+' BT='+current_user.BTprogress+' DK='+current_user.DKprogress;
     }
 	    if (e.keyCode == 51) {
-	player1.DKprogress+=1;update = true;document.getElementById('stats').innerHTML='BK='+player1.BKprogress+' BT='+player1.BTprogress+' DK='+player1.DKprogress;
+	current_user.DKprogress+=1;update = true;document.getElementById('stats').innerHTML='BK='+current_user.BKprogress+' BT='+current_user.BTprogress+' DK='+current_user.DKprogress;
     }
 });
 
+
+
+
+
+
+String.prototype.toHHMMSS = function () {
+    var sec_num = parseInt(this, 10); // don't forget the second param
+    var hours   = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+    if (hours   < 10) {hours   = "0"+hours;}
+    if (minutes < 10) {minutes = "0"+minutes;}
+    if (seconds < 10) {seconds = "0"+seconds;}
+    return hours+':'+minutes+':'+seconds;
+}
 </script>
 </body>
 </html>
