@@ -13,7 +13,7 @@ executor = ThreadPoolExecutor(2)
 #===Max of 15 people in the race===#
 index=0
 
-f = open('userdata.txt', 'w')
+f = open('userdata.txt', 'wb')
 pickle.dump([[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]],f)
 f.close()
 
