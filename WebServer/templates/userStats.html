@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+canvas {
+    zindex:1;
+    border:1px solid #d3d3d3;
+    background-color: #f1f1f1;
+}
+</style>
+</head>
+<body onload="startScreen()">
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+<script>
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+var list_people = [];
+var update = false; 
+//var Bac = new Image();
+//Bac.src = "bac.png";
+function startScreen() {
+ layout.start();
+}
+var layout = {
+canvas : document.createElement("canvas"),
+ start : function() {
+this.canvas.width = 256;
+this.canvas.height = 120;
+ this.context = this.canvas.getContext("2d");
+ document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+this.interval = setInterval(updateScreen, 1000);
+	this.stream = setInterval(updateStats, 30000);
+this.stream = setInterval(delaySend, 2000);
+	
+},
+clear : function() {
+this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+	//this.context.font = "50px Impact";
+	//this.context.fillText("RAREWARE 301%",20, 480);
+
+ }
+}

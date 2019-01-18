@@ -5,7 +5,7 @@
 <style>
 canvas {
     zindex:1;
-    border:1px solid #d3d3d3;
+    border:0px solid #d3d3d3;
     background-color: #f1f1f1;
 }
 </style>
@@ -23,6 +23,9 @@ canvas {
 <button type="button" onclick="current_user.BKprogress-=1;update = true;document.getElementById('stats').innerHTML='BK='+current_user.BKprogress+' BT='+current_user.BTprogress+' DK='+current_user.DKprogress;">BK-1</button>
 <button type="button" onclick="current_user.BTprogress-=1;update = true;document.getElementById('stats').innerHTML='BK='+current_user.BKprogress+' BT='+current_user.BTprogress+' DK='+current_user.DKprogress;">BT-1</button>
 <button type="button" onclick="current_user.DKprogress-=1;update = true;document.getElementById('stats').innerHTML='BK='+current_user.BKprogress+' BT='+current_user.BTprogress+' DK='+current_user.DKprogress;">DK-1</button>
+<br> <br> <br> <br> 
+<button id="racebutton" type="button" onclick="grab_time()">Start Race Mode</button>
+<div id="race_status">Press Start only when everyone is readied on SRL <br> Press the buttons to add/sub collectables, or Press 1, 2, or 3</div>
 <script>
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 var list_people = [];
@@ -32,7 +35,7 @@ var race_time = 0;
 var bac_image = new Image();
 bac_image.src = "{{ url_for('static', filename = 'tracker.png') }}";
 function startScreen() {
- grab_time();
+ 
  layout.start();
 }
 var layout = {
@@ -100,21 +103,38 @@ $.getJSON($SCRIPT_ROOT + '/_socket', {
       return false;
 
 }
+var timerstart =0;
+function grab_time(){	
+	setInterval(grab_time_socket, 1000);
+	document.getElementById('racebutton').style="display: none;";
+	document.getElementById('race_status').innerHTML="Player Ready";
+}
 
-function grab_time(){
-$.getJSON($SCRIPT_ROOT + '/_time', {
+
+function grab_time_socket(){
+	if (timerstart==0)
+	{
+	$.getJSON($SCRIPT_ROOT + '/_time', {
 	username:current_user.username    
       }, function(data) {
+		var temp_time = parseInt(data.result);
+		
+		if (temp_time!=0)
+		{
 		race_time = parseInt(data.result);
 		setInterval(add_time, 1000);
+		timerstart=1;
+		document.getElementById('race_status').innerHTML="";
+		}
 
       });
       return false;
-
+	}
 }
 
 function add_time(){
 race_time +=1;
+console.log(race_time);
 }
 
 function card(x , y , name) {
@@ -127,10 +147,13 @@ function card(x , y , name) {
 	this.DKprogress=0;
 	this.totals=0;
 	this.scrollpos = 0;
+	this.scrollpos2 = 7*150;
 	this.picture = new Image();
 	this.picture.src = "{{ url_for('static', filename = 'serverIcons/')}}"+name+'.png';
 	this.draw = function(){	
 		var ctx = layout.context;
+		ctx.fillStyle = "#3fff00";
+		ctx.fillRect(0,0, 200, 54);
 		ctx.drawImage(bac_image,0,0,200,54);
 		//time
 		ctx.fillStyle = "black";
@@ -140,40 +163,56 @@ function card(x , y , name) {
 		//user
 		this.totals= this.BKprogress+this.BTprogress+this.DKprogress;
 		ctx.drawImage(this.picture,75,0,25,25);
-		ctx.font = "12px Century";
+		ctx.font = "13px Century";
+		ctx.fillStyle = "black";
+		ctx.lineWidth = 3;
+		ctx.strokeText(this.username+"\t\t"+parseInt((this.totals/391)*100)+"%", 105 , 12); 
+		ctx.fillStyle = "white";
 		ctx.fillText(this.username+"\t\t"+parseInt((this.totals/391)*100)+"%", 105 , 12); 
+		ctx.fillStyle = "black";
 		var grdRed = ctx.createLinearGradient(105,19,195,23);
-		grdRed.addColorStop(0,"#990000");
-		grdRed.addColorStop(0.37,"#006d99");
-		grdRed.addColorStop(0.75,"#00990c");
+		grdRed.addColorStop(0,"#ff000c");
+		grdRed.addColorStop(0.37,"#00d0ff");
+		grdRed.addColorStop(0.75,"#ff6e00");
 		ctx.fillStyle = grdRed;
 		ctx.fillRect(105,19, 90 *(this.totals/391), 4);
 		
 		// display scrolling bar of people
 		for ( var i = 0; i< list_people.length;i++)
 			{
+			
+			
 			ctx.fillStyle = "black";
 			ctx.font = "16px Impact";
-			ctx.fillText(""+list_people[i].place+" : ",this.scrollpos + 5 + (i*140), 48); 
+			ctx.fillText(""+list_people[i].place+" : ",this.scrollpos + 5 + (i*150), 48); //list_place to have sorted list
 			
-			ctx.drawImage(list_people[i].picture,this.scrollpos + 15+ (i*140),33,16,16);
-			ctx.font = "12px Century";
-			ctx.fillText(list_people[i].username+"\t\t"+parseInt((list_people[i].totals/391)*100)+"%", this.scrollpos + 40 + (i*140), 44); 
-			var grdBar = ctx.createLinearGradient(this.scrollpos + 40 + (i*140),46, this.scrollpos + 40 + (i*140)+90,50);
-			grdBar.addColorStop(0,"#990000");
-			grdBar.addColorStop(0.37,"#006d99");
-			grdBar.addColorStop(0.75,"#00990c");
+			ctx.drawImage(list_people[i].picture,this.scrollpos + 15+ (i*150),33,16,16);
+			ctx.font = "13px Century";
+			ctx.fillText(list_people[i].username+"\t\t"+parseInt((list_people[i].totals/391)*100)+"%", this.scrollpos + 40 + (i*150), 43); 
+			var grdBar = ctx.createLinearGradient(this.scrollpos + 40 + (i*150),46, this.scrollpos + 40 + (i*150)+90,50);
+			grdBar.addColorStop(0,"#ff000c");
+			grdBar.addColorStop(0.37,"#00d0ff");
+			grdBar.addColorStop(0.75,"#ff6e00");
 			ctx.fillStyle = grdBar;
-			ctx.fillRect(this.scrollpos + 40 + (i*140),46, 90 *(list_people[i].totals/391), 4);
+			ctx.fillRect(this.scrollpos + 40 + (i*150),46, 90 *(list_people[i].totals/391), 4);
 			
 			};
-		this.scrollpos-=1;
+		ctx.fillStyle = "black";
+		ctx.font = "16px Impact";
+		ctx.fillText("Rareware 301 Race 2019",this.scrollpos2,48);
 		
-		if (this.scrollpos < (list_people.length*-140))
+		
+		this.scrollpos-=1;
+		this.scrollpos2-=1;
+		
+		if (this.scrollpos < ((list_people.length)*-150))
 		{
 		this.scrollpos=200;
 		}
-		
+		if (this.scrollpos2 < -150)
+		{
+		this.scrollpos2=7*150+50;
+		}		
 	
 
 	};
@@ -181,18 +220,13 @@ function card(x , y , name) {
 
 var current_user = new card(0,0,document.getElementById('username').innerHTML);
 
-var player1 = new card(-1 *256,5*120,"Connor75");
-
-
-var player2 = new card(1 *256,4*120,"Emoarbiter");
+var player1 = new card(-1 *256,5*120,"Hagginater");
+var player2 = new card(1 *256,4*120,"FalconxFalcon1");
 var player11 = new card(0 *256,5*120,"Secrethumorman");
-var player3 = new card(1 *256,5*120,"ObiyoSRL");
-
-
-var player7 = new card(1 *256,0*120,"Dickhiskhan");
+var player3 = new card(1 *256,5*120,"ElectricFortune");
+var player7 = new card(1 *256,0*120,"Icupspeedruns_");
 var player8 = new card(1 *256,1*120,"MutantsAbyss");
-var player9 = new card(1 *256,2*120,"Icupspeedruns_");
-var player10 = new card(1 *256,3*120,"Hagginater");
+var player9 = new card(1 *256,2*120,"Xafication");
 
 list_people.push(player1);
 list_people.push(player2);
@@ -203,7 +237,6 @@ list_people.push(player3);
 list_people.push(player7);
 list_people.push(player8);
 list_people.push(player9);
-list_people.push(player10);
 
 
 document.addEventListener("keydown", function(e) {

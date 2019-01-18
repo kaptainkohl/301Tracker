@@ -14,11 +14,13 @@ executor = ThreadPoolExecutor(2)
 index=0
 
 f = open('userdata.txt', 'wb')
-pickle.dump([[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]],f)
+pickle.dump([[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]],f)
+f.close()
+f = open('timestamp.txt', 'w')
+f.write("0.0")
 f.close()
 
-
-user_name = ["Connor75","Emoarbiter","Secrethumorman","ObiyoSRL","Dickhiskhan","MutantsAbyss","icupspeedruns_","Hagginater","kaptainkohl","HolySanctum","Mittenz","PurpleRupees","Hagginatersd"]
+user_name = ["Hagginater","FalconxFalcon1","Secrethumorman","ElectricFortune","Icupspeedruns_","MutantsAbyss","Xafication"]
 user_pic = []
 y =0
 a =0
@@ -49,6 +51,8 @@ def read_timer():
 	f = open('timestamp.txt', 'r')
 	stamp = f.readline()
 	f.close()
+	if stamp=='0.0':
+		return 0.0
 	
 	return int(time.time() - float(stamp))
 	
@@ -56,7 +60,12 @@ def read_timer():
 @app.route('/_update')
 def updateStats():
 	a = request.args.get('a', 0, type=int)
-	
+	f = open('userdata.txt', 'rb')
+	user_data = pickle.load(f)
+	f.close()			
+	totals=''
+	for x in range(0,len(user_name)):
+		totals = ''+totals + user_name[x] +","+str(user_data[x])[1:-1]+"$"
 	return jsonify(result=totals)
 	
 @app.route('/_time')
