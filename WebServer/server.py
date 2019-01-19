@@ -14,13 +14,13 @@ executor = ThreadPoolExecutor(2)
 index=0
 
 f = open('userdata.txt', 'wb')
-pickle.dump([[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]],f)
+pickle.dump([[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]],f)
 f.close()
 f = open('timestamp.txt', 'w')
 f.write("0.0")
 f.close()
 
-user_name = ["Hagginater","FalconxFalcon1","Secrethumorman","ElectricFortune","Icupspeedruns_","MutantsAbyss","Xafication"]
+user_name = ["Hagginater","FalconxFalcon1","Secrethumorman","ElectricFortune","Icupspeedruns_","Xafication"]
 user_pic = []
 y =0
 a =0

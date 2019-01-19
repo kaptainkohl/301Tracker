@@ -26,6 +26,7 @@ canvas {
 <br> <br> <br> <br> 
 <button id="racebutton" type="button" onclick="grab_time()">Start Race Mode</button>
 <div id="race_status">Press Start only when everyone is readied on SRL <br> Press the buttons to add/sub collectables, or Press 1, 2, or 3</div>
+<button id="timestop" style="display:hidden"type="button" onclick="stop_time()">.done</button>
 <script>
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 var list_people = [];
@@ -107,10 +108,11 @@ var timerstart =0;
 function grab_time(){	
 	setInterval(grab_time_socket, 1000);
 	document.getElementById('racebutton').style="display: none;";
+	document.getElementById('timestop').style="display: Visable;";
 	document.getElementById('race_status').innerHTML="Player Ready";
 }
 
-
+var inttimmer = 0;
 function grab_time_socket(){
 	if (timerstart==0)
 	{
@@ -122,7 +124,7 @@ function grab_time_socket(){
 		if (temp_time!=0)
 		{
 		race_time = parseInt(data.result);
-		setInterval(add_time, 1000);
+		inttimmer = setInterval(add_time, 1000);
 		timerstart=1;
 		document.getElementById('race_status').innerHTML="";
 		}
@@ -134,8 +136,11 @@ function grab_time_socket(){
 
 function add_time(){
 race_time +=1;
-console.log(race_time);
 }
+function stop_time(){
+clearInterval(inttimmer)
+}
+
 
 function card(x , y , name) {
 	this.xpos = x;
@@ -147,7 +152,7 @@ function card(x , y , name) {
 	this.DKprogress=0;
 	this.totals=0;
 	this.scrollpos = 0;
-	this.scrollpos2 = 7*150;
+	this.scrollpos2 = 6*150;
 	this.picture = new Image();
 	this.picture.src = "{{ url_for('static', filename = 'serverIcons/')}}"+name+'.png';
 	this.draw = function(){	
@@ -211,7 +216,7 @@ function card(x , y , name) {
 		}
 		if (this.scrollpos2 < -150)
 		{
-		this.scrollpos2=7*150+50;
+		this.scrollpos2=6*150+50;
 		}		
 	
 
@@ -235,7 +240,7 @@ list_people.push(player3);
 
 
 list_people.push(player7);
-list_people.push(player8);
+//list_people.push(player8);
 list_people.push(player9);
 
 
