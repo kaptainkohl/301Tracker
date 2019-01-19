@@ -152,7 +152,7 @@ function card(x , y , name) {
 	this.DKprogress=0;
 	this.totals=0;
 	this.scrollpos = 0;
-	this.scrollpos2 = 6*150;
+	this.scrollpos2 = 7*150;
 	this.picture = new Image();
 	this.picture.src = "{{ url_for('static', filename = 'serverIcons/')}}"+name+'.png';
 	this.draw = function(){	
@@ -168,7 +168,7 @@ function card(x , y , name) {
 		//user
 		this.totals= this.BKprogress+this.BTprogress+this.DKprogress;
 		ctx.drawImage(this.picture,75,0,25,25);
-		ctx.font = "13px Century";
+		ctx.font = "11px Century";
 		ctx.fillStyle = "black";
 		ctx.lineWidth = 3;
 		ctx.strokeText(this.username+"\t\t"+parseInt((this.totals/391)*100)+"%", 105 , 12); 
@@ -193,7 +193,7 @@ function card(x , y , name) {
 			
 			ctx.drawImage(list_people[i].picture,this.scrollpos + 15+ (i*150),33,16,16);
 			ctx.font = "13px Century";
-			ctx.fillText(list_people[i].username+"\t\t"+parseInt((list_people[i].totals/391)*100)+"%", this.scrollpos + 40 + (i*150), 43); 
+			ctx.fillText(list_people[i].username+"\t\t"+parseInt((list_people[i].totals/391)*100)+"%", this.scrollpos + 35 + (i*150), 43); 
 			var grdBar = ctx.createLinearGradient(this.scrollpos + 40 + (i*150),46, this.scrollpos + 40 + (i*150)+90,50);
 			grdBar.addColorStop(0,"#ff000c");
 			grdBar.addColorStop(0.37,"#00d0ff");
@@ -216,7 +216,7 @@ function card(x , y , name) {
 		}
 		if (this.scrollpos2 < -150)
 		{
-		this.scrollpos2=6*150+50;
+		this.scrollpos2=7*150+50;
 		}		
 	
 
@@ -240,7 +240,7 @@ list_people.push(player3);
 
 
 list_people.push(player7);
-//list_people.push(player8);
+list_people.push(player8);
 list_people.push(player9);
 
 
