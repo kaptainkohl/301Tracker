@@ -139,6 +139,10 @@ def homepage():
 def racepage():
 	return render_template('races.html')
 
+@app.route('/BingoStats')
+def bingostats():
+	return render_template('BingoStats.html')
+
 @app.route('/stats', methods=['GET', 'POST'])
 def statspage():
 	write()
