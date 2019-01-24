@@ -16,7 +16,7 @@ Tooie Bingo Stats
 
 <textarea align="right" rows="40" cols="120"style="right:10px;position:fixed;height:400px;width:800px;font-size:14pt;" id="goals" type="text" name="goals">
 bingoList[1] = [
-{name: "All Honeycomb in IoH", types: ["Honeycombs"]},
+{name: "All Honeycomb in IoH", types: ["Honeycombs", "Over"]},
 {name: "6-Health BK", types: ["Honeycombs"]},
 {name: "3 Jiggies in MT", types: ["MT", "jiggies"]},
 {name: "All Warppads in GGM", types: ["Warps", "GGM"]},
@@ -28,7 +28,7 @@ bingoList[2] = [
 {name: "Free Gobi", types: ["WW"]},
 {name: "All Warppads in CCL", types: ["Warps", "CCL"]},
 {name: "All Honeycombs in GGM", types: ["Honeycombs", "GGM"]},
-{name: "Get Double Air", types: []},
+{name: "Get Double Air", types: ["Over"]},
 {name: "Dilberta Jiggy", types: ["MT", "GGM"]},
 {name: "Pillars Jiggy", types: ["MT"]}
 ];
@@ -47,7 +47,7 @@ bingoList[4] = [
 {name: "All Honeycombs in MT", types: ["Honeycombs", "MT"]},
 {name: "All Warppads in WW", types: ["Warps", "WW"]},
 {name: "Pawno Cheato Page", types: ["Cheatos", "JRL"]},
-{name: "4 Trebleclefs", types: ["Trebleclef"]},
+{name: "4 Trebleclefs", types: ["Trebleclef", "Over"]},
 {name: "30 Doubloons", types: ["JRL"]},
 {name: "All Honeycombs in CCL", types: ["Honeycombs", "CCL"]},
 {name: "Smugglers Cove Jiggy", types: ["JRL"]},
@@ -194,7 +194,7 @@ bingoList[15] = [
 {name: "Tiptup Jiggy", types: ["JRL", "hatch"]},
 {name: "Call Train to GI", types: ["GI", "Train"]},
 {name: "All Cheato Pages in GI", types: ["Cheatos", "GI"]},
-{name: "All Mumbo Warp Pads", types: ["Warps"]},
+{name: "All Mumbo Warp Pads", types: ["Warps", "Over"]},
 {name: "5 Jiggies in GI", types: ["GI", "jiggies"]}
 ];
 
@@ -212,7 +212,7 @@ bingoList[17] = [
 {name: "All Jinjos in GI", types: ["Jinjos", "GI"]},
 {name: "4 Jiggies in JRL", types: ["JRL", "jiggies"]},
 {name: "6 Jiggies in TDL", types: ["TDL", "jiggies"]}, 
-{name: "Defeat Klungo 3", types: ["Bosses", "CK"]},
+{name: "Defeat Klungo 3", types: ["Bosses", "CK", "Over"]},
 {name: "Quality Control Jiggy", types: ["GI"]},
 {name: "Kill 11 Minjos", types: ["Minjos", "Global"]},
 {name: "7 Jiggies in GGM", types: ["GGM", "jiggies"]}
@@ -223,7 +223,7 @@ bingoList[18] = [
 {name: "Learn Snooze Pack", types: ["Moves", "GI"]},
 {name: "Boggy’s Kids Jiggy", types: ["WW"]},
 {name: "All Train Switches", types: ["Train", "Global"]},
-{name: "Hatch Heggy’s 3 Eggs", types: ["SoS", "hatch"]},
+{name: "Hatch Heggy’s 3 Eggs", types: ["Bash", "hatch"]},
 {name: "Clinkers Cavern Jiggy", types: ["GI"]}
 ];
 
@@ -245,7 +245,7 @@ bingoList[20] = [
 {name: "Dragon Kazooie", types: ["GGM"]},
 {name: "Defeat 6 Bosses", types: ["Bosses"]},
 {name: "Learn Glide", types: ["Moves", "HFP"]},
-{name: "Defeat Hag 1", types: ["CK", "Bosses"]},
+{name: "Defeat Hag 1", types: ["CK"]},
 {name: "8 Jiggies in GGM", types: ["GGM", "jiggies"]},
 {name: "9 Trebleclefs", types: ["Trebleclef", "Global"]}
 ];
@@ -263,7 +263,7 @@ bingoList[21] = [
 ];
 
 bingoList[22] = [
-{name: "Terry’s Kids Jiggy", types:["TDL", "Bosses","hatch"]},
+{name: "Terry’s Kids Jiggy", types:["TDL", "hatch"]},
 {name: "6 Jiggies in WW", types: ["WW", "jiggies"]},
 {name: "8 Jiggies in CCL", types: ["CCL", "jiggies"]},
 {name: "1 Cheato Page in Every Level", types: ["Global", "Cheatos"]},
@@ -274,7 +274,8 @@ bingoList[22] = [
 bingoList[23] = [
 {name: "All Cheato Pages in CCL", types: ["Cheatos", "CCL"]},
 {name: "9-Health BK", types: ["Honeycombs"]},
-{name: "Hatch 7 Eggs", types: ["hatch"]},
+{name: "Hatch 7 Eggs", types: ["hatch", "Over"]},
+{name: "Kill 13 Minjos", types: ["Minjos", "Global", "Over"]},
 {name: "All Jinjos in MT, TDL, and GI", types: ["Jinjos", "MT", "TDL", "GI"]},
 {name: "All Jinjos in GGM, JRL, and IoH/SM", types: ["Jinjos", "GGM", "JRL"]},
 {name: "Ride Train to Icy Side", types: ["HFP", "Train"]}
@@ -284,7 +285,6 @@ bingoList[24] = [
 {name: "6 Jiggies in JRL", types: ["JRL", "jiggies"]},
 {name: "7 Jiggies in GI", types: ["GI", "jiggies"]},
 {name: "7 Jiggies in TDL", types: ["TDL", "jiggies"]},
-{name: "Kill 13 Minjos", types: ["Minjos", "Global"]},
 {name: "All Jinjos in WW, HFP, and CCL", types: ["Jinjos", "WW", "HFP", "CCL"]},
 {name: "7 Jiggies in WW", types: ["WW", "jiggies"]}
 ];
@@ -295,13 +295,14 @@ bingoList[25] = [
 {name: "Heal The Sick Styracosaurus", types:  ["TDL"]},
 {name: "7 Jiggies in HFP", types: ["HFP", "jiggies"]},
 {name: "Defeat 7 Bosses", types: ["Bosses"]},
-{name: "All CP, HC, and Glowbos in CCL", types: ["CCL", "Cheatos", "Honeycombs", "Glowbos"]},
+{name: "All CP, HC, and Glowbos in CCL", types: ["CCL", "Global"]},
 {name: "Open all 4 Battery Doors in GI", types: ["GI"]}
 ];
+
 </textarea>
 <table id = "bingo" style="top:420px;right:10px;width:33%;position:fixed;"> </table>
 <input id="next" type="button" value="Next Card" onclick="change_board();" style="top:450px;right:700px;position:fixed;" />
-
+<p id="cardSeed" style="top:460px;right:700px;position:fixed;"></p>
 <br>
 <input id="btn2" type="button" value="Sort By" onclick="changesort();"  />
 <p id="sort"> </p>
@@ -316,19 +317,40 @@ document.getElementById("goals").style.height = window.innerHeight;
 
 var SEED = 0 ;
 
-function stat(goal,rank,types) {
+function stat(goal,rank,types, empty) {
 	this.goal = goal;
 	this.rank = rank;
 	this.types= types;
 	this.amount = 0;
-	this.array_close=0;
+	this.array_close=empty;
 	this.tagrate = 0;
-	
+	this.most = "";
+	this.num =0;
 	this.print = function(){
-		return ""+this.goal +  " <pre> Appeared: "+ this.amount+ "  |  " + (this.amount/document.getElementById("gen").value)*100 +"%  |  Difficulty: "+this.rank+"  |  Tags: "+this.types+"</pre>";
+		return ""+this.goal +  " <pre> Appeared: "+ this.amount+ "  |  " + (this.amount/document.getElementById("gen").value)*100 +"%  |  Difficulty: "+this.rank+"  |  Tags: "+this.types+"  |  Paired with: "+this.calc()+"</pre>";
 		}
-
 		
+	this.calc = function(){
+		this.most ="";
+		this.num = 0;
+		for (var q =0; q < this.array_close.length;q++)
+		{
+			//console.log(this.array_close[q].amount);
+			if ((this.array_close[q].amount > this.num) && this.array_close[q].name != this.goal)
+			{
+			this.most = this.array_close[q].name;
+			this.num = this.array_close[q].amount;
+			}
+		}
+		return ""+this.most+" : "+this.num+" times";
+		}
+	}
+	
+function close(name){
+	this.name = name;
+	this.amount = 0;
+
+
 	}
 	
 var stats_array = [];
@@ -355,6 +377,7 @@ function changesort(){
 }
 
 var board_check = [];
+var board_seed = [];
 var current_board =0;
 function generate()
 	{
@@ -389,11 +412,22 @@ function generate()
 		}
 	document.getElementById("seed").innerHTML="";
 	stats_array=[];
+
 	bingoList.forEach(function(element,index) {
 	  element.forEach(function(goal) {
-	  stats_array.push(new stat(goal.name,index, goal.types))
+	  
+	  	var second_list = [];
+	bingoList.forEach(function(element,index) {
+	  element.forEach(function(goal) {
+	  second_list.push(new close(goal.name))
 	});
 	});
+	  
+	  stats_array.push(new stat(goal.name,index, goal.types, second_list))
+	});
+	});	
+
+	
 	var genval = document.getElementById("gen").value;
 	current_board=0;
 	board_check = [];
@@ -404,13 +438,137 @@ function generate()
 		SEED = (Math.floor(Math.random()*5915587277)%10000);
 		createBoard();
 		board_check.push(bingoBoard);
-
-		for(j = 0; j < stats_array.length; j++){
-		  for(b = 1; b <= 25; b++){
+		board_seed.push(SEED);
+		document.getElementById("cardSeed").innerHTML=""+board_seed[current_board];
+		for(b = 1; b <= 25; b++){
+		  for(j = 0; j < stats_array.length; j++){
 			if(stats_array[j].goal == bingoBoard[b].name)
 				{
 					stats_array[j].amount = stats_array[j].amount+1;
-					
+					//console.log(stats_array[j].goal);
+					//calculate rows and col partners
+					//rows
+					if(b>=1 && b<=5)
+					{
+						for(var x = 1; x <= 5; x++)
+							{
+								for(var c = 0; c < stats_array[j].array_close.length; c++){
+									if (bingoBoard[x].name == stats_array[j].array_close[c].name)
+										{
+											stats_array[j].array_close[c].amount++;
+										}
+									}
+							}
+					}
+					if(b>=6 && b<=10)
+					{
+						for(var x = 6; x <= 10; x++)
+							{
+								for(var c = 0; c < stats_array[j].array_close.length; c++){
+									if (bingoBoard[x].name == stats_array[j].array_close[c].name)
+										{
+											stats_array[j].array_close[c].amount++;
+										}
+									}
+							}
+					}
+					if(b>=11 && b<=15)
+					{
+						for(var x = 11; x <= 15; x++)
+							{
+								for(var c = 0; c < stats_array[j].array_close.length; c++){
+									if (bingoBoard[x].name == stats_array[j].array_close[c].name)
+										{
+											stats_array[j].array_close[c].amount++;
+										}
+									}
+							}
+					}
+					if(b>=16 && b<=20)
+					{
+						for(var x = 16; x <= 20; x++)
+							{
+								for(var c = 0; c < stats_array[j].array_close.length; c++){
+									if (bingoBoard[x].name == stats_array[j].array_close[c].name)
+										{
+											stats_array[j].array_close[c].amount++;
+										}
+									}
+							}
+					}
+					if(b>=21 && b<=25)
+					{
+						for(var x = 21; x <= 25; x++)
+							{
+								for(var c = 0; c < stats_array[j].array_close.length; c++){
+									if (bingoBoard[x].name == stats_array[j].array_close[c].name)
+										{
+											stats_array[j].array_close[c].amount++;
+										}
+									}
+							}
+					}					
+					//col
+					if(b==1 || b==6 || b==11 || b==16 || b==21)
+					{
+						for(var x = 1; x <= 21; x=x+5)
+							{
+								for(var c = 0; c < stats_array[j].array_close.length; c++){
+									if (bingoBoard[x].name == stats_array[j].array_close[c].name)
+										{
+											stats_array[j].array_close[c].amount++;
+										}
+									}
+							}
+					}
+					if(b==2 || b==7 || b==12 || b==17 || b==22)
+					{
+						for(var x = 2; x <= 22; x=x+5)
+							{
+								for(var c = 0; c < stats_array[j].array_close.length; c++){
+									if (bingoBoard[x].name == stats_array[j].array_close[c].name)
+										{
+											stats_array[j].array_close[c].amount++;
+										}
+									}
+							}
+					}
+					if(b==3 || b==8 || b==13 || b==18 || b==23)
+					{
+						for(var x = 3; x <= 23; x=x+5)
+							{
+								for(var c = 0; c < stats_array[j].array_close.length; c++){
+									if (bingoBoard[x].name == stats_array[j].array_close[c].name)
+										{
+											stats_array[j].array_close[c].amount++;
+										}
+									}
+							}
+					}	
+					if(b==4 || b==9 || b==14 || b==19 || b==24)
+					{
+						for(var x = 4; x <= 24; x=x+5)
+							{
+								for(var c = 0; c < stats_array[j].array_close.length; c++){
+									if (bingoBoard[x].name == stats_array[j].array_close[c].name)
+										{
+											stats_array[j].array_close[c].amount++;
+										}
+									}
+							}
+					}
+					if(b==5 || b==10 || b==15 || b==20 || b==25)
+					{
+						for(var x = 5; x <= 25; x=x+5)
+							{
+								for(var c = 0; c < stats_array[j].array_close.length; c++){
+									if (bingoBoard[x].name == stats_array[j].array_close[c].name)
+										{
+											stats_array[j].array_close[c].amount++;
+										}
+									}
+							}
+					}					
 				}
 			}
 		  }
@@ -437,6 +595,7 @@ var bingoList = [];
 function change_board()
 	{
 	current_board++;
+	document.getElementById("cardSeed").innerHTML=""+board_seed[current_board];
 	tableFill();
 	}
 	
