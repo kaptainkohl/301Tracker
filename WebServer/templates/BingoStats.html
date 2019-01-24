@@ -11,7 +11,7 @@ Tooie Bingo Stats
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 <input id="gen" type="number" name="gen" value="1000">
-<input id="btn1" type="button" value="Generate Appearence Rate" onclick="generate();"  />
+<input id="btn1" type="button" value="Generate Cards" onclick="generate();"  />
 
 
 <textarea align="right" rows="40" cols="120"style="right:10px;position:fixed;height:400px;width:800px;font-size:14pt;" id="goals" type="text" name="goals">
@@ -305,6 +305,8 @@ bingoList[25] = [
 <p id="cardSeed" style="top:460px;right:700px;position:fixed;"></p>
 <br>
 <input id="btn2" type="button" value="Sort By" onclick="changesort();"  />
+<input type="checkbox" id="checkPair" name="checkPair" value="pair"> Include Pairs<br>
+
 <p id="sort"> </p>
 
 <p id="seed"> </p>
@@ -327,22 +329,18 @@ function stat(goal,rank,types, empty) {
 	this.most = "";
 	this.num =0;
 	this.print = function(){
-		return ""+this.goal +  " <pre> Appeared: "+ this.amount+ "  |  " + (this.amount/document.getElementById("gen").value)*100 +"%  |  Difficulty: "+this.rank+"  |  Tags: "+this.types+"  |  Paired with: "+this.calc()+"</pre>";
+		return ""+this.goal +  " <pre> Appeared: "+ this.amount+ "  |  " + ((this.amount/document.getElementById("gen").value)*100).toFixed(2) +"%  |  Difficulty: "+this.rank+"  |  Tags: "+this.types+"  "+this.calc()+"</pre>";
 		}
 		
 	this.calc = function(){
 		this.most ="";
 		this.num = 0;
-		for (var q =0; q < this.array_close.length;q++)
-		{
-			//console.log(this.array_close[q].amount);
-			if ((this.array_close[q].amount > this.num) && this.array_close[q].name != this.goal)
-			{
-			this.most = this.array_close[q].name;
-			this.num = this.array_close[q].amount;
+		this.array_close.sort(function(a, b){return b.amount-a.amount});
+
+		if (document.getElementById("checkPair").checked){
+			return "\nPaired with: "+this.array_close[1].name+" : "+ ((this.array_close[1].amount/this.amount)*100).toFixed(2) + "%  |  "+this.array_close[2].name+" : "+ ((this.array_close[2].amount/this.amount)*100).toFixed(2) + "%  |  "+this.array_close[3].name+" : "+ ((this.array_close[3].amount/this.amount)*100).toFixed(2) + "%";
 			}
-		}
-		return ""+this.most+" : "+this.num+" times";
+		return "";
 		}
 	}
 	
@@ -416,12 +414,15 @@ function generate()
 	bingoList.forEach(function(element,index) {
 	  element.forEach(function(goal) {
 	  
+	  
 	  	var second_list = [];
-	bingoList.forEach(function(element,index) {
-	  element.forEach(function(goal) {
-	  second_list.push(new close(goal.name))
-	});
-	});
+		
+		if (document.getElementById("checkPair").checked){
+		bingoList.forEach(function(element,index) {
+		element.forEach(function(goal) {
+		second_list.push(new close(goal.name))
+			});
+			});}
 	  
 	  stats_array.push(new stat(goal.name,index, goal.types, second_list))
 	});
@@ -440,14 +441,15 @@ function generate()
 		board_check.push(bingoBoard);
 		board_seed.push(SEED);
 		document.getElementById("cardSeed").innerHTML=""+board_seed[current_board];
-		for(b = 1; b <= 25; b++){
-		  for(j = 0; j < stats_array.length; j++){
+		for(j = 0; j < stats_array.length; j++){
+		  for(b = 1; b <= 25; b++){
 			if(stats_array[j].goal == bingoBoard[b].name)
 				{
 					stats_array[j].amount = stats_array[j].amount+1;
 					//console.log(stats_array[j].goal);
 					//calculate rows and col partners
 					//rows
+				if (document.getElementById("checkPair").checked){
 					if(b>=1 && b<=5)
 					{
 						for(var x = 1; x <= 5; x++)
@@ -568,7 +570,32 @@ function generate()
 										}
 									}
 							}
+					}
+					if(b==1 || b==7 || b==13 || b==19 || b==25)
+					{
+						for(var x = 1; x <= 25; x=x+6)
+							{
+								for(var c = 0; c < stats_array[j].array_close.length; c++){
+									if (bingoBoard[x].name == stats_array[j].array_close[c].name)
+										{
+											stats_array[j].array_close[c].amount++;
+										}
+									}
+							}
+					}	
+					if(b==5 || b==9 || b==13 || b==17 || b==21)
+					{
+						for(var x = 5; x <= 21; x=x+4)
+							{
+								for(var c = 0; c < stats_array[j].array_close.length; c++){
+									if (bingoBoard[x].name == stats_array[j].array_close[c].name)
+										{
+											stats_array[j].array_close[c].amount++;
+										}
+									}
+							}
 					}					
+					}
 				}
 			}
 		  }
