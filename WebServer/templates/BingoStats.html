@@ -3,6 +3,7 @@
 table, th, td {
   border: 1px solid black;
 }
+.highlight {color:red;}
 </style>
 <html>
 <head>
@@ -12,7 +13,7 @@ Tooie Bingo Stats
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 <input id="gen" type="number" name="gen" value="1000">
 <input id="btn1" type="button" value="Generate Cards" onclick="generate();"  />
-
+<input id="btn8" type="button" value="MumboBoard" onclick="printnewboard();"  />
 
 <textarea align="right" rows="40" cols="120"style="right:10px;position:fixed;height:400px;width:800px;font-size:14pt;" id="goals" type="text" name="goals">
 bingoList[1] = [
@@ -309,7 +310,7 @@ bingoList[25] = [
 
 <p id="sort"> </p>
 
-<p id="seed"> </p>
+<p class="clickable" id="seed"> </p>
 
 <script >
 document.getElementById("goals").style.width = window.innerWidth /2;
@@ -318,6 +319,23 @@ document.getElementById("goals").style.height = window.innerHeight;
 
 
 var SEED = 0 ;
+var  mumboard =0;
+var clicked = "";
+
+function highlight(text){
+$('#seed').each(function() {
+    
+    		//Handle special characters used in regex
+        var searchregexp = new RegExp(text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), "gi");
+        
+        //$& will maintain uppercase and lowercase characters.
+        $(this).html($(this).html().replace(searchregexp, "<span class = 'highlight'>$&</span>"));
+        
+}); 
+
+}
+
+ 
 
 function stat(goal,rank,types, empty) {
 	this.goal = goal;
@@ -326,27 +344,37 @@ function stat(goal,rank,types, empty) {
 	this.amount = 0;
 	this.array_close=empty;
 	this.tagrate = 0;
-	this.most = "";
 	this.num =0;
 	this.print = function(){
-		return ""+this.goal +  " <pre> Appeared: "+ this.amount+ "  |  " + ((this.amount/document.getElementById("gen").value)*100).toFixed(2) +"%  |  Difficulty: "+this.rank+"  |  Tags: "+this.types+"  "+this.calc()+"</pre>";
+		return ""+this.goal +  "<pre> Appeared: "+ this.amount+ "  |  " + ((this.amount/document.getElementById("gen").value)*100).toFixed(2) +"%  |  Difficulty: "+this.rank+"  |  Tags: "+this.types+"  "+this.calc()+"</pre>";
 		}
 		
 	this.calc = function(){
 		this.most ="";
-		this.num = 0;
-		this.array_close.sort(function(a, b){return b.amount-a.amount});
-
+		var num = 0;
+		var count =0;
 		if (document.getElementById("checkPair").checked){
-			return "\nPaired with: "+this.array_close[1].name+" : "+ ((this.array_close[1].amount/this.amount)*100).toFixed(2) + "%  |  "+this.array_close[2].name+" : "+ ((this.array_close[2].amount/this.amount)*100).toFixed(2) + "%  |  "+this.array_close[3].name+" : "+ ((this.array_close[3].amount/this.amount)*100).toFixed(2) + "%";
+			this.array_close.sort(function(a, b){return b.amount-a.amount});
+			var max = 0;
+			var maxrank =0;
+			for(b = 1; b <= 25; b++){
+				num = 0;
+				for(var i =0; i< this.array_close.length; i++){
+					if (this.array_close[i].rank == b && b != this.rank){ num=num+this.array_close[i].amount;}
+					}
+				if (num>max){max = num;maxrank = b}
+			}
+		
+			return "\n Paired with: "+this.array_close[1].name+" : "+ ((this.array_close[1].amount/this.amount)*100).toFixed(2) + "%  |  "+this.array_close[2].name+" : "+ ((this.array_close[2].amount/this.amount)*100).toFixed(2) + "%  |  "+this.array_close[3].name+" : "+ ((this.array_close[3].amount/this.amount)*100).toFixed(2) + "% \n Goal is usally paired with difficulty rank: "+maxrank+"  |  "+ ((max/this.amount)*100).toFixed(2) + "%";
 			}
 		return "";
 		}
 	}
 	
-function close(name){
+function close(name,rank){
 	this.name = name;
 	this.amount = 0;
+	this.rank=rank;
 
 
 	}
@@ -420,7 +448,7 @@ function generate()
 		if (document.getElementById("checkPair").checked){
 		bingoList.forEach(function(element,index) {
 		element.forEach(function(goal) {
-		second_list.push(new close(goal.name))
+		second_list.push(new close(goal.name,index))
 			});
 			});}
 	  
@@ -436,7 +464,7 @@ function generate()
 		{
 		bingoBoard = [];
 		//document.getElementById("seed").innerHTML = i + "/"+genval;
-		SEED = (Math.floor(Math.random()*5915587277)%10000);
+		SEED = (Math.floor(Math.random()*5915587277)%1000000);
 		createBoard();
 		board_check.push(bingoBoard);
 		board_seed.push(SEED);
@@ -612,9 +640,12 @@ function generate()
 var bingoList = [];
 
 	function tableFill() {
+		changesort();
+		changesort();
 		var cells = document.getElementById('bingo').getElementsByTagName("td"); 
 			for (var i = 1; i < cells.length+1; i++) { 
 					cells[i-1].innerHTML = board_check[current_board][i].name;
+					highlight(board_check[current_board][i].name);
 					
 				}	
 		}
@@ -764,11 +795,29 @@ var lineCheckList = [];
 	var bingoBoard = []; //the board itself stored as an array first
 	
 	function createBoard(){
+		if( mumboard ==0){
+			for (var i=1;i<=25;i++) {
+				bingoBoard[i] = {difficulty: difficulty(i)}; //array with objects that
+				//console.log(bingoBoard[i].difficulty);       //store the difficulty
+			} 
+		}		// in order 1-25
+		else{
+		var arrToConvert = generate_cooler_bingo_template();
+		var difficultyArr =[];
+		 
+		for(var i = 0; i < arrToConvert.length; i++)
+			{
+				difficultyArr = difficultyArr.concat(arrToConvert[i]);
+			}
 		for (var i=1;i<=25;i++) {
-			bingoBoard[i] = {difficulty: difficulty(i)}; //array with objects that
-			//console.log(bingoBoard[i].difficulty);       //store the difficulty
-		}                                          // in order 1-25
+				bingoBoard[i] = {difficulty: difficultyArr[i-1]}; 
 
+			} 
+		
+		}
+		
+		
+		
 		//populate the bingo board in the array
 		for (i=1; i<=25; i++) {
 			var getDifficulty = bingoBoard[i].difficulty; // difficulty of current square
@@ -788,9 +837,135 @@ var lineCheckList = [];
 			bingoBoard[i].types = minSynObj.value.types;
 			bingoBoard[i].name = minSynObj.value.name;
 			bingoBoard[i].synergy = minSynObj.synergy;
+			
 		}
 	}
 	
+// Mumbo Token's Generation 
+	
+function screw_up(L, mini, maxi, num){
+	var count = 0;
+	var new_L = L.slice(0);
+	while (count < num){
+		var i1 = (Math.floor(Math.random()*5915587277)%(new_L.length - 1));
+		var i2 = (Math.floor(Math.random()*5915587277)%(new_L.length - 1));
+		if (new_L[i1] > mini && new_L[i2] < maxi){
+            new_L[i1] -= 1;
+            new_L[i2] += 1;
+			}
+        count += 1;
+		}
+    return new_L;	
+	}
 
+	
+function evenly_spaced(n,k){
+	var step = 2*n/(k*(k-1));
+	var weights =[];
+	var total =0;
+	for (var i =0; i < k; i++){
+		var val = Math.floor(i*step);
+		total += val;
+		weights.push(val);
+	}
+	var diff = n -total;
+	for( var i = 1; i< diff+1; i++){
+		weights[i] +=1;
+	
+	}
+	return weights;
+}
+
+function smoothen(L){
+    var new_L = L.slice(0);
+    new_L.sort(function(a, b){return b-a})
+	new_L[0] -= 1
+	new_L[new_L.length - 2] += 1
+   // new_L[1] += 1
+    return new_L;
+}	
+
+var shuffle = function (array) {
+
+	var currentIndex = array.length;
+	var temporaryValue, randomIndex;
+
+	// While there remain elements to shuffle...
+	while (0 !== currentIndex) {
+		// Pick a remaining element...
+		randomIndex = Math.floor(Math.random() * currentIndex);
+		currentIndex -= 1;
+
+		// And swap it with the current element.
+		temporaryValue = array[currentIndex];
+		array[currentIndex] = array[randomIndex];
+		array[randomIndex] = temporaryValue;
+	}
+
+	return array;
+
+};
+
+function arrayRotate(arr, reverse) {
+  if (reverse) arr.unshift(arr.pop());
+  else arr.push(arr.shift());
+  return arr;
+}
+
+//builds a 5x5 grid where each row, column, and diagonal add up to the same number
+function generate_bingo_template(weights1, weights2){
+    var card = [];
+    var last1 = weights1;
+    var last2 = weights2;
+    for( var i =0; i<5 ; i++){
+        var row = [];
+        for( var j =0; j<5 ; j++){
+            row.push(last1[j] + last2[j])
+			}
+        card.push(row);
+        arrayRotate(last1);
+		arrayRotate(last1);
+        arrayRotate(last2);
+		arrayRotate(last2);
+		arrayRotate(last2);
+		}
+    return card;
+}
+	
+function generate_cooler_bingo_template(){
+	var n = 60;
+	var w1_max = (Math.floor(Math.random()*5915587277)%5)+4; //w1 is the 'small' list, this determines how small compared to w2
+    var w2_max = 25 - w1_max;
+    var sum1 = Math.floor(w1_max/(25+w1_max)*n); //sum of all elements in w1
+    var sum2 = n - sum1;
+    var weights1 = evenly_spaced(sum1, 5);
+    var weights2 = evenly_spaced(sum2, 5);
+	for(var i = 0; i<5 ; i++){
+		weights1[i] +=1;
+	}
+	weights1 = screw_up(weights1, 1, w1_max, 3); //more screwing up means more bias towards the middle range of goals
+    weights2 = screw_up(weights2, 0, w2_max, 10);
+	//console.log(Math.max(weights1) + Math.max(weights2));
+	while (Math.max(...weights1) + Math.max(...weights2) > 25 ){
+		//alert(Math.max(...weights1) + Math.max(...weights2));
+		weights2 = smoothen(weights2); //emergency check to make sure no goals above 25
+	}
+	shuffle(weights1);
+    shuffle(weights2);
+    return generate_bingo_template(weights1, weights2);
+}	
+
+
+function printnewboard(){
+//console.log(generate_cooler_bingo_template());
+
+	mumboard =1;
+	generate();
+	mumboard =0;
+
+
+}
+	
+	
 
   </script>
